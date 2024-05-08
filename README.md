@@ -1,17 +1,10 @@
-# React + TypeScript + Vite
+# tic-tac-toe-react
 
-Start a new React + Vite + JS/TS app with ease
+Classic game, modern twist: React Tic Tac Toe project
 
-[![Edit my-app-template](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/devbox/github/kisp/react-create-vite-extended-template?embed=1&file=%2Fsrc%2FApp.tsx)
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/kisp/react-create-vite-extended-template)
+## Template
 
-## Features
-
-- Based on [`create-vite`](https://www.npmjs.com/package/create-vite)
-- Tailwind CSS
-- ...
-
-## Build process
-
-This template is automatically created from CI running in
-https://github.com/kisp/react-create-vite-extended-template-generator.
+Based on
+https://github.com/kisp/react-create-vite-extended-template. Specifically
+this generator version:
+https://github.com/kisp/react-create-vite-extended-template-generator/commit/2da3ffa4d17a8c1f3f60ba2480a24752d244d3a9.
