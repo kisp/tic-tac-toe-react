@@ -1,7 +1,27 @@
-import {clsx} from 'clsx'
-const title = 'Hello React'
-const classes = clsx('mb-5 bg-blue-500 py-5 text-center text-5xl')
+import Button from './components/Button.tsx'
+import {Board} from './components/Board.tsx'
+import clsx from 'clsx'
+import {useState} from 'react'
+
 function App() {
-  return <h1 className={classes}>{title}</h1>
+  const [showBoard, setShowBoard] = useState(false)
+
+  return (
+    <div className="container mx-auto">
+      <h1 className={clsx('py-6 text-center')}>Welcome to React Tic Tac Toe</h1>
+      <div className={clsx('my-3 flex justify-center')}>
+        {!showBoard && (
+          <Button
+            onClick={() => setShowBoard(true)}
+            dataTestid="start-new-game-button"
+          >
+            Start New Game
+          </Button>
+        )}
+        {showBoard && <Board />}
+      </div>
+    </div>
+  )
 }
+
 export default App
