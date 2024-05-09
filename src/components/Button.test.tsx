@@ -10,7 +10,7 @@ describe('Button', () => {
     expect(button).toHaveTextContent(/click me/i)
   })
 
-  it('calls the handleClick function when clicked', () => {
+  it('calls the onClick function when clicked', () => {
     const handleClick = vi.fn().mockName('handleClick')
 
     render(<Button onClick={handleClick} />)

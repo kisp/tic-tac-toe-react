@@ -5,9 +5,8 @@ describe('App', () => {
   it('shows a greeting', () => {
     render(<App />)
 
-    const heading = screen.getByRole('heading')
+    const heading = screen.getByRole('heading', {name: /react tic tac toe/i})
     expect(heading).toBeInTheDocument()
-    expect(heading).toHaveTextContent(/react tic tac toe/i)
   })
 
   it('shows a button to start a new game', () => {
@@ -17,10 +16,10 @@ describe('App', () => {
     expect(button).toHaveTextContent(/start new game/i)
   })
 
-  it('does not show a board initially', () => {
+  it('does not show a game board initially', () => {
     render(<App />)
 
-    const board = screen.queryByTestId('board')
+    const board = screen.queryByTestId('game')
     expect(board).not.toBeInTheDocument()
   })
 
@@ -32,7 +31,7 @@ describe('App', () => {
       button.click()
     })
 
-    const board = screen.getByTestId('board')
+    const board = screen.getByTestId('game')
     expect(board).toBeInTheDocument()
   })
 

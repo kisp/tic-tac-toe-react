@@ -1,5 +1,13 @@
-import {render, screen} from '@testing-library/react'
+import {act, render, screen} from '@testing-library/react'
 import Board from './Board'
+import {
+  allFields,
+  allPieces,
+  createInitialBoardModel,
+  Field,
+  setFieldContent,
+} from '../models/GameModel.ts'
+import {describe} from 'vitest'
 
 describe('Board', () => {
   it('has 9 Cells inside', () => {
@@ -7,6 +15,39 @@ describe('Board', () => {
 
     const cells = screen.getAllByTestId('cell')
     expect(cells).toHaveLength(9)
+  })
+
+  describe('renders the given board model faithfully', () => {
+    allPieces.forEach(piece => {
+      allFields.forEach(field => {
+        it(`correctly renders ${piece} at field ${field}`, () => {
+          let boardModel = createInitialBoardModel()
+          boardModel = setFieldContent(boardModel, field as Field, piece)
+
+          render(<Board boardModel={boardModel} />)
+
+          const cells = screen.getAllByTestId('cell')
+          expect(cells[field]).toHaveTextContent(piece)
+        })
+      })
+    })
+  })
+
+  describe('accepts makeMove prop', () => {
+    allFields.forEach(field => {
+      it(`ensures that makeMove is called with field ${field} when clicked`, () => {
+        const makeMove = vi.fn().mockName('makeMove')
+
+        render(<Board makeMove={makeMove} />)
+
+        act(() => {
+          const cells = screen.getAllByTestId('cell')
+          cells[field].click()
+        })
+
+        expect(makeMove).toHaveBeenCalledWith(field)
+      })
+    })
   })
 
   describe('takes care of omitting the outer borders', () => {
