@@ -1,4 +1,4 @@
-import {render, screen} from '@testing-library/react'
+import {act, render, screen} from '@testing-library/react'
 import Cell, {BorderPosition} from './Cell'
 
 function borderClassesExcept(...classes: string[]): string[] {
@@ -8,6 +8,37 @@ function borderClassesExcept(...classes: string[]): string[] {
 }
 
 describe('Cell', () => {
+  describe('accepts a piece prop', () => {
+    it('displays X when passed piece X', () => {
+      render(<Cell piece="X" />)
+      expect(screen.getByTestId('cell')).toHaveTextContent('X')
+    })
+
+    it('displays O when passed piece O', () => {
+      render(<Cell piece="O" />)
+      expect(screen.getByTestId('cell')).toHaveTextContent('O')
+    })
+
+    it('displays neither when passed no piece', () => {
+      render(<Cell piece={undefined} />)
+      expect(screen.getByTestId('cell')).not.toHaveTextContent('X')
+      expect(screen.getByTestId('cell')).not.toHaveTextContent('O')
+    })
+  })
+
+  it('calls the onClick function when clicked', () => {
+    const handleClick = vi.fn().mockName('handleClick')
+
+    render(<Cell onClick={handleClick} />)
+
+    act(() => {
+      const button = screen.getByTestId('cell')
+      button.click()
+    })
+
+    expect(handleClick).toHaveBeenCalled()
+  })
+
   describe('when requested to omit borders at specific sides', () => {
     const renderCellWithNoBorders = (...sides: BorderPosition[]) => {
       render(<Cell noBorder={sides} />)
