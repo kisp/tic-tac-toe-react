@@ -5,9 +5,10 @@ import {
   BoardModel,
   createInitialBoardModel,
   Field,
+  makeMove,
   PieceOrEmpty,
-  setFieldContent,
 } from '../models/GameModel.ts'
+import {deterministicStrategy, Strategy} from '../models/Strategies.ts'
 
 function useCypress(
   boardModel: PieceOrEmpty[],
@@ -36,15 +37,27 @@ function useCypress(
   }, [boardModel, setBoardModel])
 }
 
-export function Game() {
+type GameProps = {
+  strategy?: Strategy
+}
+
+export function Game({strategy = deterministicStrategy}: GameProps) {
   const [boardModel, setBoardModel] = useState<BoardModel>(
     createInitialBoardModel(),
   )
 
   useCypress(boardModel, setBoardModel)
 
-  const makeMove = (field: Field) => {
-    setBoardModel(prev => setFieldContent(prev, field, 'X'))
+  const handleMakeMove = (field: Field) => {
+    setBoardModel(prev => makeMove(prev, [field, 'X']))
+
+    if (!strategy) {
+      throw new Error('Cannot make a move: missing strategy')
+    }
+
+    setTimeout(() => {
+      setBoardModel(prev => makeMove(prev, [strategy(prev), 'O']))
+    }, 1000)
   }
 
   return (
@@ -52,7 +65,7 @@ export function Game() {
       <h1 className={clsx('py-6 text-center')}>Have fun with this game!</h1>
       <div className={clsx('flex justify-center')}>
         <div className={clsx('h-64 w-64 rounded-xl')}>
-          <Board boardModel={boardModel} makeMove={makeMove} />
+          <Board boardModel={boardModel} onMakeMove={handleMakeMove} />
         </div>
       </div>
     </div>

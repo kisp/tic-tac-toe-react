@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import {MouseEventHandler} from 'react'
+import {MouseEventHandler, useState, useEffect} from 'react'
 import {PieceOrEmpty} from '../models/GameModel.ts'
 
 export type BorderPosition = 't' | 'b' | 'l' | 'r'
@@ -10,7 +10,7 @@ type CellProps = {
   noBorder?: BorderPosition[]
 }
 
-function classes(noBorder: BorderPosition[]) {
+function classes({noBorder = []}: CellProps, isFlashing: boolean) {
   return clsx(
     'flex items-center justify-center',
     'text-5xl',
@@ -21,12 +21,37 @@ function classes(noBorder: BorderPosition[]) {
       'border-b-0': noBorder.includes('b'),
       'border-l-0': noBorder.includes('l'),
     },
+    'transition duration-100',
+    {
+      'bg-blue-200': isFlashing,
+    },
   )
 }
 
-function Cell({piece, onClick, noBorder = []}: CellProps) {
+function Cell(props: CellProps) {
+  const {piece, onClick} = props
+
+  const [isFlashing, setIsFlashing] = useState(false)
+
+  useEffect(() => {
+    if (piece) {
+      setIsFlashing(true)
+      const timer = setTimeout(() => {
+        setIsFlashing(false)
+      }, 250)
+
+      return () => {
+        clearTimeout(timer)
+      }
+    }
+  }, [piece])
+
   return (
-    <div onClick={onClick} className={classes(noBorder)} data-testid="cell">
+    <div
+      onClick={onClick}
+      className={classes(props, isFlashing)}
+      data-testid="cell"
+    >
       {piece}
     </div>
   )

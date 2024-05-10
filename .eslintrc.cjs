@@ -5,6 +5,7 @@ module.exports = {
     describe: 'readonly',
     it: 'readonly',
     cy: 'readonly',
+    beforeEach: 'readonly',
   },
   extends: [
     'eslint:recommended',
