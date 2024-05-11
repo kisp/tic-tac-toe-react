@@ -59,7 +59,14 @@ export function Game({
     }
 
     setTimeout(() => {
-      setBoardModel(prev => makeMove(prev, [strategy(prev), 'O']))
+      setBoardModel(prev => {
+        // TODO: this condition is not correct
+        if (!isWinStatus(gameStatus(prev))) {
+          return makeMove(prev, [strategy(prev), 'O'])
+        } else {
+          return prev
+        }
+      })
     }, 1000)
   }
 
