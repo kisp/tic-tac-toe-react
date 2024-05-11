@@ -38,7 +38,7 @@ describe('Board', () => {
       it(`ensures that makeMove is called with field ${field} when clicked`, () => {
         const makeMove = vi.fn().mockName('makeMove')
 
-        render(<Board onMakeMove={makeMove} />)
+        render(<Board onMove={makeMove} />)
 
         act(() => {
           const cells = screen.getAllByTestId('cell')

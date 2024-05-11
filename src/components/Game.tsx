@@ -51,7 +51,7 @@ export function Game({
 
   useCypress(boardModel, setBoardModel)
 
-  const handleMakeMove = (field: Field) => {
+  const handleMove = (field: Field) => {
     setBoardModel(prev => placeMove(prev, [field, 'X']))
 
     if (!strategy) {
@@ -85,7 +85,7 @@ export function Game({
       )}
       <div className={clsx('flex justify-center')}>
         <div className={clsx('h-64 w-64 rounded-xl')}>
-          <Board boardModel={boardModel} onMakeMove={handleMakeMove} />
+          <Board boardModel={boardModel} onMove={handleMove} />
         </div>
       </div>
     </div>

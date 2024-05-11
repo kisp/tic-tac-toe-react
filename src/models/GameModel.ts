@@ -40,7 +40,6 @@ function setFieldContent(
   return newBoardModel
 }
 
-// TODO: Name this placeMove and placeMoves
 export function placeMove(boardModel: BoardModel, move: Move): BoardModel {
   const [field, piece] = move
 
