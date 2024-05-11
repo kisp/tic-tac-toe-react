@@ -18,7 +18,7 @@ describe('GameStatus', () => {
       expect(gameStatus(boardModel)).toEqual({type: 'Turn', player: 'X'})
     })
 
-    it('returns a WinStatus', () => {
+    it('returns a WinStatus for X', () => {
       const boardModel = makeMoves(
         [0, 'X'],
         [4, 'O'],
@@ -41,6 +41,32 @@ describe('GameStatus', () => {
       ])
 
       expect(gameStatus(boardModel)).toEqual({type: 'Won', player: 'X'})
+    })
+
+    it('returns a WinStatus for O', () => {
+      const boardModel = makeMoves(
+        [6, 'X'],
+        [0, 'O'],
+        [7, 'X'],
+        [1, 'O'],
+        [4, 'X'],
+        [2, 'O'],
+      )
+
+      // TODO: Remove this expect(boardModel).toEqual check
+      expect(boardModel).toEqual([
+        'O',
+        'O',
+        'O',
+        null,
+        'X',
+        null,
+        'X',
+        'X',
+        null,
+      ])
+
+      expect(gameStatus(boardModel)).toEqual({type: 'Won', player: 'O'})
     })
   })
 

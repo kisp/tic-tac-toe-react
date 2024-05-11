@@ -64,5 +64,26 @@ describe('Game', () => {
         expect(gameEndsMessage).toHaveTextContent('The winner is X!')
       })
     })
+
+    describe('given a board where O wins', () => {
+      it('displays a winning message for O', () => {
+        const boardModel = makeMoves(
+          [6, 'X'],
+          [0, 'O'],
+          [7, 'X'],
+          [1, 'O'],
+          [4, 'X'],
+          [2, 'O'],
+        )
+
+        console.log('boardModel: ', boardModel)
+
+        render(<Game initialBoardModel={boardModel} />)
+
+        const gameEndsMessage = screen.getByTestId('game-ends-message')
+        expect(gameEndsMessage).toBeInTheDocument()
+        expect(gameEndsMessage).toHaveTextContent('The winner is O!')
+      })
+    })
   })
 })

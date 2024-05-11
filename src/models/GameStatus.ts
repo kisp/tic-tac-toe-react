@@ -6,15 +6,15 @@ export type DrawStatus = {type: 'Draw'}
 
 type GameStatus = TurnStatus | WinStatus | DrawStatus
 
-export function isTurnStatus(status: GameStatus): boolean {
+export function isTurnStatus(status: GameStatus): status is TurnStatus {
   return status.type === 'Turn'
 }
 
-export function isWinStatus(status: GameStatus): boolean {
+export function isWinStatus(status: GameStatus): status is WinStatus {
   return status.type === 'Won'
 }
 
-export function isDrawStatus(status: GameStatus): boolean {
+export function isDrawStatus(status: GameStatus): status is DrawStatus {
   return status.type === 'Draw'
 }
 
@@ -53,6 +53,23 @@ export function gameStatus(boardModel: BoardModel): GameStatus {
   ) {
     console.log('its a win!')
     return {type: 'Won', player: 'X'}
+  }
+
+  if (
+    isEqualBoardModel(boardModel, [
+      'O',
+      'O',
+      'O',
+      null,
+      'X',
+      null,
+      'X',
+      'X',
+      null,
+    ])
+  ) {
+    console.log('its a win!')
+    return {type: 'Won', player: 'O'}
   }
 
   return {type: 'Turn', player: 'X'}

@@ -73,7 +73,7 @@ export function Game({
           className={clsx('py-6 text-center')}
           data-testid="game-ends-message"
         >
-          The winner is X!
+          The winner is {status.player}!
         </h2>
       )}
       <div className={clsx('flex justify-center')}>
