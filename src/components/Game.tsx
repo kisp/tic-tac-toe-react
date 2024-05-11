@@ -10,6 +10,7 @@ import {
 } from '../models/GameModel.ts'
 import {deterministicStrategy, Strategy} from '../models/Strategies.ts'
 import {gameStatus, isWinStatus} from '../models/GameStatus.ts'
+import Button from './Button.tsx'
 
 function useCypress(
   boardModel: PieceOrEmpty[],
@@ -48,6 +49,7 @@ export function Game({
   initialBoardModel = createInitialBoardModel(),
 }: GameProps) {
   const [boardModel, setBoardModel] = useState<BoardModel>(initialBoardModel)
+  const [showGameEndDialog, setShowGameEndDialog] = useState(false)
 
   useCypress(boardModel, setBoardModel)
 
@@ -72,23 +74,48 @@ export function Game({
 
   const status = gameStatus(boardModel)
 
+  useEffect(() => {
+    if (isWinStatus(status)) {
+      const timer = setTimeout(() => setShowGameEndDialog(true), 1000)
+      return () => {
+        clearTimeout(timer)
+      }
+    }
+  }, [status])
+
   return (
-    <div data-testid="game">
-      <h1 className={clsx('py-6 text-center')}>Have fun with this game!</h1>
-      {isWinStatus(status) && (
-        <h2
-          className={clsx('py-6 text-center')}
-          data-testid="game-ends-message"
-        >
-          The winner is {status.player}!
-        </h2>
-      )}
-      <div className={clsx('flex justify-center')}>
-        <div className={clsx('h-64 w-64 rounded-xl')}>
-          <Board boardModel={boardModel} onMove={handleMove} />
+    <>
+      <div data-testid="game">
+        <h1 className={clsx('py-6 text-center')}>Have fun with this game!</h1>
+        <div className={clsx('flex justify-center')}>
+          <div className={clsx('h-64 w-64 rounded-xl')}>
+            <Board boardModel={boardModel} onMove={handleMove} />
+          </div>
         </div>
       </div>
-    </div>
+
+      {showGameEndDialog && (
+        <>
+          <div className="fixed inset-0 z-50 bg-black opacity-50"></div>
+          <div
+            className={clsx(
+              'fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transform',
+              'rounded-lg bg-white p-6 shadow-lg',
+            )}
+          >
+            <p
+              className="mb-3 text-lg font-semibold text-gray-800"
+              data-testid="game-ends-message"
+            >
+              {isWinStatus(status) && (
+                <span>The winner is {status.player}!</span>
+              )}
+            </p>
+            <Button>Close</Button>
+          </div>
+        </>
+      )}
+    </>
   )
 }
 

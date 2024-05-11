@@ -48,7 +48,7 @@ describe('Game', () => {
     })
 
     describe('given a board where X wins', () => {
-      it('displays a winning message for X', () => {
+      it('displays a winning message for X', async () => {
         const boardModel = placeMoves(
           [0, 'X'],
           [4, 'O'],
@@ -59,14 +59,16 @@ describe('Game', () => {
 
         render(<Game initialBoardModel={boardModel} />)
 
-        const gameEndsMessage = screen.getByTestId('game-ends-message')
-        expect(gameEndsMessage).toBeInTheDocument()
-        expect(gameEndsMessage).toHaveTextContent('The winner is X!')
+        await waitFor(() => {
+          const gameEndsMessage = screen.getByTestId('game-ends-message')
+          expect(gameEndsMessage).toBeInTheDocument()
+          expect(gameEndsMessage).toHaveTextContent('The winner is X!')
+        })
       })
     })
 
     describe('given a board where O wins', () => {
-      it('displays a winning message for O', () => {
+      it('displays a winning message for O', async () => {
         const boardModel = placeMoves(
           [6, 'X'],
           [0, 'O'],
@@ -78,9 +80,11 @@ describe('Game', () => {
 
         render(<Game initialBoardModel={boardModel} />)
 
-        const gameEndsMessage = screen.getByTestId('game-ends-message')
-        expect(gameEndsMessage).toBeInTheDocument()
-        expect(gameEndsMessage).toHaveTextContent('The winner is O!')
+        await waitFor(() => {
+          const gameEndsMessage = screen.getByTestId('game-ends-message')
+          expect(gameEndsMessage).toBeInTheDocument()
+          expect(gameEndsMessage).toHaveTextContent('The winner is O!')
+        })
       })
     })
   })

@@ -10,6 +10,7 @@ function WelcomePage({setShowGame}: {setShowGame: (arg: boolean) => void}) {
       <h1 className={clsx('py-6 text-center')}>Welcome to React Tic Tac Toe</h1>
       <div className={clsx('my-3 flex justify-center')}>
         <Button
+          size="large"
           onClick={() => setShowGame(true)}
           dataTestid="start-new-game-button"
         >
@@ -17,14 +18,14 @@ function WelcomePage({setShowGame}: {setShowGame: (arg: boolean) => void}) {
         </Button>
       </div>
       <h2 className={clsx('py-6 text-center')}>Past Games</h2>
-      <div className={clsx('flex justify-around')}>
-        <div className="h-28 w-28 flex-col rounded-xl border-2 border-slate-400 p-2">
+      <div className={clsx('flex flex-wrap justify-around gap-6')}>
+        <div className="h-28 w-28 flex-col rounded-xl border-2 border-slate-200 p-2 shadow hover:border-slate-400">
           <Board />
         </div>
-        <div className="h-28 w-28 flex-col rounded-xl border-2 border-slate-400 p-2">
+        <div className="h-28 w-28 flex-col rounded-xl border-2 border-slate-200 p-2 shadow hover:border-slate-400">
           <Board />
         </div>
-        <div className="h-28 w-28 flex-col rounded-xl border-2 border-slate-400 p-2">
+        <div className="h-28 w-28 flex-col rounded-xl border-2 border-slate-200 p-2 shadow hover:border-slate-400">
           <Board />
         </div>
       </div>
