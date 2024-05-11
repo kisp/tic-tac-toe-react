@@ -21,6 +21,7 @@ describe('Player wins game', () => {
         null,
         null,
       ])
+      cy.get('[data-testid="cell"]').eq(0).should('have.text', 'X')
     })
 
     it('a winning message is shown', () => {
