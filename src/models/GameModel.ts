@@ -40,6 +40,7 @@ function setFieldContent(
   return newBoardModel
 }
 
+// TODO: Name this placeMove and placeMoves
 export function makeMove(boardModel: BoardModel, move: Move): BoardModel {
   const [field, piece] = move
 
@@ -66,4 +67,11 @@ export function makeMoves(
   }
 
   return moves.reduce<BoardModel>(makeMove, initialBoard)
+}
+
+export function isEqualBoardModel(
+  boardA: BoardModel,
+  boardB: BoardModel,
+): boolean {
+  return R.equals(boardA, boardB)
 }

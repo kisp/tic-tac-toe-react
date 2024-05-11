@@ -9,6 +9,7 @@ import {
   PieceOrEmpty,
 } from '../models/GameModel.ts'
 import {deterministicStrategy, Strategy} from '../models/Strategies.ts'
+import {gameStatus, isWinStatus} from '../models/GameStatus.ts'
 
 function useCypress(
   boardModel: PieceOrEmpty[],
@@ -60,9 +61,19 @@ export function Game({strategy = deterministicStrategy}: GameProps) {
     }, 1000)
   }
 
+  const status = gameStatus(boardModel)
+
   return (
     <div data-testid="game">
       <h1 className={clsx('py-6 text-center')}>Have fun with this game!</h1>
+      {isWinStatus(status) && (
+        <h2
+          className={clsx('py-6 text-center')}
+          data-testid="game-ends-message"
+        >
+          The winner is X!
+        </h2>
+      )}
       <div className={clsx('flex justify-center')}>
         <div className={clsx('h-64 w-64 rounded-xl')}>
           <Board boardModel={boardModel} onMakeMove={handleMakeMove} />

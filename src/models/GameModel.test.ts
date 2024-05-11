@@ -8,6 +8,7 @@ import {
   isEmptyField,
   makeMove,
   Move,
+  isEqualBoardModel,
 } from './GameModel.ts'
 import {describe} from 'vitest'
 
@@ -35,6 +36,20 @@ describe('GameModel', () => {
     it('creates a completely empty board', () => {
       const boardModel = createInitialBoardModel()
       expect(countEmptyFields(boardModel)).toEqual(9)
+    })
+  })
+
+  describe('isEqualBoardModel', () => {
+    it('returns true for equal boards', () => {
+      expect(
+        isEqualBoardModel(createInitialBoardModel(), createInitialBoardModel()),
+      ).toBeTruthy()
+    })
+
+    it('returns false for different boards', () => {
+      expect(
+        isEqualBoardModel(createInitialBoardModel(), makeMoves([0, 'X'])),
+      ).toBeFalsy()
     })
   })
 
@@ -102,7 +117,7 @@ describe('GameModel', () => {
     })
   })
 
-  describe('createBoardModel', () => {
+  describe('makeMoves', () => {
     describe('with no args', () => {
       it('creates an empty board', () => {
         expect(makeMoves()).toEqual(createInitialBoardModel())

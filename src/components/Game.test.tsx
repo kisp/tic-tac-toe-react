@@ -35,4 +35,15 @@ describe('Game', () => {
 
     await waitFor(() => expect(cells[7]).toHaveTextContent('O'))
   })
+
+  describe('ending the game', () => {
+    describe('given an empty board', () => {
+      it('does not display a game ends message', () => {
+        render(<Game />)
+
+        const gameEndsMessage = screen.queryByTestId('game-ends-message')
+        expect(gameEndsMessage).not.toBeInTheDocument()
+      })
+    })
+  })
 })
