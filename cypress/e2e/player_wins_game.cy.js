@@ -1,6 +1,6 @@
 describe('Player wins game', () => {
   describe('when winning on a row', () => {
-    it('a winning message is show', () => {
+    it('a winning message is shown', () => {
       cy.visit('/')
 
       cy.get('[data-testid="start-new-game-button"]').click()

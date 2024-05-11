@@ -1,6 +1,7 @@
 import {act, render, screen, waitFor} from '@testing-library/react'
 import Game from './Game'
 import {Strategy} from '../models/Strategies.ts'
+import {makeMoves} from '../models/GameModel.ts'
 
 describe('Game', () => {
   it('renders the board', () => {
@@ -43,6 +44,24 @@ describe('Game', () => {
 
         const gameEndsMessage = screen.queryByTestId('game-ends-message')
         expect(gameEndsMessage).not.toBeInTheDocument()
+      })
+    })
+
+    describe('given a board where X wins', () => {
+      it('displays a winning message for X', () => {
+        const boardModel = makeMoves(
+          [0, 'X'],
+          [4, 'O'],
+          [1, 'X'],
+          [6, 'O'],
+          [2, 'X'],
+        )
+
+        render(<Game initialBoardModel={boardModel} />)
+
+        const gameEndsMessage = screen.getByTestId('game-ends-message')
+        expect(gameEndsMessage).toBeInTheDocument()
+        expect(gameEndsMessage).toHaveTextContent('The winner is X!')
       })
     })
   })

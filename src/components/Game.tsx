@@ -40,12 +40,14 @@ function useCypress(
 
 type GameProps = {
   strategy?: Strategy
+  initialBoardModel?: BoardModel
 }
 
-export function Game({strategy = deterministicStrategy}: GameProps) {
-  const [boardModel, setBoardModel] = useState<BoardModel>(
-    createInitialBoardModel(),
-  )
+export function Game({
+  strategy = deterministicStrategy,
+  initialBoardModel = createInitialBoardModel(),
+}: GameProps) {
+  const [boardModel, setBoardModel] = useState<BoardModel>(initialBoardModel)
 
   useCypress(boardModel, setBoardModel)
 
