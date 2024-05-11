@@ -80,23 +80,16 @@ describe('Player wins game', () => {
         .and('have.text', 'The winner is O!')
     })
 
-    // it('player O will make no more moves', () => {
-    //   cy.get('[data-testid="cell"]').eq(2).click().should('have.text', 'X')
-
-    //   cy.get('[data-testid="cell"]').eq(3).should('have.text', '')
-    //   cy.wait(2000)
-    //   cy.get('[data-testid="cell"]').eq(3).should('have.text', '')
-    // })
-
+    // TODO: work on: player X cannot make more moves
     // it('player X cannot make more moves', () => {
-    //   cy.get('[data-testid="cell"]').eq(2).click().should('have.text', 'X')
+    //   cy.get('[data-testid="cell"]').eq(4).click().should('have.text', 'X')
     //   cy.get('[data-testid="game-ends-message"]')
     //     .should('be.visible')
-    //     .and('have.text', 'The winner is X!')
+    //     .and('have.text', 'The winner is O!')
 
-    //   cy.get('[data-testid="cell"]').eq(3).click()
+    //   cy.get('[data-testid="cell"]').eq(8).click()
     //   cy.wait(250)
-    //   cy.get('[data-testid="cell"]').eq(3).should('have.text', '')
+    //   cy.get('[data-testid="cell"]').eq(8).should('have.text', '')
     // })
   })
 })
