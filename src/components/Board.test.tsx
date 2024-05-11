@@ -5,7 +5,7 @@ import {
   allPieces,
   createInitialBoardModel,
   Field,
-  makeMove,
+  placeMove,
 } from '../models/GameModel.ts'
 import {describe} from 'vitest'
 
@@ -22,7 +22,7 @@ describe('Board', () => {
       allFields.forEach(field => {
         it(`correctly renders ${piece} at field ${field}`, () => {
           let boardModel = createInitialBoardModel()
-          boardModel = makeMove(boardModel, [field as Field, piece])
+          boardModel = placeMove(boardModel, [field as Field, piece])
 
           render(<Board boardModel={boardModel} />)
 

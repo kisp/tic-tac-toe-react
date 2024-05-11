@@ -41,7 +41,7 @@ function setFieldContent(
 }
 
 // TODO: Name this placeMove and placeMoves
-export function makeMove(boardModel: BoardModel, move: Move): BoardModel {
+export function placeMove(boardModel: BoardModel, move: Move): BoardModel {
   const [field, piece] = move
 
   if (getFieldContent(boardModel, field)) throw new Error('Invalid move')
@@ -49,10 +49,10 @@ export function makeMove(boardModel: BoardModel, move: Move): BoardModel {
   return setFieldContent(boardModel, field, piece)
 }
 
-export function makeMoves(...moves: Move[]): BoardModel
-export function makeMoves(boardModel: BoardModel, ...moves: Move[]): BoardModel
+export function placeMoves(...moves: Move[]): BoardModel
+export function placeMoves(boardModel: BoardModel, ...moves: Move[]): BoardModel
 
-export function makeMoves(
+export function placeMoves(
   boardOrMove: BoardModel | Move,
   ...moves: Move[]
 ): BoardModel {
@@ -66,7 +66,7 @@ export function makeMoves(
     if (boardOrMove) moves = [boardOrMove, ...moves]
   }
 
-  return moves.reduce<BoardModel>(makeMove, initialBoard)
+  return moves.reduce<BoardModel>(placeMove, initialBoard)
 }
 
 export function isEqualBoardModel(

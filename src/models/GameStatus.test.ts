@@ -1,4 +1,4 @@
-import {createInitialBoardModel, makeMoves} from './GameModel.ts'
+import {createInitialBoardModel, placeMoves} from './GameModel.ts'
 import {
   DrawStatus,
   gameStatus,
@@ -19,7 +19,7 @@ describe('GameStatus', () => {
     })
 
     it('returns a WinStatus for X', () => {
-      const boardModel = makeMoves(
+      const boardModel = placeMoves(
         [0, 'X'],
         [4, 'O'],
         [1, 'X'],
@@ -44,7 +44,7 @@ describe('GameStatus', () => {
     })
 
     it('returns a WinStatus for O', () => {
-      const boardModel = makeMoves(
+      const boardModel = placeMoves(
         [6, 'X'],
         [0, 'O'],
         [7, 'X'],

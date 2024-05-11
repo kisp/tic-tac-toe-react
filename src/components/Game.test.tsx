@@ -1,7 +1,7 @@
 import {act, render, screen, waitFor} from '@testing-library/react'
 import Game from './Game'
 import {Strategy} from '../models/Strategies.ts'
-import {makeMoves} from '../models/GameModel.ts'
+import {placeMoves} from '../models/GameModel.ts'
 
 describe('Game', () => {
   it('renders the board', () => {
@@ -49,7 +49,7 @@ describe('Game', () => {
 
     describe('given a board where X wins', () => {
       it('displays a winning message for X', () => {
-        const boardModel = makeMoves(
+        const boardModel = placeMoves(
           [0, 'X'],
           [4, 'O'],
           [1, 'X'],
@@ -67,7 +67,7 @@ describe('Game', () => {
 
     describe('given a board where O wins', () => {
       it('displays a winning message for O', () => {
-        const boardModel = makeMoves(
+        const boardModel = placeMoves(
           [6, 'X'],
           [0, 'O'],
           [7, 'X'],

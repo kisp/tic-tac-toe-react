@@ -5,7 +5,7 @@ import {
   BoardModel,
   createInitialBoardModel,
   Field,
-  makeMove,
+  placeMove,
   PieceOrEmpty,
 } from '../models/GameModel.ts'
 import {deterministicStrategy, Strategy} from '../models/Strategies.ts'
@@ -52,7 +52,7 @@ export function Game({
   useCypress(boardModel, setBoardModel)
 
   const handleMakeMove = (field: Field) => {
-    setBoardModel(prev => makeMove(prev, [field, 'X']))
+    setBoardModel(prev => placeMove(prev, [field, 'X']))
 
     if (!strategy) {
       throw new Error('Cannot make a move: missing strategy')
@@ -62,7 +62,7 @@ export function Game({
       setBoardModel(prev => {
         // TODO: this condition is not correct
         if (!isWinStatus(gameStatus(prev))) {
-          return makeMove(prev, [strategy(prev), 'O'])
+          return placeMove(prev, [strategy(prev), 'O'])
         } else {
           return prev
         }
