@@ -76,8 +76,6 @@ describe('Game', () => {
           [2, 'O'],
         )
 
-        console.log('boardModel: ', boardModel)
-
         render(<Game initialBoardModel={boardModel} />)
 
         const gameEndsMessage = screen.getByTestId('game-ends-message')

@@ -19,9 +19,6 @@ export function isDrawStatus(status: GameStatus): status is DrawStatus {
 }
 
 export function gameStatus(boardModel: BoardModel): GameStatus {
-  // TODO: remove console.log (here and in other places)
-  console.log('checking gameStatus')
-  console.log('boardModel: ', boardModel)
   if (
     isEqualBoardModel(boardModel, [
       'X',
@@ -35,7 +32,6 @@ export function gameStatus(boardModel: BoardModel): GameStatus {
       null,
     ])
   ) {
-    console.log('its a win!')
     return {type: 'Won', player: 'X'}
   }
 
@@ -52,7 +48,6 @@ export function gameStatus(boardModel: BoardModel): GameStatus {
       'X',
     ])
   ) {
-    console.log('its a win!')
     return {type: 'Won', player: 'X'}
   }
 
@@ -69,7 +64,6 @@ export function gameStatus(boardModel: BoardModel): GameStatus {
       null,
     ])
   ) {
-    console.log('its a win!')
     return {type: 'Won', player: 'O'}
   }
 
