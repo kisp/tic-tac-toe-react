@@ -30,12 +30,11 @@ describe('Player wins game', () => {
 
       cy.get('[data-testid="cell"]').eq(3).should('have.text', '')
 
-      // TODO: check here again after 2000ms
-      // cy.wait(2000)
-      // cy.get('[data-testid="game-ends-message"]')
-      //   .should('be.visible')
-      //   .and('have.text', 'The winner is X!')
-      // cy.get('[data-testid="cell"]').eq(3).should('have.text', '')
+      cy.wait(2000)
+      cy.get('[data-testid="game-ends-message"]')
+        .should('be.visible')
+        .and('have.text', 'The winner is X!')
+      cy.get('[data-testid="cell"]').eq(3).should('have.text', '')
     })
   })
 })

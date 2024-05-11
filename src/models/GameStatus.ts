@@ -19,6 +19,7 @@ export function isDrawStatus(status: GameStatus): status is DrawStatus {
 }
 
 export function gameStatus(boardModel: BoardModel): GameStatus {
+  // TODO: remove console.log (here and in other places)
   console.log('checking gameStatus')
   console.log('boardModel: ', boardModel)
   if (
