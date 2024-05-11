@@ -28,9 +28,7 @@ function classes({noBorder = []}: CellProps, isFlashing: boolean) {
   )
 }
 
-function Cell(props: CellProps) {
-  const {piece, onClick} = props
-
+function useFlashing(piece?: PieceOrEmpty) {
   const [isFlashing, setIsFlashing] = useState(false)
 
   useEffect(() => {
@@ -45,6 +43,14 @@ function Cell(props: CellProps) {
       }
     }
   }, [piece])
+
+  return isFlashing
+}
+
+function Cell(props: CellProps) {
+  const {piece, onClick} = props
+
+  const isFlashing = useFlashing(piece)
 
   return (
     <div
