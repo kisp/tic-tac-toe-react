@@ -27,19 +27,6 @@ describe('GameStatus', () => {
         [2, 'X'],
       )
 
-      // TODO: Remove this expect(boardModel).toEqual check
-      expect(boardModel).toEqual([
-        'X',
-        'X',
-        'X',
-        null,
-        'O',
-        null,
-        'O',
-        null,
-        null,
-      ])
-
       expect(gameStatus(boardModel)).toEqual({type: 'Won', player: 'X'})
     })
 
@@ -52,19 +39,6 @@ describe('GameStatus', () => {
         [4, 'X'],
         [2, 'O'],
       )
-
-      // TODO: Remove this expect(boardModel).toEqual check
-      expect(boardModel).toEqual([
-        'O',
-        'O',
-        'O',
-        null,
-        'X',
-        null,
-        'X',
-        'X',
-        null,
-      ])
 
       expect(gameStatus(boardModel)).toEqual({type: 'Won', player: 'O'})
     })
