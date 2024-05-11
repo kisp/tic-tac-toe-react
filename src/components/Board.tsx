@@ -22,12 +22,11 @@ const fieldsNoBorder: BorderPosition[][] = [
   ['r', 'b'],
 ]
 
-type BoardProps = {
-  boardModel?: BoardModel
-  onMove?: (field: Field) => void
-}
-
-function makeCell(boardModel: BoardModel, onMakeMove: (field: Field) => void) {
+function makeCell(
+  boardModel: BoardModel,
+  onMakeMove: (field: Field) => void,
+  interactive: boolean,
+) {
   return (field: Field) => {
     return (
       <Cell
@@ -35,19 +34,27 @@ function makeCell(boardModel: BoardModel, onMakeMove: (field: Field) => void) {
         piece={getFieldContent(boardModel, field)}
         onClick={() => onMakeMove(field)}
         noBorder={fieldsNoBorder[field]}
+        interactive={interactive}
       />
     )
   }
+}
+
+type BoardProps = {
+  boardModel?: BoardModel
+  onMove?: (field: Field) => void
+  interactive?: boolean
 }
 
 export function Board({
   boardModel = createInitialBoardModel(),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onMove = _field => null,
+  interactive = true,
 }: BoardProps) {
   return (
     <div className={classes} data-testid="board">
-      {allFields.map(makeCell(boardModel, onMove))}
+      {allFields.map(makeCell(boardModel, onMove, interactive))}
     </div>
   )
 }

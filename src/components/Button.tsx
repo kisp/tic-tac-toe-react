@@ -1,10 +1,13 @@
 import clsx from 'clsx'
 import {ButtonHTMLAttributes} from 'react'
 
+type ButtonSize = 'normal' | 'large'
+
 const classes = (size: ButtonSize) => {
   const baseStyles = 'bg-blue-500 text-white'
   const hoverStyles = 'hover:bg-blue-600'
-  const focusStyles = 'focus:outline-none focus:ring focus:ring-blue-300'
+  const focusStyles =
+    'focus-visible:outline-none focus-visible:ring focus-visible:ring-blue-300'
 
   const stylesForSize = (size: ButtonSize) => {
     if (size === 'normal') {
@@ -16,8 +19,6 @@ const classes = (size: ButtonSize) => {
 
   return clsx(baseStyles, hoverStyles, focusStyles, stylesForSize(size))
 }
-
-type ButtonSize = 'normal' | 'large'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   dataTestid?: string

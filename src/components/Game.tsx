@@ -69,14 +69,14 @@ export function Game({
           return prev
         }
       })
-    }, 1000)
+    }, 1500)
   }
 
   const status = gameStatus(boardModel)
 
   useEffect(() => {
     if (isWinStatus(status)) {
-      const timer = setTimeout(() => setShowGameEndDialog(true), 1000)
+      const timer = setTimeout(() => setShowGameEndDialog(true), 1500)
       return () => {
         clearTimeout(timer)
       }
