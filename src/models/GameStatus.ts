@@ -1,4 +1,11 @@
-import {BoardModel, isEqualBoardModel, Piece} from './GameModel.ts'
+import * as R from 'ramda'
+import {
+  BoardModel,
+  Field,
+  getFieldContents,
+  isEqualBoardModel,
+  Piece,
+} from './GameModel.ts'
 
 export type TurnStatus = {type: 'Turn'; player: Piece}
 export type WinStatus = {type: 'Won'; player: Piece}
@@ -18,21 +25,82 @@ export function isDrawStatus(status: GameStatus): status is DrawStatus {
   return status.type === 'Draw'
 }
 
+// TODO: Refactor gameStatus
 export function gameStatus(boardModel: BoardModel): GameStatus {
+  const rows: Field[][] = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+  ]
+
+  const columns: Field[][] = [
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+  ]
+
+  const diagonals: Field[][] = [
+    [0, 4, 8],
+    [2, 4, 6],
+  ]
+
+  // const oldCheck =
+  //   R.equals(['X', 'X', 'X'], getFieldContents(boardModel, [0, 1, 2])) ||
+  //   R.equals(['X', 'X', 'X'], getFieldContents(boardModel, [3, 4, 5])) ||
+  //   R.equals(['X', 'X', 'X'], getFieldContents(boardModel, [6, 7, 8]))
+
   if (
-    isEqualBoardModel(boardModel, [
-      'X',
-      'X',
-      'X',
-      null,
-      'O',
-      null,
-      'O',
-      null,
-      null,
-    ])
+    R.any(
+      fields => R.equals(['X', 'X', 'X'], getFieldContents(boardModel, fields)),
+      rows,
+    )
   ) {
     return {type: 'Won', player: 'X'}
+  }
+
+  if (
+    R.any(
+      fields => R.equals(['O', 'O', 'O'], getFieldContents(boardModel, fields)),
+      rows,
+    )
+  ) {
+    return {type: 'Won', player: 'O'}
+  }
+
+  if (
+    R.any(
+      fields => R.equals(['X', 'X', 'X'], getFieldContents(boardModel, fields)),
+      columns,
+    )
+  ) {
+    return {type: 'Won', player: 'X'}
+  }
+
+  if (
+    R.any(
+      fields => R.equals(['O', 'O', 'O'], getFieldContents(boardModel, fields)),
+      columns,
+    )
+  ) {
+    return {type: 'Won', player: 'O'}
+  }
+
+  if (
+    R.any(
+      fields => R.equals(['X', 'X', 'X'], getFieldContents(boardModel, fields)),
+      diagonals,
+    )
+  ) {
+    return {type: 'Won', player: 'X'}
+  }
+
+  if (
+    R.any(
+      fields => R.equals(['O', 'O', 'O'], getFieldContents(boardModel, fields)),
+      diagonals,
+    )
+  ) {
+    return {type: 'Won', player: 'O'}
   }
 
   if (
@@ -49,6 +117,38 @@ export function gameStatus(boardModel: BoardModel): GameStatus {
     ])
   ) {
     return {type: 'Won', player: 'X'}
+  }
+
+  if (
+    isEqualBoardModel(boardModel, [
+      'X',
+      'X',
+      'X',
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    ])
+  ) {
+    return {type: 'Won', player: 'X'}
+  }
+
+  if (
+    isEqualBoardModel(boardModel, [
+      'O',
+      'O',
+      'O',
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    ])
+  ) {
+    return {type: 'Won', player: 'O'}
   }
 
   if (

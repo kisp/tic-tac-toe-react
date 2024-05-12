@@ -74,3 +74,10 @@ export function isEqualBoardModel(
 ): boolean {
   return R.equals(boardA, boardB)
 }
+
+export function getFieldContents(
+  boardModel: BoardModel,
+  fields: Field[],
+): PieceOrEmpty[] {
+  return fields.map(field => getFieldContent(boardModel, field))
+}
