@@ -2,6 +2,7 @@ describe('Player wins game', () => {
   const visitAndStartGame = () => {
     cy.visit('/')
     cy.get('[data-testid="start-new-game-button"]').click()
+    cy.get('[data-testid="game"]').should('exist')
     cy.get('[data-testid="cell"]').eq(0).should('have.text', '')
     cy.get('[data-testid="game-ends-message"]').should('not.exist')
   }
