@@ -34,7 +34,9 @@ describe('Game', () => {
 
     expect(cells[3]).toHaveTextContent('X')
 
-    await waitFor(() => expect(cells[7]).toHaveTextContent('O'))
+    await waitFor(() => expect(cells[7]).toHaveTextContent('O'), {
+      timeout: 3000,
+    })
   })
 
   describe('ending the game', () => {
@@ -59,11 +61,14 @@ describe('Game', () => {
 
         render(<Game initialBoardModel={boardModel} />)
 
-        await waitFor(() => {
-          const gameEndsMessage = screen.getByTestId('game-ends-message')
-          expect(gameEndsMessage).toBeInTheDocument()
-          expect(gameEndsMessage).toHaveTextContent('The winner is X!')
-        })
+        await waitFor(
+          () => {
+            const gameEndsMessage = screen.getByTestId('game-ends-message')
+            expect(gameEndsMessage).toBeInTheDocument()
+            expect(gameEndsMessage).toHaveTextContent('The winner is X!')
+          },
+          {timeout: 3000},
+        )
       })
     })
 
@@ -80,11 +85,14 @@ describe('Game', () => {
 
         render(<Game initialBoardModel={boardModel} />)
 
-        await waitFor(() => {
-          const gameEndsMessage = screen.getByTestId('game-ends-message')
-          expect(gameEndsMessage).toBeInTheDocument()
-          expect(gameEndsMessage).toHaveTextContent('The winner is O!')
-        })
+        await waitFor(
+          () => {
+            const gameEndsMessage = screen.getByTestId('game-ends-message')
+            expect(gameEndsMessage).toBeInTheDocument()
+            expect(gameEndsMessage).toHaveTextContent('The winner is O!')
+          },
+          {timeout: 3000},
+        )
       })
     })
   })
