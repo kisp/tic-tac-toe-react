@@ -4,9 +4,7 @@ import {
   countEmptyFields,
   Field,
   getFieldContents,
-  isEqualBoardModel,
   Piece,
-  PieceOrEmpty,
 } from './GameModel.ts'
 
 export type TurnStatus = {type: 'Turn'; player: Piece}
@@ -27,29 +25,31 @@ export function isDrawStatus(status: GameStatus): status is DrawStatus {
   return status.type === 'Draw'
 }
 
+const rows: Field[][] = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+]
+
+const columns: Field[][] = [
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+]
+
+const diagonals: Field[][] = [
+  [0, 4, 8],
+  [2, 4, 6],
+]
+
+const allWinningLines = R.concat(R.concat(rows, columns), diagonals)
+
 // TODO: Refactor gameStatus
 export function gameStatus(boardModel: BoardModel): GameStatus {
-  const rows: Field[][] = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-  ]
-
-  const columns: Field[][] = [
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-  ]
-
-  const diagonals: Field[][] = [
-    [0, 4, 8],
-    [2, 4, 6],
-  ]
-
   if (
     R.any(
       fields => R.equals(['X', 'X', 'X'], getFieldContents(boardModel, fields)),
-      rows,
+      allWinningLines,
     )
   ) {
     return {type: 'Won', player: 'X'}
@@ -58,43 +58,7 @@ export function gameStatus(boardModel: BoardModel): GameStatus {
   if (
     R.any(
       fields => R.equals(['O', 'O', 'O'], getFieldContents(boardModel, fields)),
-      rows,
-    )
-  ) {
-    return {type: 'Won', player: 'O'}
-  }
-
-  if (
-    R.any(
-      fields => R.equals(['X', 'X', 'X'], getFieldContents(boardModel, fields)),
-      columns,
-    )
-  ) {
-    return {type: 'Won', player: 'X'}
-  }
-
-  if (
-    R.any(
-      fields => R.equals(['O', 'O', 'O'], getFieldContents(boardModel, fields)),
-      columns,
-    )
-  ) {
-    return {type: 'Won', player: 'O'}
-  }
-
-  if (
-    R.any(
-      fields => R.equals(['X', 'X', 'X'], getFieldContents(boardModel, fields)),
-      diagonals,
-    )
-  ) {
-    return {type: 'Won', player: 'X'}
-  }
-
-  if (
-    R.any(
-      fields => R.equals(['O', 'O', 'O'], getFieldContents(boardModel, fields)),
-      diagonals,
+      allWinningLines,
     )
   ) {
     return {type: 'Won', player: 'O'}
