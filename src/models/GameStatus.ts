@@ -100,26 +100,11 @@ export function gameStatus(boardModel: BoardModel): GameStatus {
     return {type: 'Won', player: 'O'}
   }
 
-  let turnPlayer: PieceOrEmpty
+  const emptyFields = countEmptyFields(boardModel)
 
-  switch (countEmptyFields(boardModel)) {
-    case 9:
-    case 7:
-    case 5:
-    case 3:
-    case 1:
-      turnPlayer = 'X'
-      break
-    case 8:
-    case 6:
-    case 4:
-    case 2:
-      turnPlayer = 'O'
-      break
-    default:
-      turnPlayer = null
+  if (emptyFields === 0) {
+    return {type: 'Draw'}
+  } else {
+    return {type: 'Turn', player: emptyFields % 2 === 0 ? 'O' : 'X'}
   }
-
-  if (turnPlayer) return {type: 'Turn', player: turnPlayer}
-  else return {type: 'Draw'}
 }
