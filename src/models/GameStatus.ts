@@ -1,10 +1,12 @@
 import * as R from 'ramda'
 import {
   BoardModel,
+  countEmptyFields,
   Field,
   getFieldContents,
   isEqualBoardModel,
   Piece,
+  PieceOrEmpty,
 } from './GameModel.ts'
 
 export type TurnStatus = {type: 'Turn'; player: Piece}
@@ -167,5 +169,26 @@ export function gameStatus(boardModel: BoardModel): GameStatus {
     return {type: 'Won', player: 'O'}
   }
 
-  return {type: 'Turn', player: 'X'}
+  let turnPlayer: PieceOrEmpty
+
+  switch (countEmptyFields(boardModel)) {
+    case 9:
+    case 7:
+    case 5:
+    case 3:
+    case 1:
+      turnPlayer = 'X'
+      break
+    case 8:
+    case 6:
+    case 4:
+    case 2:
+      turnPlayer = 'O'
+      break
+    default:
+      turnPlayer = null
+  }
+
+  if (turnPlayer) return {type: 'Turn', player: turnPlayer}
+  else return {type: 'Draw'}
 }

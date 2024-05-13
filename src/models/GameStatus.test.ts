@@ -23,6 +23,91 @@ describe('GameStatus', () => {
       expect(gameStatus(boardModel)).toEqual({type: 'Turn', player: 'X'})
     })
 
+    it('returns a TurnStatus for O after first move', () => {
+      const boardModel = placeMoves([0, 'X'])
+      expect(gameStatus(boardModel)).toEqual({type: 'Turn', player: 'O'})
+    })
+
+    it('returns a TurnStatus for X after two moves', () => {
+      const boardModel = placeMoves([0, 'X'], [1, 'O'])
+      expect(gameStatus(boardModel)).toEqual({type: 'Turn', player: 'X'})
+    })
+
+    it('returns a TurnStatus for O after three moves', () => {
+      const boardModel = placeMoves([0, 'X'], [1, 'O'], [2, 'X'])
+      expect(gameStatus(boardModel)).toEqual({type: 'Turn', player: 'O'})
+    })
+
+    it('returns a TurnStatus for X after four moves', () => {
+      const boardModel = placeMoves([0, 'X'], [1, 'O'], [2, 'X'], [3, 'O'])
+      expect(gameStatus(boardModel)).toEqual({type: 'Turn', player: 'X'})
+    })
+
+    it('returns a TurnStatus for O after five moves', () => {
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [1, 'O'],
+        [2, 'X'],
+        [3, 'O'],
+        [4, 'X'],
+      )
+      expect(gameStatus(boardModel)).toEqual({type: 'Turn', player: 'O'})
+    })
+
+    it('returns a TurnStatus for X after six moves', () => {
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [1, 'O'],
+        [2, 'X'],
+        [3, 'O'],
+        [4, 'X'],
+        [5, 'O'],
+      )
+      expect(gameStatus(boardModel)).toEqual({type: 'Turn', player: 'X'})
+    })
+
+    it('returns a TurnStatus for O after seven moves', () => {
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [1, 'O'],
+        [2, 'X'],
+        [3, 'O'],
+        [4, 'X'],
+        [5, 'O'],
+        [7, 'X'],
+      )
+      expect(gameStatus(boardModel)).toEqual({type: 'Turn', player: 'O'})
+    })
+
+    it('returns a TurnStatus for X after eight moves', () => {
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [1, 'O'],
+        [2, 'X'],
+        [3, 'O'],
+        [4, 'X'],
+        [5, 'O'],
+        [7, 'X'],
+        [6, 'O'],
+      )
+      expect(gameStatus(boardModel)).toEqual({type: 'Turn', player: 'X'})
+    })
+
+    it('returns a DrawStatus for a full board with no winner', () => {
+      const boardModel = placeMoves(
+        [4, 'X'],
+        [0, 'O'],
+        [6, 'X'],
+        [2, 'O'],
+        [1, 'X'],
+        [7, 'O'],
+        [8, 'X'],
+        [3, 'O'],
+        [5, 'X'],
+      )
+      expect(gameStatus(boardModel)).toEqual({type: 'Draw'})
+    })
+
     allPieces.forEach(piece => {
       ;[0, 1, 2].forEach(row => {
         it(`returns a WinStatus for ${piece} on row ${row + 1}`, () => {
