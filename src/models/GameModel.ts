@@ -15,12 +15,14 @@ export function createInitialBoardModel(): BoardModel {
   return new Array<PieceOrEmpty>(9).fill(null)
 }
 
-export function isEmptyField(boardModel: BoardModel, field: Field): boolean {
-  return !getFieldContent(boardModel, field)
-}
+export const isEmptyField = R.curry(
+  (boardModel: BoardModel, field: Field): boolean => {
+    return !getFieldContent(boardModel, field)
+  },
+)
 
 export function countEmptyFields(boardModel: BoardModel) {
-  return R.count(R.partial(isEmptyField, [boardModel]), allFields)
+  return R.count(isEmptyField(boardModel), allFields)
 }
 
 export function getFieldContent(

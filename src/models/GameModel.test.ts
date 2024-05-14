@@ -115,6 +115,18 @@ describe('GameModel', () => {
       const boardModel = createInitialBoardModel()
       expect(isEmptyField(boardModel, 0)).toBeTruthy()
     })
+
+    describe('when called with just a boardModel', () => {
+      it('returns a function that can be called with a Field', () => {
+        let boardModel = createInitialBoardModel()
+        boardModel = placeMove(boardModel, [0, 'X'])
+
+        const isEmptyFieldInThisBoardModel = isEmptyField(boardModel)
+        expect(isEmptyFieldInThisBoardModel).toBeTypeOf('function')
+        expect(isEmptyFieldInThisBoardModel(0)).toBeFalsy()
+        expect(isEmptyFieldInThisBoardModel(1)).toBeTruthy()
+      })
+    })
   })
 
   describe('placeMoves', () => {
