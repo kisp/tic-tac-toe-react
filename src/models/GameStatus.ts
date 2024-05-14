@@ -44,6 +44,10 @@ const diagonals: Field[][] = [
 
 const allWinningLines = R.concat(R.concat(rows, columns), diagonals)
 
+// // TODO: Use allEquals
+// const allEquals = array =>
+//   !R.find(R.complement(R.identical(array[0])), array.slice(1))
+
 // TODO: Refactor gameStatus
 export function gameStatus(boardModel: BoardModel): GameStatus {
   if (
