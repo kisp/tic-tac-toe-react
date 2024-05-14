@@ -122,6 +122,7 @@ describe('GameModel', () => {
         boardModel = placeMove(boardModel, [0, 'X'])
 
         const isEmptyFieldInThisBoardModel = isEmptyField(boardModel)
+
         expect(isEmptyFieldInThisBoardModel).toBeTypeOf('function')
         expect(isEmptyFieldInThisBoardModel(0)).toBeFalsy()
         expect(isEmptyFieldInThisBoardModel(1)).toBeTruthy()
