@@ -60,7 +60,7 @@ describe('GameModel', () => {
     })
   })
 
-  describe('makeMove', () => {
+  describe('placeMove', () => {
     it('sets X at a given field', () => {
       let boardModel = createInitialBoardModel()
       boardModel = placeMove(boardModel, [3, 'X'])
@@ -98,7 +98,7 @@ describe('GameModel', () => {
     })
   })
 
-  describe('isFreeField', () => {
+  describe('isEmptyField', () => {
     it('returns false if there is an X', () => {
       let boardModel = createInitialBoardModel()
       boardModel = placeMove(boardModel, [0, 'X'])
@@ -117,7 +117,7 @@ describe('GameModel', () => {
     })
   })
 
-  describe('makeMoves', () => {
+  describe('placeMoves', () => {
     describe('with no args', () => {
       it('creates an empty board', () => {
         expect(placeMoves()).toEqual(createInitialBoardModel())
