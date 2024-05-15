@@ -67,7 +67,7 @@ function Cell(props: CellProps) {
   if (interactive) {
     return (
       <button
-        onClick={onClick}
+        onClick={!piece ? onClick : undefined}
         className={classes(props, isFlashing)}
         data-testid="cell"
         tabIndex={1}
@@ -78,7 +78,7 @@ function Cell(props: CellProps) {
   } else {
     return (
       <div
-        onClick={onClick}
+        onClick={!piece ? onClick : undefined}
         className={classes(props, isFlashing)}
         data-testid="cell"
       >
