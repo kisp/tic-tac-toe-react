@@ -22,24 +22,6 @@ const fieldsNoBorder: BorderPosition[][] = [
   ['r', 'b'],
 ]
 
-function cellForField(
-  boardModel: BoardModel,
-  onMove: (field: Field) => void,
-  interactive: boolean,
-) {
-  return (field: Field) => {
-    return (
-      <Cell
-        key={field}
-        piece={getFieldContent(boardModel, field)}
-        onClick={() => onMove(field)}
-        noBorder={fieldsNoBorder[field]}
-        interactive={interactive}
-      />
-    )
-  }
-}
-
 type BoardProps = {
   boardModel?: BoardModel
   onMove?: (field: Field) => void
@@ -52,9 +34,21 @@ export function Board({
   onMove = _field => null,
   interactive = true,
 }: BoardProps) {
+  const cellForField = (field: Field) => {
+    return (
+      <Cell
+        key={field}
+        piece={getFieldContent(boardModel, field)}
+        onClick={() => onMove(field)}
+        noBorder={fieldsNoBorder[field]}
+        interactive={interactive}
+      />
+    )
+  }
+
   return (
     <div className={classes} data-testid="board">
-      {allFields.map(cellForField(boardModel, onMove, interactive))}
+      {allFields.map(cellForField)}
     </div>
   )
 }
