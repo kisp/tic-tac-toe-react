@@ -22,9 +22,9 @@ const fieldsNoBorder: BorderPosition[][] = [
   ['r', 'b'],
 ]
 
-function makeCell(
+function cellForField(
   boardModel: BoardModel,
-  onMakeMove: (field: Field) => void,
+  onMove: (field: Field) => void,
   interactive: boolean,
 ) {
   return (field: Field) => {
@@ -32,7 +32,7 @@ function makeCell(
       <Cell
         key={field}
         piece={getFieldContent(boardModel, field)}
-        onClick={() => onMakeMove(field)}
+        onClick={() => onMove(field)}
         noBorder={fieldsNoBorder[field]}
         interactive={interactive}
       />
@@ -54,7 +54,7 @@ export function Board({
 }: BoardProps) {
   return (
     <div className={classes} data-testid="board">
-      {allFields.map(makeCell(boardModel, onMove, interactive))}
+      {allFields.map(cellForField(boardModel, onMove, interactive))}
     </div>
   )
 }
