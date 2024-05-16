@@ -5,7 +5,7 @@ import {
   allPieces,
   createInitialBoardModel,
   Field,
-  makeMove,
+  placeMove,
 } from '../models/GameModel.ts'
 import {describe} from 'vitest'
 
@@ -22,7 +22,7 @@ describe('Board', () => {
       allFields.forEach(field => {
         it(`correctly renders ${piece} at field ${field}`, () => {
           let boardModel = createInitialBoardModel()
-          boardModel = makeMove(boardModel, [field as Field, piece])
+          boardModel = placeMove(boardModel, [field as Field, piece])
 
           render(<Board boardModel={boardModel} />)
 
@@ -38,7 +38,7 @@ describe('Board', () => {
       it(`ensures that makeMove is called with field ${field} when clicked`, () => {
         const makeMove = vi.fn().mockName('makeMove')
 
-        render(<Board onMakeMove={makeMove} />)
+        render(<Board onMove={makeMove} />)
 
         act(() => {
           const cells = screen.getAllByTestId('cell')

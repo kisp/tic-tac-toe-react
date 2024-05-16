@@ -15,12 +15,14 @@ export function createInitialBoardModel(): BoardModel {
   return new Array<PieceOrEmpty>(9).fill(null)
 }
 
-export function isEmptyField(boardModel: BoardModel, field: Field): boolean {
-  return !getFieldContent(boardModel, field)
-}
+export const isEmptyField = R.curry(
+  (boardModel: BoardModel, field: Field): boolean => {
+    return !getFieldContent(boardModel, field)
+  },
+)
 
 export function countEmptyFields(boardModel: BoardModel) {
-  return R.count(R.partial(isEmptyField, [boardModel]), allFields)
+  return R.count(isEmptyField(boardModel), allFields)
 }
 
 export function getFieldContent(
@@ -40,7 +42,7 @@ function setFieldContent(
   return newBoardModel
 }
 
-export function makeMove(boardModel: BoardModel, move: Move): BoardModel {
+export function placeMove(boardModel: BoardModel, move: Move): BoardModel {
   const [field, piece] = move
 
   if (getFieldContent(boardModel, field)) throw new Error('Invalid move')
@@ -48,10 +50,10 @@ export function makeMove(boardModel: BoardModel, move: Move): BoardModel {
   return setFieldContent(boardModel, field, piece)
 }
 
-export function makeMoves(...moves: Move[]): BoardModel
-export function makeMoves(boardModel: BoardModel, ...moves: Move[]): BoardModel
+export function placeMoves(...moves: Move[]): BoardModel
+export function placeMoves(boardModel: BoardModel, ...moves: Move[]): BoardModel
 
-export function makeMoves(
+export function placeMoves(
   boardOrMove: BoardModel | Move,
   ...moves: Move[]
 ): BoardModel {
@@ -65,5 +67,19 @@ export function makeMoves(
     if (boardOrMove) moves = [boardOrMove, ...moves]
   }
 
-  return moves.reduce<BoardModel>(makeMove, initialBoard)
+  return moves.reduce<BoardModel>(placeMove, initialBoard)
+}
+
+export function isEqualBoardModel(
+  boardA: BoardModel,
+  boardB: BoardModel,
+): boolean {
+  return R.equals(boardA, boardB)
+}
+
+export function getFieldContents(
+  boardModel: BoardModel,
+  fields: Field[],
+): PieceOrEmpty[] {
+  return fields.map(field => getFieldContent(boardModel, field))
 }

@@ -24,30 +24,31 @@ const fieldsNoBorder: BorderPosition[][] = [
 
 type BoardProps = {
   boardModel?: BoardModel
-  onMakeMove?: (field: Field) => void
-}
-
-function makeCell(boardModel: BoardModel, onMakeMove: (field: Field) => void) {
-  return (field: Field) => {
-    return (
-      <Cell
-        key={field}
-        piece={getFieldContent(boardModel, field)}
-        onClick={() => onMakeMove(field)}
-        noBorder={fieldsNoBorder[field]}
-      />
-    )
-  }
+  onMove?: (field: Field) => void
+  interactive?: boolean
 }
 
 export function Board({
   boardModel = createInitialBoardModel(),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onMakeMove = _field => null,
+  onMove = _field => null,
+  interactive = true,
 }: BoardProps) {
+  const cellForField = (field: Field) => {
+    return (
+      <Cell
+        key={field}
+        piece={getFieldContent(boardModel, field)}
+        onClick={() => onMove(field)}
+        noBorder={fieldsNoBorder[field]}
+        interactive={interactive}
+      />
+    )
+  }
+
   return (
     <div className={classes} data-testid="board">
-      {allFields.map(makeCell(boardModel, onMakeMove))}
+      {allFields.map(cellForField)}
     </div>
   )
 }

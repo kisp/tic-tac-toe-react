@@ -1,6 +1,7 @@
 import {act, render, screen, waitFor} from '@testing-library/react'
 import Game from './Game'
 import {Strategy} from '../models/Strategies.ts'
+import {placeMoves} from '../models/GameModel.ts'
 
 describe('Game', () => {
   it('renders the board', () => {
@@ -21,6 +22,30 @@ describe('Game', () => {
     expect(cells[0]).toHaveTextContent('X')
   })
 
+  it('tolerates immediate double clicking', () => {
+    render(<Game />)
+
+    act(() => {
+      screen.getAllByTestId('cell')[0].click()
+      screen.getAllByTestId('cell')[0].click()
+    })
+
+    expect(screen.getAllByTestId('cell')[0]).toHaveTextContent('X')
+  })
+
+  it('tolerates double clicking with re-render in between', () => {
+    render(<Game />)
+
+    act(() => {
+      screen.getAllByTestId('cell')[0].click()
+    })
+    act(() => {
+      screen.getAllByTestId('cell')[0].click()
+    })
+
+    expect(screen.getAllByTestId('cell')[0]).toHaveTextContent('X')
+  })
+
   it("let's the opponent make a move after the player placed an X", async () => {
     const strategy: Strategy = vi.fn().mockReturnValue(7).mockName('strategy')
 
@@ -33,6 +58,66 @@ describe('Game', () => {
 
     expect(cells[3]).toHaveTextContent('X')
 
-    await waitFor(() => expect(cells[7]).toHaveTextContent('O'))
+    await waitFor(() => expect(cells[7]).toHaveTextContent('O'), {
+      timeout: 3000,
+    })
+  })
+
+  describe('ending the game', () => {
+    describe('given an empty board', () => {
+      it('does not display a game ends message', () => {
+        render(<Game />)
+
+        const gameEndsMessage = screen.queryByTestId('game-ends-message')
+        expect(gameEndsMessage).not.toBeInTheDocument()
+      })
+    })
+
+    describe('given a board where X wins', () => {
+      it('displays a winning message for X', async () => {
+        const boardModel = placeMoves(
+          [0, 'X'],
+          [4, 'O'],
+          [1, 'X'],
+          [6, 'O'],
+          [2, 'X'],
+        )
+
+        render(<Game initialBoardModel={boardModel} />)
+
+        await waitFor(
+          () => {
+            const gameEndsMessage = screen.getByTestId('game-ends-message')
+            expect(gameEndsMessage).toBeInTheDocument()
+            expect(gameEndsMessage).toHaveTextContent('The winner is X!')
+          },
+          {timeout: 3000},
+        )
+      })
+    })
+
+    describe('given a board where O wins', () => {
+      it('displays a winning message for O', async () => {
+        const boardModel = placeMoves(
+          [6, 'X'],
+          [0, 'O'],
+          [7, 'X'],
+          [1, 'O'],
+          [4, 'X'],
+          [2, 'O'],
+        )
+
+        render(<Game initialBoardModel={boardModel} />)
+
+        await waitFor(
+          () => {
+            const gameEndsMessage = screen.getByTestId('game-ends-message')
+            expect(gameEndsMessage).toBeInTheDocument()
+            expect(gameEndsMessage).toHaveTextContent('The winner is O!')
+          },
+          {timeout: 3000},
+        )
+      })
+    })
   })
 })
