@@ -53,23 +53,31 @@ export function Game({
 
   useCypress(boardModel, setBoardModel)
 
-  const handleMove = (field: Field) => {
-    setBoardModel(prev => placeMove(prev, [field, 'X']))
+  const handleMove = () => {
+    let handleMoveCalled = false
 
-    if (!strategy) {
-      throw new Error('Cannot make a move: missing strategy')
-    }
+    return (field: Field) => {
+      if (!handleMoveCalled) {
+        handleMoveCalled = true
 
-    setTimeout(() => {
-      setBoardModel(prev => {
-        // TODO: this condition is not correct
-        if (!isWinStatus(gameStatus(prev))) {
-          return placeMove(prev, [strategy(prev), 'O'])
-        } else {
-          return prev
+        setBoardModel(prev => placeMove(prev, [field, 'X']))
+
+        if (!strategy) {
+          throw new Error('Cannot make a move: missing strategy')
         }
-      })
-    }, 1500)
+
+        setTimeout(() => {
+          setBoardModel(prev => {
+            // TODO: this condition is not correct
+            if (!isWinStatus(gameStatus(prev))) {
+              return placeMove(prev, [strategy(prev), 'O'])
+            } else {
+              return prev
+            }
+          })
+        }, 1500)
+      }
+    }
   }
 
   const status = gameStatus(boardModel)
@@ -89,7 +97,7 @@ export function Game({
         <h1 className={clsx('py-6 text-center')}>Have fun with this game!</h1>
         <div className={clsx('flex justify-center')}>
           <div className={clsx('h-64 w-64 rounded-xl')}>
-            <Board boardModel={boardModel} onMove={handleMove} />
+            <Board boardModel={boardModel} onMove={handleMove()} />
           </div>
         </div>
       </div>

@@ -22,6 +22,30 @@ describe('Game', () => {
     expect(cells[0]).toHaveTextContent('X')
   })
 
+  it('tolerates immediate double clicking', () => {
+    render(<Game />)
+
+    act(() => {
+      screen.getAllByTestId('cell')[0].click()
+      screen.getAllByTestId('cell')[0].click()
+    })
+
+    expect(screen.getAllByTestId('cell')[0]).toHaveTextContent('X')
+  })
+
+  it('tolerates double clicking with re-render in between', () => {
+    render(<Game />)
+
+    act(() => {
+      screen.getAllByTestId('cell')[0].click()
+    })
+    act(() => {
+      screen.getAllByTestId('cell')[0].click()
+    })
+
+    expect(screen.getAllByTestId('cell')[0]).toHaveTextContent('X')
+  })
+
   it("let's the opponent make a move after the player placed an X", async () => {
     const strategy: Strategy = vi.fn().mockReturnValue(7).mockName('strategy')
 
