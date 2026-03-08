@@ -1,13 +1,31 @@
----
 name: Test
-on: [push]
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 1,7 *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   test:
     name: Test
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
       - name: Install Dependencies
         run: npm ci
       - name: Unit Tests
@@ -17,6 +35,7 @@ jobs:
         with:
           start: npm run dev
           wait-on: 'http://localhost:5173'
+          install: false
       - name: eslint
         run: npm run lint
       - name: build for production
