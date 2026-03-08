@@ -6,16 +6,16 @@
 
 ## Tech Stack
 
-| Layer                  | Technology                      |
-| ---------------------- | ------------------------------- |
-| UI Framework           | React 18 + TypeScript           |
-| Build Tool             | Vite 5                          |
-| Styling                | Tailwind CSS 3                  |
-| Functional Utilities   | Ramda 0.30                      |
+| Layer | Technology |
+|-------|-----------|
+| UI Framework | React 18 + TypeScript |
+| Build Tool | Vite 5 |
+| Styling | Tailwind CSS 3 |
+| Functional Utilities | Ramda 0.30 |
 | Unit/Integration Tests | Vitest + @testing-library/react |
-| E2E Tests              | Cypress 13                      |
-| Linting                | ESLint 8 + TypeScript plugin    |
-| Formatting             | Prettier 3 + Tailwind plugin    |
+| E2E Tests | Cypress 13 |
+| Linting | ESLint 8 + TypeScript plugin |
+| Formatting | Prettier 3 + Tailwind plugin |
 
 ## Project Structure
 
