@@ -107,7 +107,8 @@ describe('Game', () => {
         render(<Game initialBoardModel={boardModel} />)
 
         await waitFor(
-          () => expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+          () =>
+            expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
           {timeout: 3000},
         )
 
@@ -115,7 +116,9 @@ describe('Game', () => {
           screen.getByRole('button', {name: 'Close'}).click()
         })
 
-        expect(screen.queryByTestId('game-ends-message')).not.toBeInTheDocument()
+        expect(
+          screen.queryByTestId('game-ends-message'),
+        ).not.toBeInTheDocument()
       })
     })
 
@@ -164,14 +167,16 @@ describe('Game', () => {
           screen.getAllByTestId('cell')[5].click()
         })
 
-        await waitFor(
-          () => expect(screen.getAllByTestId('cell')[5]).toHaveTextContent('X'),
+        await waitFor(() =>
+          expect(screen.getAllByTestId('cell')[5]).toHaveTextContent('X'),
         )
 
         // strategy should NOT be called because it's a draw after X's move
         await new Promise(resolve => setTimeout(resolve, 1500))
         expect(strategy).not.toHaveBeenCalled()
-        expect(screen.queryByTestId('game-ends-message')).not.toBeInTheDocument()
+        expect(
+          screen.queryByTestId('game-ends-message'),
+        ).not.toBeInTheDocument()
       })
     })
   })
