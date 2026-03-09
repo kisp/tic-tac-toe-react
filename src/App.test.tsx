@@ -1,4 +1,4 @@
-import {act, render, screen} from '@testing-library/react'
+import {act, render, screen, waitFor} from '@testing-library/react'
 import App from './App'
 
 describe('App', () => {
@@ -23,7 +23,7 @@ describe('App', () => {
     expect(board).not.toBeInTheDocument()
   })
 
-  it('will show a board when the new game button is clicked', () => {
+  it('will show a board when the new game button is clicked', async () => {
     render(<App />)
 
     act(() => {
@@ -31,11 +31,13 @@ describe('App', () => {
       button.click()
     })
 
-    const board = screen.getByTestId('game')
-    expect(board).toBeInTheDocument()
+    await waitFor(() => {
+      const board = screen.getByTestId('game')
+      expect(board).toBeInTheDocument()
+    })
   })
 
-  it('will hide the new game button after it is clicked', () => {
+  it('will hide the new game button after it is clicked', async () => {
     render(<App />)
 
     act(() => {
@@ -43,7 +45,9 @@ describe('App', () => {
       button.click()
     })
 
-    const button = screen.queryByRole('button')
-    expect(button).not.toBeInTheDocument()
+    await waitFor(() => {
+      const button = screen.queryByRole('button', {name: /start new game/i})
+      expect(button).not.toBeInTheDocument()
+    })
   })
 })

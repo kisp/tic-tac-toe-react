@@ -26,17 +26,36 @@ describe('Cell', () => {
     })
   })
 
-  it('calls the onClick function when clicked', () => {
-    const handleClick = vi.fn().mockName('handleClick')
+  describe('click handling', () => {
+    describe('when no piece is given', () => {
+      it('calls the onClick function when clicked', () => {
+        const handleClick = vi.fn().mockName('handleClick')
 
-    render(<Cell onClick={handleClick} />)
+        render(<Cell onClick={handleClick} />)
 
-    act(() => {
-      const button = screen.getByTestId('cell')
-      button.click()
+        act(() => {
+          const button = screen.getByTestId('cell')
+          button.click()
+        })
+
+        expect(handleClick).toHaveBeenCalled()
+      })
     })
 
-    expect(handleClick).toHaveBeenCalled()
+    describe('when a piece is given', () => {
+      it('does not call the onClick function when clicked', () => {
+        const handleClick = vi.fn().mockName('handleClick')
+
+        render(<Cell piece="X" onClick={handleClick} />)
+
+        act(() => {
+          const button = screen.getByTestId('cell')
+          button.click()
+        })
+
+        expect(handleClick).not.toHaveBeenCalled()
+      })
+    })
   })
 
   describe('when requested to omit borders at specific sides', () => {

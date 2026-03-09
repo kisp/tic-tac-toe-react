@@ -3,6 +3,7 @@ describe("Player notices opponent's move", () => {
     beforeEach(() => {
       cy.visit('/')
       cy.get('[data-testid="start-new-game-button"]').click()
+      cy.get('[data-testid="game"]').should('exist')
     })
 
     it('an O piece appears after player places an X', () => {

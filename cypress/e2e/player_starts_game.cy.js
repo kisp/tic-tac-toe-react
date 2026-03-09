@@ -9,8 +9,8 @@ describe('Player starts game', () => {
     cy.visit('/')
 
     cy.get('[data-testid="start-new-game-button"]').click()
-
     cy.get('[data-testid="game"]').should('exist')
+
     cy.get('[data-testid="cell"]').each($cell => {
       cy.wrap($cell).should('have.text', '')
     })
