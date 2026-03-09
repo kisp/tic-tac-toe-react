@@ -120,6 +120,38 @@ describe('Game', () => {
           screen.queryByTestId('game-ends-message'),
         ).not.toBeInTheDocument()
       })
+
+      it('shows win message in heading and does not reopen dialog after Close', async () => {
+        const boardModel = placeMoves(
+          [0, 'X'],
+          [4, 'O'],
+          [1, 'X'],
+          [6, 'O'],
+          [2, 'X'],
+        )
+
+        render(<Game initialBoardModel={boardModel} />)
+
+        await waitFor(
+          () =>
+            expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+          {timeout: 3000},
+        )
+
+        act(() => {
+          screen.getByRole('button', {name: 'Close'}).click()
+        })
+
+        expect(screen.getByRole('heading')).toHaveTextContent(
+          'The winner is X!',
+        )
+
+        // wait to confirm the dialog does not reopen
+        await new Promise(resolve => setTimeout(resolve, 800))
+        expect(
+          screen.queryByTestId('game-ends-message'),
+        ).not.toBeInTheDocument()
+      })
     })
 
     describe('given a board where O wins', () => {
