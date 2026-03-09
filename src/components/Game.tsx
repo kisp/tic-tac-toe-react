@@ -9,7 +9,7 @@ import {
   PieceOrEmpty,
 } from '../models/GameModel.ts'
 import {deterministicStrategy, Strategy} from '../models/Strategies.ts'
-import {gameStatus, isWinStatus} from '../models/GameStatus.ts'
+import {gameStatus, isTurnStatus, isWinStatus} from '../models/GameStatus.ts'
 import Button from './Button.tsx'
 
 function useCypress(
@@ -68,14 +68,13 @@ export function Game({
 
         setTimeout(() => {
           setBoardModel(prev => {
-            // TODO: this condition is not correct
-            if (!isWinStatus(gameStatus(prev))) {
+            if (isTurnStatus(gameStatus(prev))) {
               return placeMove(prev, [strategy(prev), 'O'])
             } else {
               return prev
             }
           })
-        }, 1500)
+        }, 1000)
       }
     }
   }
@@ -84,7 +83,7 @@ export function Game({
 
   useEffect(() => {
     if (isWinStatus(status)) {
-      const timer = setTimeout(() => setShowGameEndDialog(true), 1500)
+      const timer = setTimeout(() => setShowGameEndDialog(true), 500)
       return () => {
         clearTimeout(timer)
       }
@@ -119,7 +118,7 @@ export function Game({
                 <span>The winner is {status.player}!</span>
               )}
             </p>
-            <Button>Close</Button>
+            <Button onClick={() => setShowGameEndDialog(false)}>Close</Button>
           </div>
         </>
       )}
