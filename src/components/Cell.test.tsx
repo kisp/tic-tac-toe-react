@@ -58,6 +58,18 @@ describe('Cell', () => {
     })
   })
 
+  describe('when highlighted', () => {
+    it('applies the highlighted background class', () => {
+      render(<Cell piece="X" highlighted />)
+      expect(screen.getByTestId('cell')).toHaveClass('bg-yellow-300')
+    })
+
+    it('does not apply the highlighted background class when not highlighted', () => {
+      render(<Cell piece="X" />)
+      expect(screen.getByTestId('cell')).not.toHaveClass('bg-yellow-300')
+    })
+  })
+
   describe('when requested to omit borders at specific sides', () => {
     const renderCellWithNoBorders = (...sides: BorderPosition[]) => {
       render(<Cell noBorder={sides} />)

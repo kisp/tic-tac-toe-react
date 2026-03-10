@@ -4,7 +4,7 @@ import {PieceOrEmpty} from '../models/GameModel.ts'
 
 // TODO: we should have an eslint rule to either use function or const
 function classes(
-  {noBorder = [], piece, interactive}: CellProps,
+  {noBorder = [], piece, interactive, highlighted}: CellProps,
   isFlashing: boolean,
 ) {
   return clsx(
@@ -21,7 +21,7 @@ function classes(
     },
     {'transition-colors duration-1000': piece === 'X'},
     {
-      'bg-blue-200 ': isFlashing && piece === 'O',
+      'bg-blue-200 ': isFlashing && piece === 'O' && !highlighted,
     },
     {'transition-colors duration-1000': piece === 'O' && !isFlashing},
     // {
@@ -36,6 +36,7 @@ function classes(
         (piece && (piece === 'O' || !isFlashing)) ||
         (!piece && interactive === false),
     },
+    {'bg-yellow-300': highlighted},
   )
 }
 
@@ -64,6 +65,7 @@ type CellProps = {
   onClick?: MouseEventHandler
   noBorder?: BorderPosition[]
   interactive?: boolean
+  highlighted?: boolean
 }
 
 function Cell(props: CellProps) {

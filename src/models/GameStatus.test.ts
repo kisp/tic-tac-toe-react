@@ -7,6 +7,7 @@ import {
 import {
   DrawStatus,
   gameStatus,
+  getWinningFields,
   isDrawStatus,
   isTurnStatus,
   isWinStatus,
@@ -184,6 +185,78 @@ describe('GameStatus', () => {
     it('returns false for a different', () => {
       const status: TurnStatus = {type: 'Turn', player: 'X'}
       expect(isDrawStatus(status)).toBeFalsy()
+    })
+  })
+
+  describe('getWinningFields', () => {
+    it('returns null for an empty board', () => {
+      const boardModel = createInitialBoardModel()
+      expect(getWinningFields(boardModel)).toBeNull()
+    })
+
+    it('returns null for a draw', () => {
+      const boardModel = placeMoves(
+        [4, 'X'],
+        [0, 'O'],
+        [6, 'X'],
+        [2, 'O'],
+        [1, 'X'],
+        [7, 'O'],
+        [8, 'X'],
+        [3, 'O'],
+        [5, 'X'],
+      )
+      expect(getWinningFields(boardModel)).toBeNull()
+    })
+
+    allPieces.forEach(piece => {
+      ;[0, 1, 2].forEach(row => {
+        it(`returns the winning fields for ${piece} on row ${row + 1}`, () => {
+          const boardModel = placeMoves(
+            [(row * 3) as Field, piece],
+            [(row * 3 + 1) as Field, piece],
+            [(row * 3 + 2) as Field, piece],
+          )
+          expect(getWinningFields(boardModel)).toEqual([
+            row * 3,
+            row * 3 + 1,
+            row * 3 + 2,
+          ])
+        })
+      })
+    })
+
+    allPieces.forEach(piece => {
+      ;[0, 1, 2].forEach(column => {
+        it(`returns the winning fields for ${piece} on column ${column + 1}`, () => {
+          const boardModel = placeMoves(
+            [column as Field, piece],
+            [(column + 3) as Field, piece],
+            [(column + 6) as Field, piece],
+          )
+          expect(getWinningFields(boardModel)).toEqual([
+            column,
+            column + 3,
+            column + 6,
+          ])
+        })
+      })
+    })
+
+    allPieces.forEach(piece => {
+      ;[
+        [0, 4, 8],
+        [2, 4, 6],
+      ].forEach((diagonal, index) => {
+        it(`returns the winning fields for ${piece} on diagonal ${index + 1}`, () => {
+          const boardModel = placeMoves(
+            [diagonal[0] as Field, piece],
+            [diagonal[1] as Field, piece],
+            [diagonal[2] as Field, piece],
+          )
+          expect(getWinningFields(boardModel)).toEqual(diagonal)
+        })
+      })
     })
   })
 })

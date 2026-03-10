@@ -239,4 +239,33 @@ describe('Game', () => {
       })
     })
   })
+
+  describe('highlighting winning combination', () => {
+    it('highlights the winning cells when X wins on the top row', () => {
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [4, 'O'],
+        [1, 'X'],
+        [6, 'O'],
+        [2, 'X'],
+      )
+
+      render(<Game initialBoardModel={boardModel} />)
+
+      const cells = screen.getAllByTestId('cell')
+      expect(cells[0]).toHaveClass('bg-yellow-300')
+      expect(cells[1]).toHaveClass('bg-yellow-300')
+      expect(cells[2]).toHaveClass('bg-yellow-300')
+      expect(cells[3]).not.toHaveClass('bg-yellow-300')
+    })
+
+    it('does not highlight any cells when game is in progress', () => {
+      render(<Game />)
+
+      const cells = screen.getAllByTestId('cell')
+      cells.forEach(cell => {
+        expect(cell).not.toHaveClass('bg-yellow-300')
+      })
+    })
+  })
 })

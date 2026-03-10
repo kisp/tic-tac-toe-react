@@ -26,6 +26,7 @@ type BoardProps = {
   boardModel?: BoardModel
   onMove?: (field: Field) => void
   interactive?: boolean
+  winningFields?: Field[] | null
 }
 
 export function Board({
@@ -33,6 +34,7 @@ export function Board({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onMove = _field => null,
   interactive = true,
+  winningFields,
 }: BoardProps) {
   const cellForField = (field: Field) => {
     return (
@@ -42,6 +44,7 @@ export function Board({
         onClick={() => onMove(field)}
         noBorder={fieldsNoBorder[field]}
         interactive={interactive}
+        highlighted={winningFields?.includes(field)}
       />
     )
   }
