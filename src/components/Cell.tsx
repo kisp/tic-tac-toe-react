@@ -19,11 +19,14 @@ function classes(
       'border-b-0': noBorder.includes('b'),
       'border-l-0': noBorder.includes('l'),
     },
-    {'transition-colors duration-1000': piece === 'X'},
+    {'transition-colors duration-1000': piece === 'X' && !highlighted},
     {
       'bg-blue-200 ': isFlashing && piece === 'O' && !highlighted,
     },
-    {'transition-colors duration-1000': piece === 'O' && !isFlashing},
+    {
+      'transition-colors duration-1000':
+        piece === 'O' && !isFlashing && !highlighted,
+    },
     // {
     //   "hover:text-gray-400 hover:after:content-['X']": true,
     // },

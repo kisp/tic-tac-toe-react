@@ -9,7 +9,12 @@ import {
   PieceOrEmpty,
 } from '../models/GameModel.ts'
 import {deterministicStrategy, Strategy} from '../models/Strategies.ts'
-import {gameStatus, getWinningFields, isTurnStatus, isWinStatus} from '../models/GameStatus.ts'
+import {
+  gameStatus,
+  getWinningFields,
+  isTurnStatus,
+  isWinStatus,
+} from '../models/GameStatus.ts'
 import Button from './Button.tsx'
 
 function useCypress(
@@ -84,7 +89,10 @@ export function Game({
   }
 
   const status = useMemo(() => gameStatus(boardModel), [boardModel])
-  const winningFields = useMemo(() => getWinningFields(boardModel), [boardModel])
+  const winningFields = useMemo(
+    () => getWinningFields(boardModel),
+    [boardModel],
+  )
 
   useEffect(() => {
     if (isWinStatus(status) && winMessage === null) {
@@ -108,7 +116,11 @@ export function Game({
             })}
           >
             <div className={clsx({'pointer-events-none': isAIThinking})}>
-              <Board boardModel={boardModel} onMove={handleMove()} winningFields={winningFields} />
+              <Board
+                boardModel={boardModel}
+                onMove={handleMove()}
+                winningFields={winningFields}
+              />
             </div>
           </div>
         </div>
