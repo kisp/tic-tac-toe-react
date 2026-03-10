@@ -46,6 +46,33 @@ describe('Game', () => {
     expect(screen.getAllByTestId('cell')[0]).toHaveTextContent('X')
   })
 
+  it('prevents player from making a move while the AI is thinking', async () => {
+    const strategy: Strategy = vi.fn().mockReturnValue(8).mockName('strategy')
+
+    render(<Game strategy={strategy} />)
+    const cells = screen.getAllByTestId('cell')
+
+    act(() => {
+      cells[0].click()
+    })
+
+    expect(cells[0]).toHaveTextContent('X')
+
+    // Player tries to move while AI is thinking
+    act(() => {
+      cells[1].click()
+    })
+
+    // Cell 1 must remain empty while AI is thinking
+    expect(cells[1]).not.toHaveTextContent('X')
+    expect(cells[1]).not.toHaveTextContent('O')
+
+    // Wait for AI to complete its move
+    await waitFor(() => expect(cells[8]).toHaveTextContent('O'), {
+      timeout: 3000,
+    })
+  })
+
   it("let's the opponent make a move after the player placed an X", async () => {
     const strategy: Strategy = vi.fn().mockReturnValue(7).mockName('strategy')
 

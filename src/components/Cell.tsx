@@ -3,7 +3,10 @@ import {MouseEventHandler, useEffect, useState} from 'react'
 import {PieceOrEmpty} from '../models/GameModel.ts'
 
 // TODO: we should have an eslint rule to either use function or const
-function classes({noBorder = [], piece}: CellProps, isFlashing: boolean) {
+function classes(
+  {noBorder = [], piece, interactive}: CellProps,
+  isFlashing: boolean,
+) {
   return clsx(
     'flex items-center justify-center',
     'text-5xl',
@@ -26,9 +29,13 @@ function classes({noBorder = [], piece}: CellProps, isFlashing: boolean) {
     // },
     {
       'cursor-pointer hover:bg-gray-200':
-        !piece || (piece === 'X' && isFlashing),
+        interactive !== false && (!piece || (piece === 'X' && isFlashing)),
     },
-    {'cursor-not-allowed': piece && (piece === 'O' || !isFlashing)},
+    {
+      'cursor-not-allowed':
+        (piece && (piece === 'O' || !isFlashing)) ||
+        (!piece && interactive === false),
+    },
   )
 }
 
@@ -60,7 +67,7 @@ type CellProps = {
 }
 
 function Cell(props: CellProps) {
-  const {piece, onClick, interactive} = props
+  const {piece, onClick, interactive = true} = props
 
   const isFlashing = useFlashing(piece)
 
@@ -78,7 +85,6 @@ function Cell(props: CellProps) {
   } else {
     return (
       <div
-        onClick={!piece ? onClick : undefined}
         className={classes(props, isFlashing)}
         data-testid="cell"
       >

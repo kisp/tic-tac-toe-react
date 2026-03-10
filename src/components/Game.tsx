@@ -51,6 +51,7 @@ export function Game({
   const [boardModel, setBoardModel] = useState<BoardModel>(initialBoardModel)
   const [showGameEndDialog, setShowGameEndDialog] = useState(false)
   const [winMessage, setWinMessage] = useState<string | null>(null)
+  const [isAIThinking, setIsAIThinking] = useState(false)
 
   useCypress(boardModel, setBoardModel)
 
@@ -58,8 +59,9 @@ export function Game({
     let handleMoveCalled = false
 
     return (field: Field) => {
-      if (!handleMoveCalled) {
+      if (!handleMoveCalled && !isAIThinking) {
         handleMoveCalled = true
+        setIsAIThinking(true)
 
         setBoardModel(prev => placeMove(prev, [field, 'X']))
 
@@ -75,6 +77,7 @@ export function Game({
               return prev
             }
           })
+          setIsAIThinking(false)
         }, 1000)
       }
     }
@@ -98,8 +101,14 @@ export function Game({
           {winMessage ?? 'Have fun with this game!'}
         </h1>
         <div className={clsx('flex justify-center')}>
-          <div className={clsx('h-64 w-64 rounded-xl')}>
-            <Board boardModel={boardModel} onMove={handleMove()} />
+          <div
+            className={clsx('h-64 w-64 rounded-xl', {
+              'cursor-not-allowed': isAIThinking,
+            })}
+          >
+            <div className={clsx({'pointer-events-none': isAIThinking})}>
+              <Board boardModel={boardModel} onMove={handleMove()} />
+            </div>
           </div>
         </div>
       </div>
