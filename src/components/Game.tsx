@@ -57,6 +57,7 @@ export function Game({
   const [showGameEndDialog, setShowGameEndDialog] = useState(false)
   const [winMessage, setWinMessage] = useState<string | null>(null)
   const [isAIThinking, setIsAIThinking] = useState(false)
+  const [lastMoveField, setLastMoveField] = useState<Field | null>(null)
 
   useCypress(boardModel, setBoardModel)
 
@@ -67,6 +68,7 @@ export function Game({
       if (!handleMoveCalled && !isAIThinking) {
         handleMoveCalled = true
         setIsAIThinking(true)
+        setLastMoveField(field)
 
         setBoardModel(prev => placeMove(prev, [field, 'X']))
 
@@ -77,7 +79,9 @@ export function Game({
         setTimeout(() => {
           setBoardModel(prev => {
             if (isTurnStatus(gameStatus(prev))) {
-              return placeMove(prev, [strategy(prev), 'O'])
+              const aiField = strategy(prev)
+              setLastMoveField(aiField)
+              return placeMove(prev, [aiField, 'O'])
             } else {
               return prev
             }
@@ -93,6 +97,11 @@ export function Game({
     () => getWinningFields(boardModel),
     [boardModel],
   )
+  const effectiveWinningFields = useMemo(() => {
+    if (!winningFields) return null
+    if (showGameEndDialog || lastMoveField === null) return winningFields
+    return winningFields.filter(f => f !== lastMoveField)
+  }, [winningFields, showGameEndDialog, lastMoveField])
 
   useEffect(() => {
     if (isWinStatus(status) && winMessage === null) {
@@ -119,7 +128,7 @@ export function Game({
               <Board
                 boardModel={boardModel}
                 onMove={handleMove()}
-                winningFields={winningFields}
+                winningFields={effectiveWinningFields}
               />
             </div>
           </div>
