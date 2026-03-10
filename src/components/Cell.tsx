@@ -84,10 +84,7 @@ function Cell(props: CellProps) {
     )
   } else {
     return (
-      <div
-        className={classes(props, isFlashing)}
-        data-testid="cell"
-      >
+      <div className={classes(props, isFlashing)} data-testid="cell">
         {piece}
       </div>
     )
