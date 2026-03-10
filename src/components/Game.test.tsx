@@ -94,6 +94,64 @@ describe('Game', () => {
           {timeout: 3000},
         )
       })
+
+      it('closes the dialog when the Close button is clicked', async () => {
+        const boardModel = placeMoves(
+          [0, 'X'],
+          [4, 'O'],
+          [1, 'X'],
+          [6, 'O'],
+          [2, 'X'],
+        )
+
+        render(<Game initialBoardModel={boardModel} />)
+
+        await waitFor(
+          () =>
+            expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+          {timeout: 3000},
+        )
+
+        act(() => {
+          screen.getByRole('button', {name: 'Close'}).click()
+        })
+
+        expect(
+          screen.queryByTestId('game-ends-message'),
+        ).not.toBeInTheDocument()
+      })
+
+      it('shows win message in heading and does not reopen dialog after Close', async () => {
+        const boardModel = placeMoves(
+          [0, 'X'],
+          [4, 'O'],
+          [1, 'X'],
+          [6, 'O'],
+          [2, 'X'],
+        )
+
+        render(<Game initialBoardModel={boardModel} />)
+
+        await waitFor(
+          () =>
+            expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+          {timeout: 3000},
+        )
+
+        act(() => {
+          screen.getByRole('button', {name: 'Close'}).click()
+        })
+
+        expect(screen.getByRole('heading')).toHaveTextContent(
+          'The winner is X!',
+        )
+
+        // wait to confirm the dialog does not reopen
+        await new Promise(resolve => setTimeout(resolve, 800))
+        expect(
+          screen.queryByTestId('game-ends-message'),
+        ).not.toBeInTheDocument()
+      })
     })
 
     describe('given a board where O wins', () => {
@@ -117,6 +175,40 @@ describe('Game', () => {
           },
           {timeout: 3000},
         )
+      })
+    })
+
+    describe('given a board one move away from a draw', () => {
+      it('does not display a game ends message after the last move', async () => {
+        // After 8 moves; X plays at field 5 to fill the board with no winner (draw)
+        const boardModel = placeMoves(
+          [4, 'X'],
+          [0, 'O'],
+          [6, 'X'],
+          [2, 'O'],
+          [1, 'X'],
+          [7, 'O'],
+          [8, 'X'],
+          [3, 'O'],
+        )
+        const strategy: Strategy = vi.fn().mockName('strategy')
+
+        render(<Game initialBoardModel={boardModel} strategy={strategy} />)
+
+        act(() => {
+          screen.getAllByTestId('cell')[5].click()
+        })
+
+        await waitFor(() =>
+          expect(screen.getAllByTestId('cell')[5]).toHaveTextContent('X'),
+        )
+
+        // strategy should NOT be called because it's a draw after X's move
+        await new Promise(resolve => setTimeout(resolve, 1500))
+        expect(strategy).not.toHaveBeenCalled()
+        expect(
+          screen.queryByTestId('game-ends-message'),
+        ).not.toBeInTheDocument()
       })
     })
   })

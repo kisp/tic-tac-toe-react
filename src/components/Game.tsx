@@ -1,6 +1,6 @@
 import Board from './Board.tsx'
 import clsx from 'clsx'
-import {useEffect, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {
   BoardModel,
   createInitialBoardModel,
@@ -9,7 +9,7 @@ import {
   PieceOrEmpty,
 } from '../models/GameModel.ts'
 import {deterministicStrategy, Strategy} from '../models/Strategies.ts'
-import {gameStatus, isWinStatus} from '../models/GameStatus.ts'
+import {gameStatus, isTurnStatus, isWinStatus} from '../models/GameStatus.ts'
 import Button from './Button.tsx'
 
 function useCypress(
@@ -50,6 +50,7 @@ export function Game({
 }: GameProps) {
   const [boardModel, setBoardModel] = useState<BoardModel>(initialBoardModel)
   const [showGameEndDialog, setShowGameEndDialog] = useState(false)
+  const [winMessage, setWinMessage] = useState<string | null>(null)
 
   useCypress(boardModel, setBoardModel)
 
@@ -68,33 +69,34 @@ export function Game({
 
         setTimeout(() => {
           setBoardModel(prev => {
-            // TODO: this condition is not correct
-            if (!isWinStatus(gameStatus(prev))) {
+            if (isTurnStatus(gameStatus(prev))) {
               return placeMove(prev, [strategy(prev), 'O'])
             } else {
               return prev
             }
           })
-        }, 1500)
+        }, 1000)
       }
     }
   }
 
-  const status = gameStatus(boardModel)
+  const status = useMemo(() => gameStatus(boardModel), [boardModel])
 
   useEffect(() => {
-    if (isWinStatus(status)) {
-      const timer = setTimeout(() => setShowGameEndDialog(true), 1500)
+    if (isWinStatus(status) && winMessage === null) {
+      const timer = setTimeout(() => setShowGameEndDialog(true), 500)
       return () => {
         clearTimeout(timer)
       }
     }
-  }, [status])
+  }, [status, winMessage])
 
   return (
     <>
       <div data-testid="game">
-        <h1 className={clsx('py-6 text-center')}>Have fun with this game!</h1>
+        <h1 className={clsx('py-6 text-center')}>
+          {winMessage ?? 'Have fun with this game!'}
+        </h1>
         <div className={clsx('flex justify-center')}>
           <div className={clsx('h-64 w-64 rounded-xl')}>
             <Board boardModel={boardModel} onMove={handleMove()} />
@@ -119,7 +121,16 @@ export function Game({
                 <span>The winner is {status.player}!</span>
               )}
             </p>
-            <Button>Close</Button>
+            <Button
+              onClick={() => {
+                if (isWinStatus(status)) {
+                  setWinMessage(`The winner is ${status.player}!`)
+                }
+                setShowGameEndDialog(false)
+              }}
+            >
+              Close
+            </Button>
           </div>
         </>
       )}
