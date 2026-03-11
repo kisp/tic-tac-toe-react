@@ -99,13 +99,16 @@ export function Game({
   )
   const effectiveWinningFields = useMemo(() => {
     if (!winningFields) return null
-    if (showGameEndDialog || lastMoveField === null) return winningFields
+    if (lastMoveField === null) return winningFields
     return winningFields.filter(f => f !== lastMoveField)
-  }, [winningFields, showGameEndDialog, lastMoveField])
+  }, [winningFields, lastMoveField])
 
   useEffect(() => {
     if (isWinStatus(status) && winMessage === null) {
-      const timer = setTimeout(() => setShowGameEndDialog(true), 500)
+      const timer = setTimeout(() => {
+        setShowGameEndDialog(true)
+        setLastMoveField(null)
+      }, 500)
       return () => {
         clearTimeout(timer)
       }
