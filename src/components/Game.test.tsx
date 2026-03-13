@@ -239,4 +239,68 @@ describe('Game', () => {
       })
     })
   })
+
+  describe('highlighting winning combination', () => {
+    it('highlights the winning cells when X wins on the top row', () => {
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [4, 'O'],
+        [1, 'X'],
+        [6, 'O'],
+        [2, 'X'],
+      )
+
+      render(<Game initialBoardModel={boardModel} />)
+
+      const cells = screen.getAllByTestId('cell')
+      expect(cells[0]).toHaveClass('bg-yellow-300')
+      expect(cells[1]).toHaveClass('bg-yellow-300')
+      expect(cells[2]).toHaveClass('bg-yellow-300')
+      expect(cells[3]).not.toHaveClass('bg-yellow-300')
+    })
+
+    it('does not highlight winning move cell until dialog opens', async () => {
+      // X is one move away from winning the top row by playing at field 2
+      const boardModel = placeMoves([0, 'X'], [4, 'O'], [1, 'X'], [6, 'O'])
+      const strategy: Strategy = vi.fn().mockName('strategy')
+
+      render(<Game initialBoardModel={boardModel} strategy={strategy} />)
+
+      act(() => {
+        screen.getAllByTestId('cell')[2].click()
+      })
+
+      const cells = screen.getAllByTestId('cell')
+      // The other two winning cells are highlighted immediately
+      expect(cells[0]).toHaveClass('bg-yellow-300')
+      expect(cells[1]).toHaveClass('bg-yellow-300')
+      // The winning move cell is NOT highlighted yet
+      expect(cells[2]).not.toHaveClass('bg-yellow-300')
+
+      // Once the dialog opens the winning move cell is also highlighted
+      await waitFor(
+        () =>
+          expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+        {timeout: 3000},
+      )
+      expect(cells[2]).toHaveClass('bg-yellow-300')
+
+      // After closing the dialog all three winning cells remain highlighted
+      act(() => {
+        screen.getByRole('button', {name: 'Close'}).click()
+      })
+      expect(cells[0]).toHaveClass('bg-yellow-300')
+      expect(cells[1]).toHaveClass('bg-yellow-300')
+      expect(cells[2]).toHaveClass('bg-yellow-300')
+    })
+
+    it('does not highlight any cells when game is in progress', () => {
+      render(<Game />)
+
+      const cells = screen.getAllByTestId('cell')
+      cells.forEach(cell => {
+        expect(cell).not.toHaveClass('bg-yellow-300')
+      })
+    })
+  })
 })

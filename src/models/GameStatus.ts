@@ -48,6 +48,15 @@ const allWinningLines = R.concat(R.concat(rows, columns), diagonals)
 // const allEquals = array =>
 //   !R.find(R.complement(R.identical(array[0])), array.slice(1))
 
+export function getWinningFields(boardModel: BoardModel): Field[] | null {
+  const winningLine = allWinningLines.find(
+    fields =>
+      R.equals(['X', 'X', 'X'], getFieldContents(boardModel, fields)) ||
+      R.equals(['O', 'O', 'O'], getFieldContents(boardModel, fields)),
+  )
+  return winningLine ?? null
+}
+
 // TODO: Refactor gameStatus
 export function gameStatus(boardModel: BoardModel): GameStatus {
   if (

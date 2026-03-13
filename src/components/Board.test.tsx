@@ -6,6 +6,7 @@ import {
   createInitialBoardModel,
   Field,
   placeMove,
+  placeMoves,
 } from '../models/GameModel.ts'
 import {describe} from 'vitest'
 
@@ -80,6 +81,31 @@ describe('Board', () => {
       expect(cells[0]).toHaveClass('border-l-0')
       expect(cells[3]).toHaveClass('border-l-0')
       expect(cells[6]).toHaveClass('border-l-0')
+    })
+  })
+
+  describe('winningFields', () => {
+    it('highlights the winning cells when winningFields is provided', () => {
+      const boardModel = placeMoves([0, 'X'], [1, 'X'], [2, 'X'])
+
+      render(<Board boardModel={boardModel} winningFields={[0, 1, 2]} />)
+
+      const cells = screen.getAllByTestId('cell')
+      expect(cells[0]).toHaveClass('bg-yellow-300')
+      expect(cells[1]).toHaveClass('bg-yellow-300')
+      expect(cells[2]).toHaveClass('bg-yellow-300')
+      expect(cells[3]).not.toHaveClass('bg-yellow-300')
+    })
+
+    it('does not highlight any cells when winningFields is not provided', () => {
+      const boardModel = createInitialBoardModel()
+
+      render(<Board boardModel={boardModel} />)
+
+      const cells = screen.getAllByTestId('cell')
+      cells.forEach(cell => {
+        expect(cell).not.toHaveClass('bg-yellow-300')
+      })
     })
   })
 })

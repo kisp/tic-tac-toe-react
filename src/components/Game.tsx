@@ -9,7 +9,12 @@ import {
   PieceOrEmpty,
 } from '../models/GameModel.ts'
 import {deterministicStrategy, Strategy} from '../models/Strategies.ts'
-import {gameStatus, isTurnStatus, isWinStatus} from '../models/GameStatus.ts'
+import {
+  gameStatus,
+  getWinningFields,
+  isTurnStatus,
+  isWinStatus,
+} from '../models/GameStatus.ts'
 import Button from './Button.tsx'
 
 function useCypress(
@@ -52,6 +57,7 @@ export function Game({
   const [showGameEndDialog, setShowGameEndDialog] = useState(false)
   const [winMessage, setWinMessage] = useState<string | null>(null)
   const [isAIThinking, setIsAIThinking] = useState(false)
+  const [lastMoveField, setLastMoveField] = useState<Field | null>(null)
 
   useCypress(boardModel, setBoardModel)
 
@@ -62,6 +68,7 @@ export function Game({
       if (!handleMoveCalled && !isAIThinking) {
         handleMoveCalled = true
         setIsAIThinking(true)
+        setLastMoveField(field)
 
         setBoardModel(prev => placeMove(prev, [field, 'X']))
 
@@ -72,7 +79,9 @@ export function Game({
         setTimeout(() => {
           setBoardModel(prev => {
             if (isTurnStatus(gameStatus(prev))) {
-              return placeMove(prev, [strategy(prev), 'O'])
+              const aiField = strategy(prev)
+              setLastMoveField(aiField)
+              return placeMove(prev, [aiField, 'O'])
             } else {
               return prev
             }
@@ -84,10 +93,22 @@ export function Game({
   }
 
   const status = useMemo(() => gameStatus(boardModel), [boardModel])
+  const winningFields = useMemo(
+    () => getWinningFields(boardModel),
+    [boardModel],
+  )
+  const effectiveWinningFields = useMemo(() => {
+    if (!winningFields) return null
+    if (lastMoveField === null) return winningFields
+    return winningFields.filter(f => f !== lastMoveField)
+  }, [winningFields, lastMoveField])
 
   useEffect(() => {
     if (isWinStatus(status) && winMessage === null) {
-      const timer = setTimeout(() => setShowGameEndDialog(true), 500)
+      const timer = setTimeout(() => {
+        setShowGameEndDialog(true)
+        setLastMoveField(null)
+      }, 500)
       return () => {
         clearTimeout(timer)
       }
@@ -107,7 +128,11 @@ export function Game({
             })}
           >
             <div className={clsx({'pointer-events-none': isAIThinking})}>
-              <Board boardModel={boardModel} onMove={handleMove()} />
+              <Board
+                boardModel={boardModel}
+                onMove={handleMove()}
+                winningFields={effectiveWinningFields}
+              />
             </div>
           </div>
         </div>
