@@ -61,11 +61,13 @@ export function Game({
 
   useCypress(boardModel, setBoardModel)
 
+  const status = useMemo(() => gameStatus(boardModel), [boardModel])
+
   const handleMove = () => {
     let handleMoveCalled = false
 
     return (field: Field) => {
-      if (!handleMoveCalled && !isAIThinking) {
+      if (!handleMoveCalled && !isAIThinking && isTurnStatus(status)) {
         handleMoveCalled = true
         setIsAIThinking(true)
         setLastMoveField(field)
@@ -92,7 +94,6 @@ export function Game({
     }
   }
 
-  const status = useMemo(() => gameStatus(boardModel), [boardModel])
   const winningFields = useMemo(
     () => getWinningFields(boardModel),
     [boardModel],
@@ -124,10 +125,14 @@ export function Game({
         <div className={clsx('flex justify-center')}>
           <div
             className={clsx('h-64 w-64 rounded-xl', {
-              'cursor-not-allowed': isAIThinking,
+              'cursor-not-allowed': isAIThinking || !isTurnStatus(status),
             })}
           >
-            <div className={clsx({'pointer-events-none': isAIThinking})}>
+            <div
+              className={clsx({
+                'pointer-events-none': isAIThinking || !isTurnStatus(status),
+              })}
+            >
               <Board
                 boardModel={boardModel}
                 onMove={handleMove()}

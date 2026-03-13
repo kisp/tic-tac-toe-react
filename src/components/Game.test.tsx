@@ -181,6 +181,35 @@ describe('Game', () => {
       })
     })
 
+    describe('given a board where X just won', () => {
+      it('prevents player X from making any more moves', async () => {
+        // X wins on the top row; cells 3-8 are still empty
+        const boardModel = placeMoves(
+          [0, 'X'],
+          [4, 'O'],
+          [1, 'X'],
+          [6, 'O'],
+          [2, 'X'],
+        )
+        const strategy: Strategy = vi.fn().mockName('strategy')
+
+        render(<Game initialBoardModel={boardModel} strategy={strategy} />)
+
+        const cells = screen.getAllByTestId('cell')
+
+        // Try to click an empty cell after game has ended
+        act(() => {
+          cells[3].click()
+        })
+
+        // The cell must remain empty
+        expect(cells[3]).not.toHaveTextContent('X')
+        expect(cells[3]).not.toHaveTextContent('O')
+        // The AI strategy must not have been invoked
+        expect(strategy).not.toHaveBeenCalled()
+      })
+    })
+
     describe('given a board where O wins', () => {
       it('displays a winning message for O', async () => {
         const boardModel = placeMoves(
