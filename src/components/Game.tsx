@@ -61,38 +61,41 @@ export function Game({
 
   useCypress(boardModel, setBoardModel)
 
+  const status = useMemo(() => gameStatus(boardModel), [boardModel])
+
   const handleMove = () => {
     let handleMoveCalled = false
 
     return (field: Field) => {
-      if (!handleMoveCalled && !isAIThinking) {
+      if (!handleMoveCalled && !isAIThinking && isTurnStatus(status)) {
         handleMoveCalled = true
-        setIsAIThinking(true)
         setLastMoveField(field)
 
-        setBoardModel(prev => placeMove(prev, [field, 'X']))
+        const boardAfterX = placeMove(boardModel, [field, 'X'])
+        setBoardModel(boardAfterX)
 
         if (!strategy) {
           throw new Error('Cannot make a move: missing strategy')
         }
 
+        if (!isTurnStatus(gameStatus(boardAfterX))) {
+          return
+        }
+
+        setIsAIThinking(true)
+
         setTimeout(() => {
-          setBoardModel(prev => {
-            if (isTurnStatus(gameStatus(prev))) {
-              const aiField = strategy(prev)
-              setLastMoveField(aiField)
-              return placeMove(prev, [aiField, 'O'])
-            } else {
-              return prev
-            }
-          })
+          if (isTurnStatus(gameStatus(boardAfterX))) {
+            const aiField = strategy(boardAfterX)
+            setLastMoveField(aiField)
+            setBoardModel(placeMove(boardAfterX, [aiField, 'O']))
+          }
           setIsAIThinking(false)
         }, 1000)
       }
     }
   }
 
-  const status = useMemo(() => gameStatus(boardModel), [boardModel])
   const winningFields = useMemo(
     () => getWinningFields(boardModel),
     [boardModel],
@@ -124,10 +127,14 @@ export function Game({
         <div className={clsx('flex justify-center')}>
           <div
             className={clsx('h-64 w-64 rounded-xl', {
-              'cursor-not-allowed': isAIThinking,
+              'cursor-not-allowed': isAIThinking || !isTurnStatus(status),
             })}
           >
-            <div className={clsx({'pointer-events-none': isAIThinking})}>
+            <div
+              className={clsx({
+                'pointer-events-none': isAIThinking || !isTurnStatus(status),
+              })}
+            >
               <Board
                 boardModel={boardModel}
                 onMove={handleMove()}
