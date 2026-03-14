@@ -39,4 +39,16 @@ describe('Player makes a move', () => {
       cy.get('[data-testid="cell"]').eq(2).should('have.text', 'O')
     })
   })
+
+  describe('when clicking an already occupied cell', () => {
+    it('does not overwrite the existing piece', () => {
+      cy.get('[data-testid="cell"]').eq(4).click().should('have.text', 'X')
+      // wait for the AI to respond before interacting again
+      cy.get('[data-testid="cell"]').eq(0).should('have.text', 'O')
+
+      cy.get('[data-testid="cell"]').eq(4).click()
+      cy.wait(250)
+      cy.get('[data-testid="cell"]').eq(4).should('have.text', 'X')
+    })
+  })
 })
