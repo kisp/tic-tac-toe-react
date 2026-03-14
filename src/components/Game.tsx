@@ -69,25 +69,27 @@ export function Game({
     return (field: Field) => {
       if (!handleMoveCalled && !isAIThinking && isTurnStatus(status)) {
         handleMoveCalled = true
-        setIsAIThinking(true)
         setLastMoveField(field)
 
-        setBoardModel(prev => placeMove(prev, [field, 'X']))
+        const boardAfterX = placeMove(boardModel, [field, 'X'])
+        setBoardModel(boardAfterX)
 
         if (!strategy) {
           throw new Error('Cannot make a move: missing strategy')
         }
 
+        if (!isTurnStatus(gameStatus(boardAfterX))) {
+          return
+        }
+
+        setIsAIThinking(true)
+
         setTimeout(() => {
-          setBoardModel(prev => {
-            if (isTurnStatus(gameStatus(prev))) {
-              const aiField = strategy(prev)
-              setLastMoveField(aiField)
-              return placeMove(prev, [aiField, 'O'])
-            } else {
-              return prev
-            }
-          })
+          if (isTurnStatus(gameStatus(boardAfterX))) {
+            const aiField = strategy(boardAfterX)
+            setLastMoveField(aiField)
+            setBoardModel(placeMove(boardAfterX, [aiField, 'O']))
+          }
           setIsAIThinking(false)
         }, 1000)
       }
