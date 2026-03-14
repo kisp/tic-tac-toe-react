@@ -1,4 +1,5 @@
-import {act, render, screen, waitFor} from '@testing-library/react'
+import {render, screen, waitFor} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import App from './App'
 
 describe('App', () => {
@@ -24,12 +25,10 @@ describe('App', () => {
   })
 
   it('will show a board when the new game button is clicked', async () => {
+    const user = userEvent.setup()
     render(<App />)
 
-    act(() => {
-      const button = screen.getByRole('button')
-      button.click()
-    })
+    await user.click(screen.getByRole('button'))
 
     await waitFor(() => {
       const board = screen.getByTestId('game')
@@ -38,12 +37,10 @@ describe('App', () => {
   })
 
   it('will hide the new game button after it is clicked', async () => {
+    const user = userEvent.setup()
     render(<App />)
 
-    act(() => {
-      const button = screen.getByRole('button')
-      button.click()
-    })
+    await user.click(screen.getByRole('button'))
 
     await waitFor(() => {
       const button = screen.queryByRole('button', {name: /start new game/i})

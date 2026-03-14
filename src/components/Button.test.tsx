@@ -1,4 +1,5 @@
-import {act, render, screen} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Button from './Button.tsx'
 
 describe('Button', () => {
@@ -10,15 +11,13 @@ describe('Button', () => {
     expect(button).toHaveTextContent(/click me/i)
   })
 
-  it('calls the onClick function when clicked', () => {
+  it('calls the onClick function when clicked', async () => {
+    const user = userEvent.setup()
     const handleClick = vi.fn().mockName('handleClick')
 
     render(<Button onClick={handleClick} />)
 
-    act(() => {
-      const button = screen.getByRole('button')
-      button.click()
-    })
+    await user.click(screen.getByRole('button'))
 
     expect(handleClick).toHaveBeenCalled()
   })
