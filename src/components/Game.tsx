@@ -146,6 +146,11 @@ export function Game({
             </div>
           </div>
         </div>
+        {winMessage !== null && onReturnToWelcome && (
+          <div className={clsx('mt-6 flex justify-center')}>
+            <Button onClick={onReturnToWelcome}>Return to Welcome Page</Button>
+          </div>
+        )}
       </div>
 
       {showGameEndDialog && (
@@ -166,25 +171,18 @@ export function Game({
               )}
               {isDrawStatus(status) && <span>It&apos;s a draw!</span>}
             </p>
-            <div className="flex gap-3">
-              <Button
-                onClick={() => {
-                  if (isWinStatus(status)) {
-                    setWinMessage(`The winner is ${status.player}!`)
-                  } else if (isDrawStatus(status)) {
-                    setWinMessage("It's a draw!")
-                  }
-                  setShowGameEndDialog(false)
-                }}
-              >
-                Close
-              </Button>
-              {onReturnToWelcome && (
-                <Button onClick={onReturnToWelcome}>
-                  Return to Welcome Page
-                </Button>
-              )}
-            </div>
+            <Button
+              onClick={() => {
+                if (isWinStatus(status)) {
+                  setWinMessage(`The winner is ${status.player}!`)
+                } else if (isDrawStatus(status)) {
+                  setWinMessage("It's a draw!")
+                }
+                setShowGameEndDialog(false)
+              }}
+            >
+              Close
+            </Button>
           </div>
         </>
       )}

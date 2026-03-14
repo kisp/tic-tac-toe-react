@@ -171,6 +171,14 @@ describe('Game', () => {
           {timeout: 3000},
         )
 
+        // Button is not yet visible while the dialog is open
+        expect(
+          screen.queryByRole('button', {name: 'Return to Welcome Page'}),
+        ).not.toBeInTheDocument()
+
+        await user.click(screen.getByRole('button', {name: 'Close'}))
+
+        // Button appears below the game after closing the dialog
         await user.click(
           screen.getByRole('button', {name: 'Return to Welcome Page'}),
         )
@@ -179,6 +187,7 @@ describe('Game', () => {
       })
 
       it('does not show a Return to Welcome Page button when onReturnToWelcome is not provided', async () => {
+        const user = userEvent.setup()
         const boardModel = placeMoves(
           [0, 'X'],
           [4, 'O'],
@@ -194,6 +203,8 @@ describe('Game', () => {
             expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
           {timeout: 3000},
         )
+
+        await user.click(screen.getByRole('button', {name: 'Close'}))
 
         expect(
           screen.queryByRole('button', {name: 'Return to Welcome Page'}),
