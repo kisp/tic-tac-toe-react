@@ -1,4 +1,5 @@
-import {act, render, screen, waitFor} from '@testing-library/react'
+import {render, screen, waitFor} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Game from './Game'
 import {Strategy} from '../models/Strategies.ts'
 import {placeMoves} from '../models/GameModel.ts'
@@ -11,57 +12,49 @@ describe('Game', () => {
     expect(board).toBeInTheDocument()
   })
 
-  it('allows the first player to make and see its move', () => {
+  it('allows the first player to make and see its move', async () => {
+    const user = userEvent.setup()
     render(<Game />)
     const cells = screen.getAllByTestId('cell')
 
-    act(() => {
-      cells[0].click()
-    })
+    await user.click(cells[0])
 
     expect(cells[0]).toHaveTextContent('X')
   })
 
-  it('tolerates immediate double clicking', () => {
+  it('tolerates immediate double clicking', async () => {
+    const user = userEvent.setup()
     render(<Game />)
 
-    act(() => {
-      screen.getAllByTestId('cell')[0].click()
-      screen.getAllByTestId('cell')[0].click()
-    })
+    await user.click(screen.getAllByTestId('cell')[0])
+    await user.click(screen.getAllByTestId('cell')[0])
 
     expect(screen.getAllByTestId('cell')[0]).toHaveTextContent('X')
   })
 
-  it('tolerates double clicking with re-render in between', () => {
+  it('tolerates double clicking with re-render in between', async () => {
+    const user = userEvent.setup()
     render(<Game />)
 
-    act(() => {
-      screen.getAllByTestId('cell')[0].click()
-    })
-    act(() => {
-      screen.getAllByTestId('cell')[0].click()
-    })
+    await user.click(screen.getAllByTestId('cell')[0])
+    await user.click(screen.getAllByTestId('cell')[0])
 
     expect(screen.getAllByTestId('cell')[0]).toHaveTextContent('X')
   })
 
   it('prevents player from making a move while the AI is thinking', async () => {
+    const user = userEvent.setup()
     const strategy: Strategy = vi.fn().mockReturnValue(8).mockName('strategy')
 
     render(<Game strategy={strategy} />)
     const cells = screen.getAllByTestId('cell')
 
-    act(() => {
-      cells[0].click()
-    })
+    await user.click(cells[0])
 
     expect(cells[0]).toHaveTextContent('X')
 
     // Player tries to move while AI is thinking
-    act(() => {
-      cells[1].click()
-    })
+    await user.click(cells[1])
 
     // Cell 1 must remain empty while AI is thinking
     expect(cells[1]).not.toHaveTextContent('X')
@@ -74,14 +67,13 @@ describe('Game', () => {
   })
 
   it("let's the opponent make a move after the player placed an X", async () => {
+    const user = userEvent.setup()
     const strategy: Strategy = vi.fn().mockReturnValue(7).mockName('strategy')
 
     render(<Game strategy={strategy} />)
     const cells = screen.getAllByTestId('cell')
 
-    act(() => {
-      cells[3].click()
-    })
+    await user.click(cells[3])
 
     expect(cells[3]).toHaveTextContent('X')
 
@@ -123,6 +115,7 @@ describe('Game', () => {
       })
 
       it('closes the dialog when the Close button is clicked', async () => {
+        const user = userEvent.setup()
         const boardModel = placeMoves(
           [0, 'X'],
           [4, 'O'],
@@ -139,9 +132,7 @@ describe('Game', () => {
           {timeout: 3000},
         )
 
-        act(() => {
-          screen.getByRole('button', {name: 'Close'}).click()
-        })
+        await user.click(screen.getByRole('button', {name: 'Close'}))
 
         expect(
           screen.queryByTestId('game-ends-message'),
@@ -149,6 +140,7 @@ describe('Game', () => {
       })
 
       it('shows win message in heading and does not reopen dialog after Close', async () => {
+        const user = userEvent.setup()
         const boardModel = placeMoves(
           [0, 'X'],
           [4, 'O'],
@@ -165,9 +157,7 @@ describe('Game', () => {
           {timeout: 3000},
         )
 
-        act(() => {
-          screen.getByRole('button', {name: 'Close'}).click()
-        })
+        await user.click(screen.getByRole('button', {name: 'Close'}))
 
         expect(screen.getByRole('heading')).toHaveTextContent(
           'The winner is X!',
@@ -183,6 +173,7 @@ describe('Game', () => {
 
     describe('given a board where X just won', () => {
       it('prevents player X from making any more moves', async () => {
+        const user = userEvent.setup()
         // X wins on the top row; cells 3-8 are still empty
         const boardModel = placeMoves(
           [0, 'X'],
@@ -198,9 +189,7 @@ describe('Game', () => {
         const cells = screen.getAllByTestId('cell')
 
         // Try to click an empty cell after game has ended
-        act(() => {
-          cells[3].click()
-        })
+        await user.click(cells[3])
 
         // The cell must remain empty
         expect(cells[3]).not.toHaveTextContent('X')
@@ -236,6 +225,7 @@ describe('Game', () => {
 
     describe('given a board one move away from a draw', () => {
       it('displays a draw message after the last move', async () => {
+        const user = userEvent.setup()
         // After 8 moves; X plays at field 5 to fill the board with no winner (draw)
         const boardModel = placeMoves(
           [4, 'X'],
@@ -251,9 +241,7 @@ describe('Game', () => {
 
         render(<Game initialBoardModel={boardModel} strategy={strategy} />)
 
-        act(() => {
-          screen.getAllByTestId('cell')[5].click()
-        })
+        await user.click(screen.getAllByTestId('cell')[5])
 
         await waitFor(() =>
           expect(screen.getAllByTestId('cell')[5]).toHaveTextContent('X'),
@@ -274,6 +262,7 @@ describe('Game', () => {
       })
 
       it('shows draw message in heading and does not reopen dialog after Close', async () => {
+        const user = userEvent.setup()
         const boardModel = placeMoves(
           [4, 'X'],
           [0, 'O'],
@@ -288,9 +277,7 @@ describe('Game', () => {
 
         render(<Game initialBoardModel={boardModel} strategy={strategy} />)
 
-        act(() => {
-          screen.getAllByTestId('cell')[5].click()
-        })
+        await user.click(screen.getAllByTestId('cell')[5])
 
         await waitFor(
           () =>
@@ -298,9 +285,7 @@ describe('Game', () => {
           {timeout: 3000},
         )
 
-        act(() => {
-          screen.getByRole('button', {name: 'Close'}).click()
-        })
+        await user.click(screen.getByRole('button', {name: 'Close'}))
 
         expect(screen.getByRole('heading')).toHaveTextContent("It's a draw!")
 
@@ -333,15 +318,14 @@ describe('Game', () => {
     })
 
     it('does not highlight winning move cell until dialog opens', async () => {
+      const user = userEvent.setup()
       // X is one move away from winning the top row by playing at field 2
       const boardModel = placeMoves([0, 'X'], [4, 'O'], [1, 'X'], [6, 'O'])
       const strategy: Strategy = vi.fn().mockName('strategy')
 
       render(<Game initialBoardModel={boardModel} strategy={strategy} />)
 
-      act(() => {
-        screen.getAllByTestId('cell')[2].click()
-      })
+      await user.click(screen.getAllByTestId('cell')[2])
 
       const cells = screen.getAllByTestId('cell')
       // The other two winning cells are highlighted immediately
@@ -359,9 +343,7 @@ describe('Game', () => {
       expect(cells[2]).toHaveClass('bg-yellow-300')
 
       // After closing the dialog all three winning cells remain highlighted
-      act(() => {
-        screen.getByRole('button', {name: 'Close'}).click()
-      })
+      await user.click(screen.getByRole('button', {name: 'Close'}))
       expect(cells[0]).toHaveClass('bg-yellow-300')
       expect(cells[1]).toHaveClass('bg-yellow-300')
       expect(cells[2]).toHaveClass('bg-yellow-300')

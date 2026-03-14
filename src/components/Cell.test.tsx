@@ -1,4 +1,5 @@
-import {act, render, screen} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Cell, {BorderPosition} from './Cell'
 
 function borderClassesExcept(...classes: string[]): string[] {
@@ -28,30 +29,26 @@ describe('Cell', () => {
 
   describe('click handling', () => {
     describe('when no piece is given', () => {
-      it('calls the onClick function when clicked', () => {
+      it('calls the onClick function when clicked', async () => {
+        const user = userEvent.setup()
         const handleClick = vi.fn().mockName('handleClick')
 
         render(<Cell onClick={handleClick} />)
 
-        act(() => {
-          const button = screen.getByTestId('cell')
-          button.click()
-        })
+        await user.click(screen.getByTestId('cell'))
 
         expect(handleClick).toHaveBeenCalled()
       })
     })
 
     describe('when a piece is given', () => {
-      it('does not call the onClick function when clicked', () => {
+      it('does not call the onClick function when clicked', async () => {
+        const user = userEvent.setup()
         const handleClick = vi.fn().mockName('handleClick')
 
         render(<Cell piece="X" onClick={handleClick} />)
 
-        act(() => {
-          const button = screen.getByTestId('cell')
-          button.click()
-        })
+        await user.click(screen.getByTestId('cell'))
 
         expect(handleClick).not.toHaveBeenCalled()
       })

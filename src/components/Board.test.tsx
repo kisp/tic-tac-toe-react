@@ -1,4 +1,5 @@
-import {act, render, screen} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Board from './Board'
 import {
   allFields,
@@ -36,15 +37,14 @@ describe('Board', () => {
 
   describe('accepts makeMove prop', () => {
     allFields.forEach(field => {
-      it(`ensures that makeMove is called with field ${field} when clicked`, () => {
+      it(`ensures that makeMove is called with field ${field} when clicked`, async () => {
+        const user = userEvent.setup()
         const makeMove = vi.fn().mockName('makeMove')
 
         render(<Board onMove={makeMove} />)
 
-        act(() => {
-          const cells = screen.getAllByTestId('cell')
-          cells[field].click()
-        })
+        const cells = screen.getAllByTestId('cell')
+        await user.click(cells[field])
 
         expect(makeMove).toHaveBeenCalledWith(field)
       })
