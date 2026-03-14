@@ -119,4 +119,24 @@ describe('Cell', () => {
       })
     })
   })
+
+  describe('when interactive is false', () => {
+    it('renders a div instead of a button', () => {
+      render(<Cell interactive={false} />)
+
+      const cell = screen.getByTestId('cell')
+      expect(cell.tagName.toLowerCase()).toBe('div')
+    })
+
+    it('does not call onClick when clicked', async () => {
+      const user = userEvent.setup()
+      const handleClick = vi.fn().mockName('handleClick')
+
+      render(<Cell interactive={false} onClick={handleClick} />)
+
+      await user.click(screen.getByTestId('cell'))
+
+      expect(handleClick).not.toHaveBeenCalled()
+    })
+  })
 })

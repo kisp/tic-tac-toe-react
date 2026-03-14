@@ -2,6 +2,7 @@ import {
   allFields,
   allPieces,
   countEmptyFields,
+  getFieldContents,
   placeMoves,
   createInitialBoardModel,
   getFieldContent,
@@ -54,9 +55,48 @@ describe('GameModel', () => {
   })
 
   describe('getFieldContent', () => {
-    it('returns the piece at a given field', () => {
+    it('returns null for an empty field', () => {
       const boardModel = createInitialBoardModel()
       expect(getFieldContent(boardModel, 0)).toEqual(null)
+    })
+
+    it('returns X after X is placed at that field', () => {
+      const boardModel = placeMove(createInitialBoardModel(), [4, 'X'])
+      expect(getFieldContent(boardModel, 4)).toEqual('X')
+    })
+
+    it('returns O after O is placed at that field', () => {
+      const boardModel = placeMove(createInitialBoardModel(), [7, 'O'])
+      expect(getFieldContent(boardModel, 7)).toEqual('O')
+    })
+  })
+
+  describe('getFieldContents', () => {
+    it('returns the pieces at the given fields', () => {
+      const boardModel = placeMoves([0, 'X'], [1, 'O'])
+      expect(getFieldContents(boardModel, [0, 1, 2])).toEqual(['X', 'O', null])
+    })
+
+    it('returns an empty array when given no fields', () => {
+      const boardModel = createInitialBoardModel()
+      expect(getFieldContents(boardModel, [])).toEqual([])
+    })
+
+    it('returns all pieces for a fully placed board', () => {
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [1, 'O'],
+        [2, 'X'],
+        [3, 'O'],
+        [4, 'X'],
+        [5, 'O'],
+        [6, 'X'],
+        [7, 'O'],
+        [8, 'X'],
+      )
+      expect(getFieldContents(boardModel, [0, 1, 2, 3, 4, 5, 6, 7, 8])).toEqual(
+        ['X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'],
+      )
     })
   })
 

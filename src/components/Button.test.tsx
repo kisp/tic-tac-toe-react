@@ -36,4 +36,24 @@ describe('Button', () => {
     expect(button.getAttributeNames()).toContain('disabled')
     expect(button.id).toEqual('123')
   })
+
+  it('applies normal size styles by default', () => {
+    render(<Button>Click me</Button>)
+
+    const button = screen.getByRole('button')
+    expect(button).toHaveClass('rounded-md')
+    expect(button).toHaveClass('px-4')
+    expect(button).toHaveClass('py-2')
+    expect(button).toHaveClass('shadow-md')
+  })
+
+  it('applies large size styles when size is large', () => {
+    render(<Button size="large">Click me</Button>)
+
+    const button = screen.getByRole('button')
+    expect(button).toHaveClass('rounded-xl')
+    expect(button).toHaveClass('px-8')
+    expect(button).toHaveClass('py-4')
+    expect(button).toHaveClass('shadow-xl')
+  })
 })

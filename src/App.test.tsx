@@ -47,4 +47,18 @@ describe('App', () => {
       expect(button).not.toBeInTheDocument()
     })
   })
+
+  it('shows a "Past Games" heading', () => {
+    render(<App />)
+
+    const heading = screen.getByRole('heading', {name: /past games/i})
+    expect(heading).toBeInTheDocument()
+  })
+
+  it('shows 3 past game boards', () => {
+    render(<App />)
+
+    const boards = screen.getAllByTestId('board')
+    expect(boards).toHaveLength(3)
+  })
 })
