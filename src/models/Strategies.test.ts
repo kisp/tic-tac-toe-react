@@ -22,5 +22,20 @@ describe('Strategies', () => {
       const boardModel = placeMoves([0, 'X'], [1, 'O'], [2, 'X'])
       expect(deterministicStrategy(boardModel)).toEqual(3)
     })
+
+    it('throws an error when the board is full', () => {
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [1, 'O'],
+        [2, 'X'],
+        [3, 'O'],
+        [4, 'X'],
+        [5, 'O'],
+        [6, 'X'],
+        [7, 'O'],
+        [8, 'X'],
+      )
+      expect(() => deterministicStrategy(boardModel)).toThrow()
+    })
   })
 })

@@ -12,6 +12,14 @@ describe('Game', () => {
     expect(board).toBeInTheDocument()
   })
 
+  it('shows the default heading text', () => {
+    render(<Game />)
+
+    expect(screen.getByRole('heading')).toHaveTextContent(
+      'Have fun with this game!',
+    )
+  })
+
   it('allows the first player to make and see its move', async () => {
     const user = userEvent.setup()
     render(<Game />)
