@@ -48,11 +48,13 @@ function useCypress(
 type GameProps = {
   strategy?: Strategy
   initialBoardModel?: BoardModel
+  onReturnToWelcome?: () => void
 }
 
 export function Game({
   strategy = deterministicStrategy,
   initialBoardModel = createInitialBoardModel(),
+  onReturnToWelcome,
 }: GameProps) {
   const [boardModel, setBoardModel] = useState<BoardModel>(initialBoardModel)
   const [showGameEndDialog, setShowGameEndDialog] = useState(false)
@@ -164,18 +166,25 @@ export function Game({
               )}
               {isDrawStatus(status) && <span>It&apos;s a draw!</span>}
             </p>
-            <Button
-              onClick={() => {
-                if (isWinStatus(status)) {
-                  setWinMessage(`The winner is ${status.player}!`)
-                } else if (isDrawStatus(status)) {
-                  setWinMessage("It's a draw!")
-                }
-                setShowGameEndDialog(false)
-              }}
-            >
-              Close
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => {
+                  if (isWinStatus(status)) {
+                    setWinMessage(`The winner is ${status.player}!`)
+                  } else if (isDrawStatus(status)) {
+                    setWinMessage("It's a draw!")
+                  }
+                  setShowGameEndDialog(false)
+                }}
+              >
+                Close
+              </Button>
+              {onReturnToWelcome && (
+                <Button onClick={onReturnToWelcome}>
+                  Return to Welcome Page
+                </Button>
+              )}
+            </div>
           </div>
         </>
       )}
