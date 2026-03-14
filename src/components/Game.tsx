@@ -12,6 +12,7 @@ import {deterministicStrategy, Strategy} from '../models/Strategies.ts'
 import {
   gameStatus,
   getWinningFields,
+  isDrawStatus,
   isTurnStatus,
   isWinStatus,
 } from '../models/GameStatus.ts'
@@ -107,7 +108,7 @@ export function Game({
   }, [winningFields, lastMoveField])
 
   useEffect(() => {
-    if (isWinStatus(status) && winMessage === null) {
+    if ((isWinStatus(status) || isDrawStatus(status)) && winMessage === null) {
       const timer = setTimeout(() => {
         setShowGameEndDialog(true)
         setLastMoveField(null)
@@ -161,11 +162,14 @@ export function Game({
               {isWinStatus(status) && (
                 <span>The winner is {status.player}!</span>
               )}
+              {isDrawStatus(status) && <span>It&apos;s a draw!</span>}
             </p>
             <Button
               onClick={() => {
                 if (isWinStatus(status)) {
                   setWinMessage(`The winner is ${status.player}!`)
+                } else if (isDrawStatus(status)) {
+                  setWinMessage("It's a draw!")
                 }
                 setShowGameEndDialog(false)
               }}
