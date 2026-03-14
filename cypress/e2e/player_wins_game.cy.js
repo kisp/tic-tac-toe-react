@@ -52,7 +52,7 @@ describe('Player wins game', () => {
         .and('have.text', 'The winner is X!')
       cy.contains('button', 'Close').click()
 
-      cy.get('[data-testid="cell"]').eq(3).click()
+      cy.get('[data-testid="cell"]').eq(3).click({ force: true })
       cy.wait(250)
       cy.get('[data-testid="cell"]').eq(3).should('have.text', '')
     })
@@ -89,7 +89,7 @@ describe('Player wins game', () => {
         .and('have.text', 'The winner is O!')
       cy.contains('button', 'Close').click()
 
-      cy.get('[data-testid="cell"]').eq(8).click()
+      cy.get('[data-testid="cell"]').eq(8).click({ force: true })
       cy.wait(250)
       cy.get('[data-testid="cell"]').eq(8).should('have.text', '')
     })
