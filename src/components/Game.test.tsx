@@ -147,6 +147,70 @@ describe('Game', () => {
         ).not.toBeInTheDocument()
       })
 
+      it('calls onReturnToWelcome when the Return to Welcome Page button is clicked', async () => {
+        const user = userEvent.setup()
+        const onReturnToWelcome = vi.fn()
+        const boardModel = placeMoves(
+          [0, 'X'],
+          [4, 'O'],
+          [1, 'X'],
+          [6, 'O'],
+          [2, 'X'],
+        )
+
+        render(
+          <Game
+            initialBoardModel={boardModel}
+            onReturnToWelcome={onReturnToWelcome}
+          />,
+        )
+
+        await waitFor(
+          () =>
+            expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+          {timeout: 3000},
+        )
+
+        // Button is not yet visible while the dialog is open
+        expect(
+          screen.queryByRole('button', {name: 'Return to Welcome Page'}),
+        ).not.toBeInTheDocument()
+
+        await user.click(screen.getByRole('button', {name: 'Close'}))
+
+        // Button appears below the game after closing the dialog
+        await user.click(
+          screen.getByRole('button', {name: 'Return to Welcome Page'}),
+        )
+
+        expect(onReturnToWelcome).toHaveBeenCalledOnce()
+      })
+
+      it('does not show a Return to Welcome Page button when onReturnToWelcome is not provided', async () => {
+        const user = userEvent.setup()
+        const boardModel = placeMoves(
+          [0, 'X'],
+          [4, 'O'],
+          [1, 'X'],
+          [6, 'O'],
+          [2, 'X'],
+        )
+
+        render(<Game initialBoardModel={boardModel} />)
+
+        await waitFor(
+          () =>
+            expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+          {timeout: 3000},
+        )
+
+        await user.click(screen.getByRole('button', {name: 'Close'}))
+
+        expect(
+          screen.queryByRole('button', {name: 'Return to Welcome Page'}),
+        ).not.toBeInTheDocument()
+      })
+
       it('shows win message in heading and does not reopen dialog after Close', async () => {
         const user = userEvent.setup()
         const boardModel = placeMoves(

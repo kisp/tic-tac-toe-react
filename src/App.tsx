@@ -63,7 +63,7 @@ function App() {
           'opacity-0': !showGame,
         })}
       >
-        {!!showGame && <Game />}
+        {!!showGame && <Game onReturnToWelcome={() => setShowGame(false)} />}
       </div>
     </div>
   )

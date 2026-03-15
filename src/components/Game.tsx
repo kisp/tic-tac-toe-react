@@ -48,11 +48,13 @@ function useCypress(
 type GameProps = {
   strategy?: Strategy
   initialBoardModel?: BoardModel
+  onReturnToWelcome?: () => void
 }
 
 export function Game({
   strategy = deterministicStrategy,
   initialBoardModel = createInitialBoardModel(),
+  onReturnToWelcome,
 }: GameProps) {
   const [boardModel, setBoardModel] = useState<BoardModel>(initialBoardModel)
   const [showGameEndDialog, setShowGameEndDialog] = useState(false)
@@ -144,6 +146,11 @@ export function Game({
             </div>
           </div>
         </div>
+        {winMessage !== null && onReturnToWelcome && (
+          <div className={clsx('mt-6 flex justify-center')}>
+            <Button onClick={onReturnToWelcome}>Return to Welcome Page</Button>
+          </div>
+        )}
       </div>
 
       {showGameEndDialog && (
