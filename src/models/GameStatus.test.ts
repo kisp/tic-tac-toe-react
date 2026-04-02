@@ -258,5 +258,23 @@ describe('GameStatus', () => {
         })
       })
     })
+
+    it('returns all winning fields when two lines win simultaneously (T-shape)', () => {
+      // X X X  (row 0: fields 0,1,2)
+      // O X O  (col 1: fields 1,4,7)
+      // O X O
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [1, 'X'],
+        [2, 'X'],
+        [4, 'X'],
+        [7, 'X'],
+        [3, 'O'],
+        [5, 'O'],
+        [6, 'O'],
+        [8, 'O'],
+      )
+      expect(getWinningFields(boardModel)).toEqual([0, 1, 2, 4, 7])
+    })
   })
 })
