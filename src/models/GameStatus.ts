@@ -49,12 +49,13 @@ const allWinningLines = R.concat(R.concat(rows, columns), diagonals)
 //   !R.find(R.complement(R.identical(array[0])), array.slice(1))
 
 export function getWinningFields(boardModel: BoardModel): Field[] | null {
-  const winningLine = allWinningLines.find(
+  const winningLines = allWinningLines.filter(
     fields =>
       R.equals(['X', 'X', 'X'], getFieldContents(boardModel, fields)) ||
       R.equals(['O', 'O', 'O'], getFieldContents(boardModel, fields)),
   )
-  return winningLine ?? null
+  if (winningLines.length === 0) return null
+  return R.uniq(winningLines.flat()) as Field[]
 }
 
 // TODO: Refactor gameStatus
