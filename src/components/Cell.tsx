@@ -40,7 +40,8 @@ function classes(
         (!piece && interactive === false),
     },
     {
-      'bg-yellow-300 transition-colors duration-500 animate-win-pop': highlighted,
+      'animate-win-pop bg-yellow-300 transition-colors duration-500':
+        highlighted,
     },
   )
 }
@@ -98,7 +99,11 @@ function Cell(props: CellProps) {
     )
   } else {
     return (
-      <div className={classes(props, isFlashing)} style={style} data-testid="cell">
+      <div
+        className={classes(props, isFlashing)}
+        style={style}
+        data-testid="cell"
+      >
         {piece}
       </div>
     )
