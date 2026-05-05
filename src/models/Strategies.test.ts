@@ -1,4 +1,9 @@
-import {createInitialBoardModel, Field, isEmptyField, placeMoves} from './GameModel.ts'
+import {
+  createInitialBoardModel,
+  Field,
+  isEmptyField,
+  placeMoves,
+} from './GameModel.ts'
 import {deterministicStrategy, randomStrategy} from './Strategies.ts'
 
 describe('Strategies', () => {
