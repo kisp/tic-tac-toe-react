@@ -6,6 +6,7 @@ import {PieceOrEmpty} from '../models/GameModel.ts'
 function classes(
   {noBorder = [], piece, interactive, highlighted}: CellProps,
   isFlashing: boolean,
+  cursorDelayed: boolean,
 ) {
   return clsx(
     'flex items-center justify-center',
@@ -32,11 +33,12 @@ function classes(
     // },
     {
       'cursor-pointer hover:bg-gray-200':
-        interactive !== false && (!piece || (piece === 'X' && isFlashing)),
+        interactive !== false &&
+        (!piece || (piece === 'X' && (isFlashing || cursorDelayed))),
     },
     {
       'cursor-not-allowed':
-        (piece && (piece === 'O' || !isFlashing)) ||
+        (piece && (piece === 'O' || (!cursorDelayed && !isFlashing))) ||
         (!piece && interactive === false),
     },
     {
@@ -64,6 +66,21 @@ function useFlashing(piece?: PieceOrEmpty): boolean {
   return !!piece && !stopFlashing
 }
 
+function useCursorDelay(piece?: PieceOrEmpty): boolean {
+  const [cursorDelayed, setCursorDelayed] = useState(false)
+
+  useEffect(() => {
+    if (piece === 'X') {
+      setCursorDelayed(true)
+      const timer = setTimeout(() => setCursorDelayed(false), 1000)
+      return () => clearTimeout(timer)
+    }
+    setCursorDelayed(false)
+  }, [piece])
+
+  return cursorDelayed
+}
+
 export type BorderPosition = 't' | 'b' | 'l' | 'r'
 
 type CellProps = {
@@ -79,6 +96,7 @@ function Cell(props: CellProps) {
   const {piece, onClick, interactive = true} = props
 
   const isFlashing = useFlashing(piece)
+  const cursorDelayed = useCursorDelay(piece)
 
   const style =
     props.highlighted && props.highlightDelay !== undefined
@@ -89,7 +107,7 @@ function Cell(props: CellProps) {
     return (
       <button
         onClick={!piece ? onClick : undefined}
-        className={classes(props, isFlashing)}
+        className={classes(props, isFlashing, cursorDelayed)}
         style={style}
         data-testid="cell"
         tabIndex={1}
@@ -100,7 +118,7 @@ function Cell(props: CellProps) {
   } else {
     return (
       <div
-        className={classes(props, isFlashing)}
+        className={classes(props, isFlashing, cursorDelayed)}
         style={style}
         data-testid="cell"
       >
