@@ -192,53 +192,56 @@ export function Game({
                 : 'animate-backdrop-fade-in',
             )}
           ></div>
-          <div
-            className={clsx(
-              'fixed left-1/2 top-1/2 z-50 min-w-[280px] -translate-x-1/2 -translate-y-1/2 transform',
-              'overflow-hidden rounded-2xl border border-wood/30 bg-cream shadow-2xl',
-              dialogClosing
-                ? 'animate-dialog-fade-out'
-                : 'animate-dialog-scale-in',
-            )}
-          >
+          <div className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transform">
             <div
-              className={clsx('h-2', {
-                'bg-honey': isWinStatus(status),
-                'bg-wood/40': isDrawStatus(status),
-              })}
-            />
-            <div className="px-8 pb-8 pt-6 text-center">
-              <div className="mb-3 text-5xl" aria-hidden="true">
-                {isWinStatus(status) && '🏆'}
-                {isDrawStatus(status) && '🤝'}
+              className={clsx(
+                'min-w-[280px] overflow-hidden rounded-2xl border border-wood/30 bg-cream shadow-2xl',
+                dialogClosing
+                  ? 'animate-dialog-fade-out'
+                  : 'animate-dialog-scale-in',
+              )}
+            >
+              <div
+                className={clsx('h-2', {
+                  'bg-honey': isWinStatus(status),
+                  'bg-wood/40': isDrawStatus(status),
+                })}
+              />
+              <div className="px-8 pb-8 pt-6 text-center">
+                <div className="mb-3 text-5xl" aria-hidden="true">
+                  {isWinStatus(status) && '🏆'}
+                  {isDrawStatus(status) && '🤝'}
+                </div>
+                <p
+                  className="mb-6 text-xl font-bold text-bark"
+                  data-testid="game-ends-message"
+                >
+                  {isWinStatus(status) && (
+                    <span>The winner is {status.player}!</span>
+                  )}
+                  {isDrawStatus(status) && (
+                    <span>It&apos;s a draw!</span>
+                  )}
+                </p>
+                <Button
+                  size="large"
+                  className="w-full"
+                  onClick={() => {
+                    if (isWinStatus(status)) {
+                      setWinMessage(`The winner is ${status.player}!`)
+                    } else if (isDrawStatus(status)) {
+                      setWinMessage("It's a draw!")
+                    }
+                    setDialogClosing(true)
+                    setTimeout(() => {
+                      setShowGameEndDialog(false)
+                      setDialogClosing(false)
+                    }, 500)
+                  }}
+                >
+                  Close
+                </Button>
               </div>
-              <p
-                className="mb-6 text-xl font-bold text-bark"
-                data-testid="game-ends-message"
-              >
-                {isWinStatus(status) && (
-                  <span>The winner is {status.player}!</span>
-                )}
-                {isDrawStatus(status) && <span>It&apos;s a draw!</span>}
-              </p>
-              <Button
-                size="large"
-                className="w-full"
-                onClick={() => {
-                  if (isWinStatus(status)) {
-                    setWinMessage(`The winner is ${status.player}!`)
-                  } else if (isDrawStatus(status)) {
-                    setWinMessage("It's a draw!")
-                  }
-                  setDialogClosing(true)
-                  setTimeout(() => {
-                    setShowGameEndDialog(false)
-                    setDialogClosing(false)
-                  }, 500)
-                }}
-              >
-                Close
-              </Button>
             </div>
           </div>
         </>
