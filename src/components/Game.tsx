@@ -161,7 +161,7 @@ export function Game({
 
         <div className="flex flex-1 items-center justify-center px-4 py-4 sm:flex-initial sm:p-4">
           <div
-            className={clsx('w-full max-w-xs sm:max-w-sm', {
+            className={clsx('w-64 sm:w-80', {
               'cursor-not-allowed':
                 showNotAllowedCursor || !isTurnStatus(status),
               'cursor-pointer': isAIThinking && !showNotAllowedCursor,
