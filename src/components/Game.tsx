@@ -112,11 +112,17 @@ export function Game({
   useEffect(() => {
     if ((isWinStatus(status) || isDrawStatus(status)) && winMessage === null) {
       const timer = setTimeout(() => {
-        setShowGameEndDialog(true)
         setLastMoveField(null)
       }, 500)
+
+      const dialogDelay = isWinStatus(status) ? 1200 : 500
+      const dialogTimer = setTimeout(() => {
+        setShowGameEndDialog(true)
+      }, dialogDelay)
+
       return () => {
         clearTimeout(timer)
+        clearTimeout(dialogTimer)
       }
     }
   }, [status, winMessage])

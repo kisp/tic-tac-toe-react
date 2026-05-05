@@ -36,7 +36,16 @@ export function Board({
   interactive = true,
   winningFields,
 }: BoardProps) {
+  const sortedWinningFields = winningFields
+    ? [...winningFields].sort((a, b) => a - b)
+    : null
+
   const cellForField = (field: Field) => {
+    const isHighlighted = winningFields?.includes(field)
+    const highlightDelay = isHighlighted
+      ? (sortedWinningFields?.indexOf(field) ?? 0) * 100
+      : undefined
+
     return (
       <Cell
         key={field}
@@ -44,7 +53,8 @@ export function Board({
         onClick={() => onMove(field)}
         noBorder={fieldsNoBorder[field]}
         interactive={interactive}
-        highlighted={winningFields?.includes(field)}
+        highlighted={isHighlighted}
+        highlightDelay={highlightDelay}
       />
     )
   }

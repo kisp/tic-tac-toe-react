@@ -39,7 +39,10 @@ function classes(
         (piece && (piece === 'O' || !isFlashing)) ||
         (!piece && interactive === false),
     },
-    {'bg-yellow-300': highlighted},
+    {
+      'animate-win-pop bg-yellow-300 transition-colors duration-500':
+        highlighted,
+    },
   )
 }
 
@@ -69,6 +72,7 @@ type CellProps = {
   noBorder?: BorderPosition[]
   interactive?: boolean
   highlighted?: boolean
+  highlightDelay?: number
 }
 
 function Cell(props: CellProps) {
@@ -76,11 +80,17 @@ function Cell(props: CellProps) {
 
   const isFlashing = useFlashing(piece)
 
+  const style =
+    props.highlighted && props.highlightDelay !== undefined
+      ? {animationDelay: `${props.highlightDelay}ms`}
+      : undefined
+
   if (interactive) {
     return (
       <button
         onClick={!piece ? onClick : undefined}
         className={classes(props, isFlashing)}
+        style={style}
         data-testid="cell"
         tabIndex={1}
       >
@@ -89,7 +99,11 @@ function Cell(props: CellProps) {
     )
   } else {
     return (
-      <div className={classes(props, isFlashing)} data-testid="cell">
+      <div
+        className={classes(props, isFlashing)}
+        style={style}
+        data-testid="cell"
+      >
         {piece}
       </div>
     )
