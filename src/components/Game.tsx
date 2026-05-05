@@ -58,6 +58,7 @@ export function Game({
 }: GameProps) {
   const [boardModel, setBoardModel] = useState<BoardModel>(initialBoardModel)
   const [showGameEndDialog, setShowGameEndDialog] = useState(false)
+  const [dialogClosing, setDialogClosing] = useState(false)
   const [winMessage, setWinMessage] = useState<string | null>(null)
   const [isAIThinking, setIsAIThinking] = useState(false)
   const [lastMoveField, setLastMoveField] = useState<Field | null>(null)
@@ -161,11 +162,18 @@ export function Game({
 
       {showGameEndDialog && (
         <>
-          <div className="fixed inset-0 z-50 bg-black opacity-50"></div>
+          <div
+            className={clsx(
+              'fixed inset-0 z-50 bg-black transition-opacity duration-500',
+              dialogClosing ? 'opacity-0' : 'opacity-50',
+            )}
+          ></div>
           <div
             className={clsx(
               'fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transform',
               'rounded-lg bg-white p-6 shadow-lg',
+              'transition-opacity duration-500',
+              dialogClosing ? 'opacity-0' : 'opacity-100',
             )}
           >
             <p
@@ -184,7 +192,11 @@ export function Game({
                 } else if (isDrawStatus(status)) {
                   setWinMessage("It's a draw!")
                 }
-                setShowGameEndDialog(false)
+                setDialogClosing(true)
+                setTimeout(() => {
+                  setShowGameEndDialog(false)
+                  setDialogClosing(false)
+                }, 500)
               }}
             >
               Close

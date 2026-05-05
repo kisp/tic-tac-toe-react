@@ -142,9 +142,11 @@ describe('Game', () => {
 
         await user.click(screen.getByRole('button', {name: 'Close'}))
 
-        expect(
-          screen.queryByTestId('game-ends-message'),
-        ).not.toBeInTheDocument()
+        await waitFor(() =>
+          expect(
+            screen.queryByTestId('game-ends-message'),
+          ).not.toBeInTheDocument(),
+        )
       })
 
       it('calls onReturnToWelcome when the Return to Welcome Page button is clicked', async () => {
