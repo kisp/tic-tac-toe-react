@@ -61,9 +61,21 @@ export function Game({
   const [dialogClosing, setDialogClosing] = useState(false)
   const [winMessage, setWinMessage] = useState<string | null>(null)
   const [isAIThinking, setIsAIThinking] = useState(false)
+  const [showNotAllowedCursor, setShowNotAllowedCursor] = useState(false)
   const [lastMoveField, setLastMoveField] = useState<Field | null>(null)
 
   useCypress(boardModel, setBoardModel)
+
+  useEffect(() => {
+    if (isAIThinking) {
+      const timer = setTimeout(() => setShowNotAllowedCursor(true), 1000)
+      return () => {
+        clearTimeout(timer)
+        setShowNotAllowedCursor(false)
+      }
+    }
+    setShowNotAllowedCursor(false)
+  }, [isAIThinking])
 
   const status = useMemo(() => gameStatus(boardModel), [boardModel])
 
@@ -137,7 +149,7 @@ export function Game({
         <div className={clsx('flex justify-center')}>
           <div
             className={clsx('h-64 w-64 rounded-xl', {
-              'cursor-not-allowed': isAIThinking || !isTurnStatus(status),
+              'cursor-not-allowed': showNotAllowedCursor || !isTurnStatus(status),
             })}
           >
             <div
