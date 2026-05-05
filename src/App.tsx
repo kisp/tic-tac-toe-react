@@ -19,7 +19,7 @@ function WelcomePage({
       <div
         className={clsx('my-3 flex justify-center', {
           'transition-transform duration-200 ease-in-out': true,
-          'scale-150 transform': showGame === 0,
+          'scale-110 transform': showGame === 0,
         })}
       >
         <Button
