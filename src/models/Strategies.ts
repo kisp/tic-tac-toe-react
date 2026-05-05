@@ -1,4 +1,10 @@
-import {allFields, BoardModel, Field, isEmptyField, placeMove} from './GameModel.ts'
+import {
+  allFields,
+  BoardModel,
+  Field,
+  isEmptyField,
+  placeMove,
+} from './GameModel.ts'
 import {gameStatus} from './GameStatus.ts'
 
 export type Strategy = (boardModel: BoardModel) => Field

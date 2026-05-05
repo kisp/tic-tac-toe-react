@@ -31,7 +31,9 @@ function playGame(
   return current
 }
 
-function alwaysFirstEmpty(board: ReturnType<typeof createInitialBoardModel>): Field {
+function alwaysFirstEmpty(
+  board: ReturnType<typeof createInitialBoardModel>,
+): Field {
   return deterministicStrategy(board)
 }
 
@@ -169,7 +171,9 @@ describe('Strategies', () => {
       const nextBoard = placeMove(boardModel, [result, 'O'])
       const finalBoard = playGame(nextBoard, alwaysFirstEmpty)
       const finalStatus = gameStatus(finalBoard)
-      expect(finalStatus.type === 'Won' && finalStatus.player === 'X').toBe(false)
+      expect(finalStatus.type === 'Won' && finalStatus.player === 'X').toBe(
+        false,
+      )
     })
 
     it('never loses from any starting move as O', () => {
@@ -178,7 +182,9 @@ describe('Strategies', () => {
         const boardModel = placeMoves([start, 'X'])
         const finalBoard = playGame(boardModel, alwaysFirstEmpty)
         const finalStatus = gameStatus(finalBoard)
-        expect(finalStatus.type === 'Won' && finalStatus.player === 'X').toBe(false)
+        expect(finalStatus.type === 'Won' && finalStatus.player === 'X').toBe(
+          false,
+        )
       }
     })
 
@@ -189,18 +195,24 @@ describe('Strategies', () => {
         board = placeMove(board, [firstMove, 'X'])
 
         while (gameStatus(board).type === 'Turn') {
-          const currentPlayer = (gameStatus(board) as {type: 'Turn'; player: 'X' | 'O'}).player
+          const currentPlayer = (
+            gameStatus(board) as {type: 'Turn'; player: 'X' | 'O'}
+          ).player
           if (currentPlayer === 'O') {
             const move = minimaxStrategy(board)
             board = placeMove(board, [move, 'O'])
           } else {
-            const emptyFields = allMoves.filter(f => isEmptyField(board, f as Field)) as Field[]
+            const emptyFields = allMoves.filter(f =>
+              isEmptyField(board, f as Field),
+            ) as Field[]
             board = placeMove(board, [emptyFields[0], 'X'])
           }
         }
 
         const finalStatus = gameStatus(board)
-        expect(finalStatus.type === 'Won' && finalStatus.player === 'X').toBe(false)
+        expect(finalStatus.type === 'Won' && finalStatus.player === 'X').toBe(
+          false,
+        )
       }
     })
 
