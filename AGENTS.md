@@ -68,7 +68,7 @@ npm run build
 
 - **TypeScript strict mode** is enabled; avoid `any` and prefer explicit types.
 - **ESLint** is configured with zero warnings allowed (`--max-warnings 0`). Run `npm run lint` before committing.
-- **Prettier** is the formatter; run `npm run prettier` to auto-format.
+- **Prettier** is the formatter; run `npm run prettier` before committing to auto-format.
 - Business logic lives in `src/models/` and must remain free of React imports.
 - UI components live in `src/components/` and should delegate game logic to the models.
 - AI strategies follow the `Strategy` type signature: `(boardModel: BoardModel) => Field`.

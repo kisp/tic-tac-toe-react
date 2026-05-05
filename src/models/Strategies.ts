@@ -9,3 +9,12 @@ export const deterministicStrategy: Strategy = boardModel => {
   }
   return emptyField
 }
+
+export const randomStrategy: Strategy = boardModel => {
+  const emptyFields = allFields.filter(isEmptyField(boardModel))
+  if (emptyFields.length === 0) {
+    throw new Error('No empty field found in the board model')
+  }
+  const randomIndex = Math.floor(Math.random() * emptyFields.length)
+  return emptyFields[randomIndex]
+}
