@@ -219,9 +219,7 @@ export function Game({
                   {isWinStatus(status) && (
                     <span>The winner is {status.player}!</span>
                   )}
-                  {isDrawStatus(status) && (
-                    <span>It&apos;s a draw!</span>
-                  )}
+                  {isDrawStatus(status) && <span>It&apos;s a draw!</span>}
                 </p>
                 <Button
                   size="large"
