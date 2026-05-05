@@ -1,4 +1,4 @@
-import {render, screen} from '@testing-library/react'
+import {render, screen, act} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Cell, {BorderPosition} from './Cell'
 
@@ -137,6 +137,82 @@ describe('Cell', () => {
       await user.click(screen.getByTestId('cell'))
 
       expect(handleClick).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('cursor delay on X piece', () => {
+    it('shows cursor-pointer on X piece immediately, not cursor-not-allowed', () => {
+      vi.useFakeTimers()
+      render(<Cell piece="X" />)
+      const cell = screen.getByTestId('cell')
+
+      expect(cell).toHaveClass('cursor-pointer')
+      expect(cell).not.toHaveClass('cursor-not-allowed')
+
+      vi.useRealTimers()
+    })
+
+    it('keeps cursor-pointer on X piece past the flashing timeout (800ms)', () => {
+      vi.useFakeTimers()
+      render(<Cell piece="X" />)
+      const cell = screen.getByTestId('cell')
+
+      act(() => {
+        vi.advanceTimersByTime(800)
+      })
+
+      expect(cell).toHaveClass('cursor-pointer')
+      expect(cell).not.toHaveClass('cursor-not-allowed')
+
+      vi.useRealTimers()
+    })
+
+    it('shows cursor-not-allowed on X piece after 1 second delay', () => {
+      vi.useFakeTimers()
+      render(<Cell piece="X" />)
+      const cell = screen.getByTestId('cell')
+
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+
+      expect(cell).toHaveClass('cursor-not-allowed')
+      expect(cell).not.toHaveClass('cursor-pointer')
+
+      vi.useRealTimers()
+    })
+
+    it('shows cursor-not-allowed on O piece immediately', () => {
+      render(<Cell piece="O" />)
+      const cell = screen.getByTestId('cell')
+
+      expect(cell).toHaveClass('cursor-not-allowed')
+      expect(cell).not.toHaveClass('cursor-pointer')
+    })
+
+    it('delays cursor-not-allowed when X is placed on a previously empty cell', () => {
+      vi.useFakeTimers()
+      const {rerender} = render(<Cell />)
+
+      rerender(<Cell piece="X" />)
+      const cell = screen.getByTestId('cell')
+
+      expect(cell).toHaveClass('cursor-pointer')
+      expect(cell).not.toHaveClass('cursor-not-allowed')
+
+      act(() => {
+        vi.advanceTimersByTime(900)
+      })
+
+      expect(cell).not.toHaveClass('cursor-not-allowed')
+
+      act(() => {
+        vi.advanceTimersByTime(100)
+      })
+
+      expect(cell).toHaveClass('cursor-not-allowed')
+
+      vi.useRealTimers()
     })
   })
 })
