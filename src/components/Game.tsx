@@ -165,14 +165,18 @@ export function Game({
           <div
             className={clsx(
               'fixed inset-0 z-50 bg-black',
-              dialogClosing ? 'animate-backdrop-fade-out' : 'animate-backdrop-fade-in',
+              dialogClosing
+                ? 'animate-backdrop-fade-out'
+                : 'animate-backdrop-fade-in',
             )}
           ></div>
           <div
             className={clsx(
               'fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transform',
               'rounded-lg bg-white p-6 shadow-lg',
-              dialogClosing ? 'animate-dialog-fade-out' : 'animate-dialog-fade-in',
+              dialogClosing
+                ? 'animate-dialog-fade-out'
+                : 'animate-dialog-fade-in',
             )}
           >
             <p

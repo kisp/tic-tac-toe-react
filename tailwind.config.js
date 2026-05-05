@@ -10,20 +10,20 @@ export default {
           '100%': {transform: 'scale(1)'},
         },
         'dialog-fade-in': {
-          'from': {opacity: '0'},
-          'to': {opacity: '1'},
+          from: {opacity: '0'},
+          to: {opacity: '1'},
         },
         'dialog-fade-out': {
-          'from': {opacity: '1'},
-          'to': {opacity: '0'},
+          from: {opacity: '1'},
+          to: {opacity: '0'},
         },
         'backdrop-fade-in': {
-          'from': {opacity: '0'},
-          'to': {opacity: '0.5'},
+          from: {opacity: '0'},
+          to: {opacity: '0.5'},
         },
         'backdrop-fade-out': {
-          'from': {opacity: '0.5'},
-          'to': {opacity: '0'},
+          from: {opacity: '0.5'},
+          to: {opacity: '0'},
         },
       },
       animation: {
