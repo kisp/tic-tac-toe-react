@@ -30,6 +30,11 @@ export default {
           from: {opacity: '0'},
           to: {opacity: '1'},
         },
+        'dialog-scale-in': {
+          '0%': {opacity: '0', transform: 'scale(0.85)'},
+          '60%': {opacity: '1', transform: 'scale(1.05)'},
+          '100%': {opacity: '1', transform: 'scale(1)'},
+        },
         'dialog-fade-out': {
           from: {opacity: '1'},
           to: {opacity: '0'},
@@ -46,6 +51,7 @@ export default {
       animation: {
         'win-pop': 'win-pop 0.6s ease-out',
         'dialog-fade-in': 'dialog-fade-in 500ms ease-in-out forwards',
+        'dialog-scale-in': 'dialog-scale-in 500ms ease-out forwards',
         'dialog-fade-out': 'dialog-fade-out 500ms ease-in-out forwards',
         'backdrop-fade-in': 'backdrop-fade-in 500ms ease-in-out forwards',
         'backdrop-fade-out': 'backdrop-fade-out 500ms ease-in-out forwards',

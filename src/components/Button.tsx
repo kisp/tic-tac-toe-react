@@ -28,11 +28,16 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 function Button({
   size = 'normal',
   children,
+  className,
   dataTestid,
   ...props
 }: ButtonProps) {
   return (
-    <button className={classes(size)} data-testid={dataTestid} {...props}>
+    <button
+      className={clsx(classes(size), className)}
+      data-testid={dataTestid}
+      {...props}
+    >
       {children}
     </button>
   )
