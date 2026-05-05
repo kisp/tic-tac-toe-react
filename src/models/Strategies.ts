@@ -2,6 +2,8 @@ import {allFields, BoardModel, Field, isEmptyField} from './GameModel.ts'
 
 export type Strategy = (boardModel: BoardModel) => Field
 
+export type StrategyName = 'deterministic' | 'random'
+
 export const deterministicStrategy: Strategy = boardModel => {
   const emptyField = allFields.find(isEmptyField(boardModel))
   if (emptyField === undefined) {
@@ -17,4 +19,9 @@ export const randomStrategy: Strategy = boardModel => {
   }
   const randomIndex = Math.floor(Math.random() * emptyFields.length)
   return emptyFields[randomIndex]
+}
+
+export const strategyMap: Record<StrategyName, Strategy> = {
+  deterministic: deterministicStrategy,
+  random: randomStrategy,
 }
