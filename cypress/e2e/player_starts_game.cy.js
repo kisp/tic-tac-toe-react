@@ -16,4 +16,33 @@ describe('Player starts game', () => {
     })
     cy.get('[data-testid="start-new-game-button"]').should('not.exist')
   })
+
+  it('should show deterministic strategy selected by default', () => {
+    cy.visit('/')
+
+    cy.get('[data-testid="strategy-deterministic"]').should('be.checked')
+    cy.get('[data-testid="strategy-random"]').should('not.be.checked')
+  })
+
+  it('should allow selecting the random strategy', () => {
+    cy.visit('/')
+
+    cy.get('[data-testid="strategy-random"]').click()
+    cy.get('[data-testid="strategy-random"]').should('be.checked')
+    cy.get('[data-testid="strategy-deterministic"]').should('not.be.checked')
+  })
+
+  it('should allow switching between strategies', () => {
+    cy.visit('/')
+
+    cy.get('[data-testid="strategy-deterministic"]').should('be.checked')
+
+    cy.get('[data-testid="strategy-random"]').click()
+    cy.get('[data-testid="strategy-random"]').should('be.checked')
+    cy.get('[data-testid="strategy-deterministic"]').should('not.be.checked')
+
+    cy.get('[data-testid="strategy-deterministic"]').click()
+    cy.get('[data-testid="strategy-deterministic"]').should('be.checked')
+    cy.get('[data-testid="strategy-random"]').should('not.be.checked')
+  })
 })

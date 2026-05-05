@@ -4,7 +4,12 @@ import {
   isEmptyField,
   placeMoves,
 } from './GameModel.ts'
-import {deterministicStrategy, randomStrategy} from './Strategies.ts'
+import {
+  deterministicStrategy,
+  randomStrategy,
+  strategyMap,
+  StrategyName,
+} from './Strategies.ts'
 
 describe('Strategies', () => {
   describe('deterministicStrategy', () => {
@@ -90,6 +95,23 @@ describe('Strategies', () => {
         [8, 'X'],
       )
       expect(() => randomStrategy(boardModel)).toThrow()
+    })
+  })
+
+  describe('strategyMap', () => {
+    it('maps deterministic to deterministicStrategy', () => {
+      expect(strategyMap.deterministic).toBe(deterministicStrategy)
+    })
+
+    it('maps random to randomStrategy', () => {
+      expect(strategyMap.random).toBe(randomStrategy)
+    })
+
+    it('contains exactly two strategies', () => {
+      const keys = Object.keys(strategyMap) as StrategyName[]
+      expect(keys).toHaveLength(2)
+      expect(keys).toContain('deterministic')
+      expect(keys).toContain('random')
     })
   })
 })
