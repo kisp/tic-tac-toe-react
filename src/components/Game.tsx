@@ -150,6 +150,7 @@ export function Game({
           <div
             className={clsx('h-64 w-64 rounded-xl', {
               'cursor-not-allowed': showNotAllowedCursor || !isTurnStatus(status),
+              'cursor-pointer': isAIThinking && !showNotAllowedCursor,
             })}
           >
             <div
