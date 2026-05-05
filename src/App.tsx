@@ -49,6 +49,18 @@ function WelcomePage({
           />
           <span className="text-bark">Random</span>
         </label>
+        <label className="flex items-center gap-2">
+          <input
+            type="radio"
+            name="strategy"
+            value="minimax"
+            checked={strategyName === 'minimax'}
+            onChange={() => setStrategyName('minimax')}
+            data-testid="strategy-minimax"
+            className="accent-flame"
+          />
+          <span className="text-bark">Minimax</span>
+        </label>
       </div>
       <div
         className={clsx('my-3 flex justify-center', {
