@@ -2,7 +2,6 @@ import clsx from 'clsx'
 import {MouseEventHandler, useEffect, useState} from 'react'
 import {PieceOrEmpty} from '../models/GameModel.ts'
 
-// TODO: we should have an eslint rule to either use function or const
 function classes(
   {noBorder = [], piece, interactive, highlighted}: CellProps,
   isFlashing: boolean,
@@ -10,10 +9,11 @@ function classes(
 ) {
   return clsx(
     'flex items-center justify-center',
-    'text-5xl',
-    'border border-black',
-    'select-none',
-    'focus-visible:outline-none focus-visible:ring focus-visible:ring-inset focus-visible:ring-blue-300',
+    'text-5xl font-bold text-bark',
+    'border border-wood-dark',
+    'select-none bg-cream/50',
+    'min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0',
+    'focus-visible:outline-none focus-visible:ring focus-visible:ring-inset focus-visible:ring-flame/50',
     {
       'border-t-0': noBorder.includes('t'),
       'border-r-0': noBorder.includes('r'),
@@ -22,17 +22,14 @@ function classes(
     },
     {'transition-colors duration-1000': piece === 'X' && !highlighted},
     {
-      'bg-blue-200 ': isFlashing && piece === 'O' && !highlighted,
+      'bg-honey/30': isFlashing && piece === 'O' && !highlighted,
     },
     {
       'transition-colors duration-1000':
         piece === 'O' && !isFlashing && !highlighted,
     },
-    // {
-    //   "hover:text-gray-400 hover:after:content-['X']": true,
-    // },
     {
-      'cursor-pointer hover:bg-gray-200':
+      'cursor-pointer hover:bg-honey/30':
         interactive !== false &&
         (!piece || (piece === 'X' && (isFlashing || cursorDelayed))),
     },
@@ -42,7 +39,7 @@ function classes(
         (!piece && interactive === false),
     },
     {
-      'animate-win-pop bg-yellow-300 transition-colors duration-500':
+      'animate-win-pop bg-flame text-cream transition-colors duration-500':
         highlighted,
     },
   )
@@ -107,7 +104,10 @@ function Cell(props: CellProps) {
     return (
       <button
         onClick={!piece ? onClick : undefined}
-        className={classes(props, isFlashing, cursorDelayed)}
+        className={clsx(
+          classes(props, isFlashing, cursorDelayed),
+          piece && 'piece-shadow',
+        )}
         style={style}
         data-testid="cell"
         tabIndex={1}
@@ -118,7 +118,10 @@ function Cell(props: CellProps) {
   } else {
     return (
       <div
-        className={classes(props, isFlashing, cursorDelayed)}
+        className={clsx(
+          classes(props, isFlashing, cursorDelayed),
+          piece && 'piece-shadow',
+        )}
         style={style}
         data-testid="cell"
       >

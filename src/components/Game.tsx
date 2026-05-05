@@ -142,14 +142,28 @@ export function Game({
 
   return (
     <>
-      <div data-testid="game">
-        <h1 className={clsx('py-6 text-center')}>
-          {winMessage ?? 'Have fun with this game!'}
-        </h1>
-        <div className={clsx('flex justify-center')}>
+      <div
+        data-testid="game"
+        className="flex min-h-screen flex-col sm:min-h-0 sm:items-center sm:justify-center sm:py-8"
+      >
+        <div className="flex flex-col items-center px-4 pt-6 sm:pt-0">
+          <h1 className="py-4 text-center text-2xl font-bold text-bark sm:py-6 sm:text-3xl">
+            {winMessage ?? 'Have fun with this game!'}
+          </h1>
+          {winMessage !== null && onReturnToWelcome && (
+            <div className="pb-2">
+              <Button onClick={onReturnToWelcome}>
+                Return to Welcome Page
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-1 items-center justify-center px-4 py-4 sm:flex-initial sm:p-4">
           <div
-            className={clsx('h-64 w-64 rounded-xl', {
-              'cursor-not-allowed': showNotAllowedCursor || !isTurnStatus(status),
+            className={clsx('w-full max-w-xs sm:max-w-sm', {
+              'cursor-not-allowed':
+                showNotAllowedCursor || !isTurnStatus(status),
               'cursor-pointer': isAIThinking && !showNotAllowedCursor,
             })}
           >
@@ -166,18 +180,13 @@ export function Game({
             </div>
           </div>
         </div>
-        {winMessage !== null && onReturnToWelcome && (
-          <div className={clsx('mt-6 flex justify-center')}>
-            <Button onClick={onReturnToWelcome}>Return to Welcome Page</Button>
-          </div>
-        )}
       </div>
 
       {showGameEndDialog && (
         <>
           <div
             className={clsx(
-              'fixed inset-0 z-50 bg-black',
+              'fixed inset-0 z-50 bg-bark/60',
               dialogClosing
                 ? 'animate-backdrop-fade-out'
                 : 'animate-backdrop-fade-in',
@@ -186,14 +195,14 @@ export function Game({
           <div
             className={clsx(
               'fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transform',
-              'rounded-lg bg-white p-6 shadow-lg',
+              'rounded-lg border border-wood/30 bg-cream p-6 shadow-xl',
               dialogClosing
                 ? 'animate-dialog-fade-out'
                 : 'animate-dialog-fade-in',
             )}
           >
             <p
-              className="mb-3 text-lg font-semibold text-gray-800"
+              className="mb-3 text-lg font-semibold text-bark"
               data-testid="game-ends-message"
             >
               {isWinStatus(status) && (

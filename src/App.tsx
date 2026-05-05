@@ -15,7 +15,9 @@ function WelcomePage({
 }) {
   return (
     <>
-      <h1 className={clsx('py-6 text-center')}>Welcome to React Tic Tac Toe</h1>
+      <h1 className="py-6 text-center text-3xl font-bold text-bark">
+        Welcome to React Tic Tac Toe
+      </h1>
       <div
         className={clsx('my-3 flex justify-center', {
           'transition-transform duration-200 ease-in-out': true,
@@ -33,15 +35,17 @@ function WelcomePage({
           Start New Game
         </Button>
       </div>
-      <h2 className={clsx('py-6 text-center')}>Past Games</h2>
-      <div className={clsx('flex flex-wrap justify-around gap-6')}>
-        <div className="h-28 w-28 flex-col rounded-xl border-2 border-slate-200 p-2 shadow hover:border-slate-400">
+      <h2 className="py-6 text-center text-xl font-semibold text-bark">
+        Past Games
+      </h2>
+      <div className="flex flex-wrap justify-around gap-6">
+        <div className="h-28 w-28 flex-col rounded-xl border-2 border-wood/30 bg-cream/50 p-2 shadow-md hover:border-wood/50">
           <Board interactive={false} />
         </div>
-        <div className="h-28 w-28 flex-col rounded-xl border-2 border-slate-200 p-2 shadow hover:border-slate-400">
+        <div className="h-28 w-28 flex-col rounded-xl border-2 border-wood/30 bg-cream/50 p-2 shadow-md hover:border-wood/50">
           <Board interactive={false} />
         </div>
-        <div className="h-28 w-28 flex-col rounded-xl border-2 border-slate-200 p-2 shadow hover:border-slate-400">
+        <div className="h-28 w-28 flex-col rounded-xl border-2 border-wood/30 bg-cream/50 p-2 shadow-md hover:border-wood/50">
           <Board interactive={false} />
         </div>
       </div>
@@ -53,9 +57,11 @@ function App() {
   const [showGame, setShowGame] = useState<ShowGameStatus>(false)
 
   return (
-    <div className="container mx-auto">
+    <div className="min-h-screen">
       {!showGame && (
-        <WelcomePage showGame={showGame} setShowGame={setShowGame} />
+        <div className="flex min-h-screen flex-col items-center justify-center px-4">
+          <WelcomePage showGame={showGame} setShowGame={setShowGame} />
+        </div>
       )}
       <div
         className={clsx('transition-opacity duration-500 ease-in-out', {

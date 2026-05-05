@@ -385,10 +385,10 @@ describe('Game', () => {
       render(<Game initialBoardModel={boardModel} />)
 
       const cells = screen.getAllByTestId('cell')
-      expect(cells[0]).toHaveClass('bg-yellow-300')
-      expect(cells[1]).toHaveClass('bg-yellow-300')
-      expect(cells[2]).toHaveClass('bg-yellow-300')
-      expect(cells[3]).not.toHaveClass('bg-yellow-300')
+      expect(cells[0]).toHaveClass('bg-flame')
+      expect(cells[1]).toHaveClass('bg-flame')
+      expect(cells[2]).toHaveClass('bg-flame')
+      expect(cells[3]).not.toHaveClass('bg-flame')
     })
 
     it('does not highlight winning move cell until dialog opens', async () => {
@@ -403,10 +403,10 @@ describe('Game', () => {
 
       const cells = screen.getAllByTestId('cell')
       // The other two winning cells are highlighted immediately
-      expect(cells[0]).toHaveClass('bg-yellow-300')
-      expect(cells[1]).toHaveClass('bg-yellow-300')
+      expect(cells[0]).toHaveClass('bg-flame')
+      expect(cells[1]).toHaveClass('bg-flame')
       // The winning move cell is NOT highlighted yet
-      expect(cells[2]).not.toHaveClass('bg-yellow-300')
+      expect(cells[2]).not.toHaveClass('bg-flame')
 
       // Once the dialog opens the winning move cell is also highlighted
       await waitFor(
@@ -414,13 +414,13 @@ describe('Game', () => {
           expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
         {timeout: 3000},
       )
-      expect(cells[2]).toHaveClass('bg-yellow-300')
+      expect(cells[2]).toHaveClass('bg-flame')
 
       // After closing the dialog all three winning cells remain highlighted
       await user.click(screen.getByRole('button', {name: 'Close'}))
-      expect(cells[0]).toHaveClass('bg-yellow-300')
-      expect(cells[1]).toHaveClass('bg-yellow-300')
-      expect(cells[2]).toHaveClass('bg-yellow-300')
+      expect(cells[0]).toHaveClass('bg-flame')
+      expect(cells[1]).toHaveClass('bg-flame')
+      expect(cells[2]).toHaveClass('bg-flame')
     })
 
     it('does not highlight any cells when game is in progress', () => {
@@ -428,7 +428,7 @@ describe('Game', () => {
 
       const cells = screen.getAllByTestId('cell')
       cells.forEach(cell => {
-        expect(cell).not.toHaveClass('bg-yellow-300')
+        expect(cell).not.toHaveClass('bg-flame')
       })
     })
   })
