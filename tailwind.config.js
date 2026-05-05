@@ -3,6 +3,23 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      colors: {
+        wood: {
+          DEFAULT: '#8B5E3C',
+          light: '#A0522D',
+          dark: '#5D3A1A',
+        },
+        cream: {
+          DEFAULT: '#FFF8E7',
+          dark: '#F5E6C8',
+        },
+        honey: '#D4A056',
+        flame: {
+          DEFAULT: '#E8751A',
+          dark: '#C86415',
+        },
+        bark: '#3E2723',
+      },
       keyframes: {
         'win-pop': {
           '0%': {transform: 'scale(0.85)'},

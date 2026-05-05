@@ -8,7 +8,9 @@ import {
   getFieldContent,
 } from '../models/GameModel.ts'
 
-const classes = clsx('grid aspect-square max-h-full grid-cols-3 grid-rows-3')
+const classes = clsx(
+  'wood-grain grid aspect-square max-h-full grid-cols-3 grid-rows-3 overflow-hidden rounded-lg shadow-lg',
+)
 
 const fieldsNoBorder: BorderPosition[][] = [
   ['l', 't'],

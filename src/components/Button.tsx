@@ -4,10 +4,10 @@ import {ButtonHTMLAttributes} from 'react'
 type ButtonSize = 'normal' | 'large'
 
 const classes = (size: ButtonSize) => {
-  const baseStyles = 'bg-blue-500 text-white'
-  const hoverStyles = 'hover:bg-blue-600'
+  const baseStyles = 'bg-flame text-white font-semibold'
+  const hoverStyles = 'hover:bg-flame-dark'
   const focusStyles =
-    'focus-visible:outline-none focus-visible:ring focus-visible:ring-blue-300'
+    'focus-visible:outline-none focus-visible:ring focus-visible:ring-flame/50'
 
   const stylesForSize = (size: ButtonSize) => {
     if (size === 'normal') {

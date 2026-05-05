@@ -58,12 +58,12 @@ describe('Cell', () => {
   describe('when highlighted', () => {
     it('applies the highlighted background class', () => {
       render(<Cell piece="X" highlighted />)
-      expect(screen.getByTestId('cell')).toHaveClass('bg-yellow-300')
+      expect(screen.getByTestId('cell')).toHaveClass('bg-flame')
     })
 
     it('does not apply the highlighted background class when not highlighted', () => {
       render(<Cell piece="X" />)
-      expect(screen.getByTestId('cell')).not.toHaveClass('bg-yellow-300')
+      expect(screen.getByTestId('cell')).not.toHaveClass('bg-flame')
     })
   })
 

@@ -91,10 +91,10 @@ describe('Board', () => {
       render(<Board boardModel={boardModel} winningFields={[0, 1, 2]} />)
 
       const cells = screen.getAllByTestId('cell')
-      expect(cells[0]).toHaveClass('bg-yellow-300')
-      expect(cells[1]).toHaveClass('bg-yellow-300')
-      expect(cells[2]).toHaveClass('bg-yellow-300')
-      expect(cells[3]).not.toHaveClass('bg-yellow-300')
+      expect(cells[0]).toHaveClass('bg-flame')
+      expect(cells[1]).toHaveClass('bg-flame')
+      expect(cells[2]).toHaveClass('bg-flame')
+      expect(cells[3]).not.toHaveClass('bg-flame')
     })
 
     it('does not highlight any cells when winningFields is not provided', () => {
@@ -104,7 +104,7 @@ describe('Board', () => {
 
       const cells = screen.getAllByTestId('cell')
       cells.forEach(cell => {
-        expect(cell).not.toHaveClass('bg-yellow-300')
+        expect(cell).not.toHaveClass('bg-flame')
       })
     })
   })
