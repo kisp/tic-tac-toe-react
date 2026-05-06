@@ -2,12 +2,26 @@ import clsx from 'clsx'
 import {ButtonHTMLAttributes} from 'react'
 
 type ButtonSize = 'normal' | 'large'
+type ButtonVariant = 'primary' | 'secondary'
 
-const classes = (size: ButtonSize) => {
-  const baseStyles = 'bg-flame text-white font-semibold'
-  const hoverStyles = 'hover:bg-flame-dark'
+const classes = (size: ButtonSize, variant: ButtonVariant = 'primary') => {
   const focusStyles =
     'focus-visible:outline-none focus-visible:ring focus-visible:ring-flame/50'
+
+  const variantStyles = (variant: ButtonVariant) => {
+    if (variant === 'secondary') {
+      return clsx(
+        'border-2 border-flame bg-cream font-semibold text-flame',
+        'hover:bg-flame/10',
+        focusStyles,
+      )
+    }
+    return clsx(
+      'bg-flame font-semibold text-white',
+      'hover:bg-flame-dark',
+      focusStyles,
+    )
+  }
 
   const stylesForSize = (size: ButtonSize) => {
     if (size === 'normal') {
@@ -17,16 +31,18 @@ const classes = (size: ButtonSize) => {
     }
   }
 
-  return clsx(baseStyles, hoverStyles, focusStyles, stylesForSize(size))
+  return clsx(variantStyles(variant), stylesForSize(size))
 }
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   dataTestid?: string
   size?: ButtonSize
+  variant?: ButtonVariant
 }
 
 function Button({
   size = 'normal',
+  variant = 'primary',
   children,
   className,
   dataTestid,
@@ -34,7 +50,7 @@ function Button({
 }: ButtonProps) {
   return (
     <button
-      className={clsx(classes(size), className)}
+      className={clsx(classes(size, variant), className)}
       data-testid={dataTestid}
       {...props}
     >

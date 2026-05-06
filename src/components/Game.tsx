@@ -158,6 +158,7 @@ export function Game({
           {onReturnToWelcome && (
             <div className="pb-2">
               <Button
+                variant="secondary"
                 onClick={
                   isTurnStatus(status)
                     ? () => setShowAbortDialog(true)
@@ -290,6 +291,7 @@ export function Game({
                 </p>
                 <div className="flex gap-3">
                   <Button
+                    variant="secondary"
                     className="flex-1"
                     onClick={() => {
                       setAbortDialogClosing(true)
