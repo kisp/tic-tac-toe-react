@@ -14,6 +14,7 @@ import {
 import {BoardModel} from './models/GameModel.ts'
 import {PastGameResult} from './models/PastGame.ts'
 import {useLocalStorage} from './hooks/useLocalStorage.ts'
+import {getWinningFields} from './models/GameStatus.ts'
 
 type ShowGameStatus = false | 0 | true
 
@@ -33,6 +34,7 @@ function WelcomePage({
   onClearHistory: () => void
 }) {
   const [showClearHistoryDialog, setShowClearHistoryDialog] = useState(false)
+  const [hoveredGameId, setHoveredGameId] = useState<string | null>(null)
 
   return (
     <>
@@ -125,8 +127,18 @@ function WelcomePage({
                 key={game.id}
                 className="flex-col rounded-xl border-2 border-wood/30 bg-cream/50 p-2 shadow-md hover:border-wood/50"
                 data-testid="past-game-card"
+                onMouseEnter={() => setHoveredGameId(game.id)}
+                onMouseLeave={() => setHoveredGameId(null)}
               >
-                <Board interactive={false} boardModel={game.boardModel} />
+                <Board
+                  interactive={false}
+                  boardModel={game.boardModel}
+                  winningFields={
+                    hoveredGameId === game.id
+                      ? getWinningFields(game.boardModel)
+                      : null
+                  }
+                />
                 <div className="mt-1 text-center text-sm font-semibold text-bark">
                   {resultLabel(game.result)}
                 </div>

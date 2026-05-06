@@ -210,4 +210,81 @@ describe('App', () => {
       ).not.toBeInTheDocument()
     })
   })
+
+  describe('Past Games hover highlights', () => {
+    const xWinBoardModel = ['X', 'X', 'X', 'O', 'O', '', '', '', ''] as const
+
+    const drawBoardModel = [
+      'X',
+      'O',
+      'X',
+      'X',
+      'X',
+      'O',
+      'O',
+      'X',
+      'O',
+    ] as const
+
+    it('highlights winning cells when hovering over a past game where X won', async () => {
+      const user = userEvent.setup()
+      localStorage.setItem(
+        'pastGames',
+        JSON.stringify([
+          {
+            id: 'game-x-win',
+            boardModel: xWinBoardModel,
+            result: 'X',
+            strategy: 'deterministic',
+            timestamp: Date.now(),
+          },
+        ]),
+      )
+      render(<App />)
+
+      const cards = screen.getAllByTestId('past-game-card')
+      const cells = cards[0].querySelectorAll('[data-testid="cell"]')
+
+      expect(cells[0]).not.toHaveClass('bg-flame')
+      expect(cells[1]).not.toHaveClass('bg-flame')
+      expect(cells[2]).not.toHaveClass('bg-flame')
+
+      await user.hover(cards[0])
+
+      expect(cells[0]).toHaveClass('bg-flame')
+      expect(cells[1]).toHaveClass('bg-flame')
+      expect(cells[2]).toHaveClass('bg-flame')
+      expect(cells[3]).not.toHaveClass('bg-flame')
+
+      await user.unhover(cards[0])
+
+      expect(cells[0]).not.toHaveClass('bg-flame')
+    })
+
+    it('does not highlight any cells when hovering over a draw game', async () => {
+      const user = userEvent.setup()
+      localStorage.setItem(
+        'pastGames',
+        JSON.stringify([
+          {
+            id: 'game-draw',
+            boardModel: drawBoardModel,
+            result: 'draw',
+            strategy: 'deterministic',
+            timestamp: Date.now(),
+          },
+        ]),
+      )
+      render(<App />)
+
+      const cards = screen.getAllByTestId('past-game-card')
+      const cells = cards[0].querySelectorAll('[data-testid="cell"]')
+
+      await user.hover(cards[0])
+
+      cells.forEach(cell => {
+        expect(cell).not.toHaveClass('bg-flame')
+      })
+    })
+  })
 })
