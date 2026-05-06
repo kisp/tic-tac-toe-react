@@ -1,4 +1,4 @@
-import {render, screen, waitFor} from '@testing-library/react'
+import {act, render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Game from './Game'
 import {Strategy} from '../models/Strategies.ts'
@@ -666,6 +666,145 @@ describe('Game', () => {
       expect(
         screen.getByRole('button', {name: 'Return to Welcome Page'}),
       ).toBeInTheDocument()
+    })
+  })
+
+  describe('elapsed time', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('starts at 00:00', () => {
+      render(<Game />)
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('00:00')
+    })
+
+    it('increments every second during gameplay', () => {
+      render(<Game strategyName="deterministic" />)
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('00:00')
+
+      act(() => {
+        vi.advanceTimersByTime(3000)
+      })
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('00:03')
+    })
+
+    it('stops incrementing when game has already ended', () => {
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [4, 'O'],
+        [1, 'X'],
+        [6, 'O'],
+        [2, 'X'],
+      )
+
+      render(
+        <Game initialBoardModel={boardModel} strategyName="deterministic" />,
+      )
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('00:00')
+
+      act(() => {
+        vi.advanceTimersByTime(5000)
+      })
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('00:00')
+    })
+
+    it('formats time correctly for minutes and seconds', () => {
+      render(<Game strategyName="deterministic" />)
+
+      act(() => {
+        vi.advanceTimersByTime(125_000)
+      })
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('02:05')
+    })
+  })
+
+  describe('AI thinking indicator', () => {
+    it('does not show when AI is not thinking', () => {
+      render(<Game />)
+
+      expect(screen.queryByTestId('ai-thinking')).not.toBeInTheDocument()
+    })
+
+    it('shows when AI is thinking after player makes a move', async () => {
+      const user = userEvent.setup()
+      const strategy: Strategy = vi.fn().mockReturnValue(8).mockName('strategy')
+
+      render(<Game strategy={strategy} />)
+
+      const cells = screen.getAllByTestId('cell')
+      await user.click(cells[0])
+
+      expect(screen.getByTestId('ai-thinking')).toBeInTheDocument()
+
+      await waitFor(
+        () => {
+          expect(screen.queryByTestId('ai-thinking')).not.toBeInTheDocument()
+        },
+        {timeout: 3000},
+      )
+    })
+
+    it('does not show when game ends on player move', async () => {
+      const user = userEvent.setup()
+      const boardModel = placeMoves([0, 'X'], [4, 'O'], [1, 'X'], [6, 'O'])
+      const strategy: Strategy = vi.fn().mockName('strategy')
+
+      render(<Game initialBoardModel={boardModel} strategy={strategy} />)
+
+      await user.click(screen.getAllByTestId('cell')[2])
+
+      expect(screen.queryByTestId('ai-thinking')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('strategy display', () => {
+    it('does not show when strategyName is not provided', () => {
+      render(<Game />)
+
+      expect(screen.queryByTestId('strategy-display')).not.toBeInTheDocument()
+    })
+
+    it('shows deterministic strategy', () => {
+      render(<Game strategyName="deterministic" />)
+
+      expect(screen.getByTestId('strategy-display')).toHaveTextContent(
+        'Playing against: Deterministic',
+      )
+    })
+
+    it('shows random strategy', () => {
+      render(<Game strategyName="random" />)
+
+      expect(screen.getByTestId('strategy-display')).toHaveTextContent(
+        'Playing against: Random',
+      )
+    })
+
+    it('shows mostlyRandom strategy', () => {
+      render(<Game strategyName="mostlyRandom" />)
+
+      expect(screen.getByTestId('strategy-display')).toHaveTextContent(
+        'Playing against: Mostly random',
+      )
+    })
+
+    it('shows minimax strategy', () => {
+      render(<Game strategyName="minimax" />)
+
+      expect(screen.getByTestId('strategy-display')).toHaveTextContent(
+        'Playing against: Minimax',
+      )
     })
   })
 })

@@ -9,8 +9,12 @@ import {
   placeMove,
   PieceOrEmpty,
 } from '../models/GameModel.ts'
-import {deterministicStrategy, Strategy} from '../models/Strategies.ts'
-import {PastGameResult} from '../models/PastGame.ts'
+import {
+  deterministicStrategy,
+  Strategy,
+  StrategyName,
+} from '../models/Strategies.ts'
+import {PastGameResult, strategyLabel} from '../models/PastGame.ts'
 import {
   gameStatus,
   getWinningFields,
@@ -21,6 +25,12 @@ import {
 import Button from './Button.tsx'
 import ConfirmationDialog from './ConfirmationDialog.tsx'
 import Dialog from './Dialog.tsx'
+
+function formatElapsedSeconds(totalSeconds: number): string {
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+}
 
 function useCypress(
   boardModel: PieceOrEmpty[],
@@ -51,6 +61,7 @@ function useCypress(
 
 type GameProps = {
   strategy?: Strategy
+  strategyName?: StrategyName
   initialBoardModel?: BoardModel
   onReturnToWelcome?: () => void
   onGameComplete?: (boardModel: BoardModel, result: PastGameResult) => void
@@ -58,6 +69,7 @@ type GameProps = {
 
 export function Game({
   strategy = deterministicStrategy,
+  strategyName,
   initialBoardModel = createInitialBoardModel(),
   onReturnToWelcome,
   onGameComplete,
@@ -69,6 +81,7 @@ export function Game({
   const [showNotAllowedCursor, setShowNotAllowedCursor] = useState(false)
   const [lastMoveField, setLastMoveField] = useState<Field | null>(null)
   const [showAbortDialog, setShowAbortDialog] = useState(false)
+  const [elapsedSeconds, setElapsedSeconds] = useState(0)
 
   useCypress(boardModel, setBoardModel)
 
@@ -84,6 +97,16 @@ export function Game({
   }, [isAIThinking])
 
   const status = useMemo(() => gameStatus(boardModel), [boardModel])
+
+  useEffect(() => {
+    if (!isTurnStatus(status)) return
+
+    const timer = setInterval(() => {
+      setElapsedSeconds(prev => prev + 1)
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [status])
 
   const handleMove = () => {
     let handleMoveCalled = false
@@ -156,6 +179,44 @@ export function Game({
           <h1 className="py-4 text-center text-2xl font-bold text-bark sm:py-6 sm:text-3xl">
             {winMessage ?? 'Have fun with this game!'}
           </h1>
+          <div className="flex items-center gap-4 pb-2 text-sm text-bark/60">
+            {strategyName && (
+              <span data-testid="strategy-display">
+                Playing against: {strategyLabel(strategyName)}
+              </span>
+            )}
+            {strategyName && <span aria-hidden="true">·</span>}
+            <span data-testid="elapsed-time" className="font-mono tabular-nums">
+              {formatElapsedSeconds(elapsedSeconds)}
+            </span>
+            {isAIThinking && (
+              <span
+                data-testid="ai-thinking"
+                className="flex items-center"
+                aria-label="AI is thinking"
+              >
+                <span className="mr-0.5 text-bark/80">Thinking</span>
+                <span
+                  className="inline-block animate-thinking-dot"
+                  style={{animationDelay: '0ms'}}
+                >
+                  .
+                </span>
+                <span
+                  className="inline-block animate-thinking-dot"
+                  style={{animationDelay: '200ms'}}
+                >
+                  .
+                </span>
+                <span
+                  className="inline-block animate-thinking-dot"
+                  style={{animationDelay: '400ms'}}
+                >
+                  .
+                </span>
+              </span>
+            )}
+          </div>
           {onReturnToWelcome && (
             <div className="pb-2">
               <Button

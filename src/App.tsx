@@ -201,6 +201,7 @@ function App() {
         {!!showGame && (
           <Game
             strategy={strategyMap[strategyName]}
+            strategyName={strategyName}
             onReturnToWelcome={() => setShowGame(false)}
             onGameComplete={handleGameComplete}
           />
