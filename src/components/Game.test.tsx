@@ -727,6 +727,65 @@ describe('Game', () => {
 
       expect(screen.getByTestId('elapsed-time')).toHaveTextContent('02:05')
     })
+
+    it('uses wall-clock time, not interval counting', () => {
+      render(<Game strategyName="deterministic" />)
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('00:00')
+
+      act(() => {
+        vi.advanceTimersByTime(1500)
+      })
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('00:01')
+
+      act(() => {
+        vi.advanceTimersByTime(500)
+      })
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('00:02')
+    })
+
+    it('shows correct final time when game ends during play', () => {
+      // @ts-expect-error testing
+      window.Cypress = true
+
+      const boardModel = placeMoves([0, 'X'], [4, 'O'], [1, 'X'], [6, 'O'])
+
+      render(
+        <Game initialBoardModel={boardModel} strategyName="deterministic" />,
+      )
+
+      act(() => {
+        vi.advanceTimersByTime(5000)
+      })
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('00:05')
+
+      const winningBoardModel = placeMoves(
+        [0, 'X'],
+        [4, 'O'],
+        [1, 'X'],
+        [6, 'O'],
+        [2, 'X'],
+      )
+
+      act(() => {
+        // @ts-expect-error for testing
+        window.setBoardModel(winningBoardModel)
+      })
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('00:05')
+
+      act(() => {
+        vi.advanceTimersByTime(5000)
+      })
+
+      expect(screen.getByTestId('elapsed-time')).toHaveTextContent('00:05')
+
+      // @ts-expect-error cleanup
+      delete window.Cypress
+    })
   })
 
   describe('AI thinking indicator', () => {
