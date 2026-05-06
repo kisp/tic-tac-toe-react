@@ -10,7 +10,11 @@ import {gameStatus} from './GameStatus.ts'
 
 export type Strategy = (boardModel: BoardModel) => Field
 
-export type StrategyName = 'deterministic' | 'random' | 'mostlyRandom' | 'minimax'
+export type StrategyName =
+  | 'deterministic'
+  | 'random'
+  | 'mostlyRandom'
+  | 'minimax'
 
 function minimaxScore(boardModel: BoardModel, isMaximizing: boolean): number {
   const status = gameStatus(boardModel)
