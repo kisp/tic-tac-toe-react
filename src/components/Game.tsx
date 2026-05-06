@@ -66,6 +66,8 @@ export function Game({
   const [isAIThinking, setIsAIThinking] = useState(false)
   const [showNotAllowedCursor, setShowNotAllowedCursor] = useState(false)
   const [lastMoveField, setLastMoveField] = useState<Field | null>(null)
+  const [showAbortDialog, setShowAbortDialog] = useState(false)
+  const [abortDialogClosing, setAbortDialogClosing] = useState(false)
 
   useCypress(boardModel, setBoardModel)
 
@@ -153,10 +155,18 @@ export function Game({
           <h1 className="py-4 text-center text-2xl font-bold text-bark sm:py-6 sm:text-3xl">
             {winMessage ?? 'Have fun with this game!'}
           </h1>
-          {winMessage !== null && onReturnToWelcome && (
+          {onReturnToWelcome && (
             <div className="pb-2">
-              <Button onClick={onReturnToWelcome}>
-                Return to Welcome Page
+              <Button
+                onClick={
+                  isTurnStatus(status)
+                    ? () => setShowAbortDialog(true)
+                    : onReturnToWelcome
+                }
+              >
+                {isTurnStatus(status)
+                  ? 'Abort Game'
+                  : 'Return to Welcome Page'}
               </Button>
             </div>
           )}
@@ -244,6 +254,67 @@ export function Game({
                 >
                   Close
                 </Button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {showAbortDialog && (
+        <>
+          <div
+            className={clsx(
+              'fixed inset-0 z-50 bg-bark/60',
+              abortDialogClosing
+                ? 'animate-backdrop-fade-out'
+                : 'animate-backdrop-fade-in',
+            )}
+          ></div>
+          <div className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transform">
+            <div
+              className={clsx(
+                'min-w-[280px] overflow-hidden rounded-2xl border border-wood/30 bg-cream shadow-2xl',
+                abortDialogClosing
+                  ? 'animate-dialog-fade-out'
+                  : 'animate-dialog-scale-in',
+              )}
+            >
+              <div className="h-2 bg-wood/40" />
+              <div className="px-8 pb-8 pt-6 text-center">
+                <div className="mb-3 text-5xl" aria-hidden="true">
+                  ⚠️
+                </div>
+                <p
+                  className="mb-6 text-xl font-bold text-bark"
+                  data-testid="abort-dialog-message"
+                >
+                  Are you sure you want to quit the game?
+                </p>
+                <div className="flex gap-3">
+                  <Button
+                    className="flex-1"
+                    onClick={() => {
+                      setAbortDialogClosing(true)
+                      setTimeout(() => {
+                        setShowAbortDialog(false)
+                        setAbortDialogClosing(false)
+                      }, 500)
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    size="large"
+                    className="flex-1"
+                    onClick={() => {
+                      setShowAbortDialog(false)
+                      setAbortDialogClosing(false)
+                      onReturnToWelcome?.()
+                    }}
+                  >
+                    Quit Game
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
