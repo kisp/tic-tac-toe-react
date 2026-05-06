@@ -15,7 +15,7 @@ function classes(
     isSmall ? 'text-lg font-bold text-bark' : 'text-5xl font-bold text-bark',
     'border border-wood-dark',
     'select-none bg-cream/50',
-    isSmall ? '' : 'min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0',
+    'min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0',
     'focus-visible:outline-none focus-visible:ring focus-visible:ring-inset focus-visible:ring-flame/50',
     {
       'border-t-0': noBorder.includes('t'),
