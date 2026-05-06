@@ -162,8 +162,7 @@ function WelcomePage({
 
 function App() {
   const [showGame, setShowGame] = useState<ShowGameStatus>(false)
-  const [strategyName, setStrategyName] =
-    useState<StrategyName>('deterministic')
+  const [strategyName, setStrategyName] = useState<StrategyName>('mostlyRandom')
   const [pastGames, setPastGames] = useLocalStorage<PastGame[]>('pastGames', [])
 
   const handleGameComplete = (

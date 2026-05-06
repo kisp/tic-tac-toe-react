@@ -45,7 +45,7 @@ describe('Past Games', () => {
     cy.get('[data-testid="past-games-list"]').should('exist')
     cy.get('[data-testid="past-game-card"]').should('have.length', 1)
     cy.get('[data-testid="past-game-card"]').contains('X won!')
-    cy.get('[data-testid="past-game-card"]').contains('Deterministic')
+    cy.get('[data-testid="past-game-card"]').contains('Mostly random')
   })
 
   it('shows a draw game in Past Games', () => {
@@ -81,7 +81,7 @@ describe('Past Games', () => {
   })
 
   it('shows multiple past games in reverse order', () => {
-    // Play first game (X wins with deterministic)
+    // Play first game (X wins)
     cy.get('[data-testid="start-new-game-button"]').click()
     cy.get('[data-testid="game"]').should('exist')
 

@@ -39,6 +39,15 @@ describe('Player makes a move', () => {
       cy.get('[data-testid="cell"]').eq(2).should('have.text', 'O')
     })
   })
+})
+
+describe('Player makes a move with deterministic strategy', () => {
+  beforeEach(() => {
+    cy.visit('/')
+    cy.get('[data-testid="strategy-deterministic"]').click()
+    cy.get('[data-testid="start-new-game-button"]').click()
+    cy.get('[data-testid="game"]').should('exist')
+  })
 
   describe('when clicking an already occupied cell', () => {
     it('does not overwrite the existing piece', () => {
