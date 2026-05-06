@@ -2,17 +2,19 @@ import Button from './components/Button.tsx'
 import ConfirmationDialog from './components/ConfirmationDialog.tsx'
 import Game from './components/Game.tsx'
 import clsx from 'clsx'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import Board from './components/Board.tsx'
 import {strategyMap, StrategyName} from './models/Strategies.ts'
 import {
   PastGame,
+  PastGameResult,
   createPastGame,
+  formatAbsoluteTime,
+  formatRelativeTime,
   resultLabel,
   strategyLabel,
 } from './models/PastGame.ts'
 import {BoardModel} from './models/GameModel.ts'
-import {PastGameResult} from './models/PastGame.ts'
 import {useLocalStorage} from './hooks/useLocalStorage.ts'
 import {getWinningFields} from './models/GameStatus.ts'
 
@@ -35,6 +37,21 @@ function WelcomePage({
 }) {
   const [showClearHistoryDialog, setShowClearHistoryDialog] = useState(false)
   const [hoveredGameId, setHoveredGameId] = useState<string | null>(null)
+  const [currentTime, setCurrentTime] = useState(Date.now())
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now())
+    }, 60000)
+
+    const handleFocus = () => setCurrentTime(Date.now())
+    window.addEventListener('focus', handleFocus)
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [])
 
   return (
     <>
@@ -144,6 +161,12 @@ function WelcomePage({
                 </div>
                 <div className="text-center text-xs text-bark/60">
                   {strategyLabel(game.strategy)}
+                </div>
+                <div
+                  className="text-center text-xs text-bark/50"
+                  title={formatAbsoluteTime(game.timestamp)}
+                >
+                  {formatRelativeTime(game.timestamp, currentTime)}
                 </div>
               </div>
             ))}
