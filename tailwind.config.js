@@ -47,6 +47,10 @@ export default {
           from: {opacity: '0.5'},
           to: {opacity: '0'},
         },
+        'thinking-dot': {
+          '0%, 100%': {opacity: '0.3'},
+          '50%': {opacity: '1'},
+        },
       },
       animation: {
         'win-pop': 'win-pop 0.6s ease-out',
@@ -55,6 +59,7 @@ export default {
         'dialog-fade-out': 'dialog-fade-out 500ms ease-in-out forwards',
         'backdrop-fade-in': 'backdrop-fade-in 500ms ease-in-out forwards',
         'backdrop-fade-out': 'backdrop-fade-out 500ms ease-in-out forwards',
+        'thinking-dot': 'thinking-dot 1.2s ease-in-out infinite',
       },
     },
   },
