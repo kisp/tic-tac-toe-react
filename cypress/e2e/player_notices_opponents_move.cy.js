@@ -2,6 +2,7 @@ describe("Player notices opponent's move", () => {
   describe('starting from an empty board', () => {
     beforeEach(() => {
       cy.visit('/')
+      cy.get('[data-testid="strategy-deterministic"]').click()
       cy.get('[data-testid="start-new-game-button"]').click()
       cy.get('[data-testid="game"]').should('exist')
     })

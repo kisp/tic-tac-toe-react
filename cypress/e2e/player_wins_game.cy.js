@@ -59,6 +59,16 @@ describe('Player wins game', () => {
   })
 
   describe('when O wins on a row', () => {
+    const visitAndStartGameWithDeterministic = () => {
+      cy.visit('/')
+      cy.get('[data-testid="strategy-deterministic"]').click()
+      cy.get('[data-testid="start-new-game-button"]').click()
+      cy.get('[data-testid="game"]').should('exist')
+      cy.get('[data-testid="cell"]').eq(0).should('have.text', '')
+      cy.get('[data-testid="game-ends-message"]').should('not.exist')
+    }
+
+    beforeEach(visitAndStartGameWithDeterministic)
     beforeEach(() => {
       cy.window().invoke('setBoardModel', [
         'O',
