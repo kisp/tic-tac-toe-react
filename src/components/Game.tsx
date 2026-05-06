@@ -9,6 +9,7 @@ import {
   PieceOrEmpty,
 } from '../models/GameModel.ts'
 import {deterministicStrategy, Strategy} from '../models/Strategies.ts'
+import {PastGameResult} from '../models/PastGame.ts'
 import {
   gameStatus,
   getWinningFields,
@@ -49,12 +50,14 @@ type GameProps = {
   strategy?: Strategy
   initialBoardModel?: BoardModel
   onReturnToWelcome?: () => void
+  onGameComplete?: (boardModel: BoardModel, result: PastGameResult) => void
 }
 
 export function Game({
   strategy = deterministicStrategy,
   initialBoardModel = createInitialBoardModel(),
   onReturnToWelcome,
+  onGameComplete,
 }: GameProps) {
   const [boardModel, setBoardModel] = useState<BoardModel>(initialBoardModel)
   const [showGameEndDialog, setShowGameEndDialog] = useState(false)
@@ -227,8 +230,10 @@ export function Game({
                   onClick={() => {
                     if (isWinStatus(status)) {
                       setWinMessage(`The winner is ${status.player}!`)
+                      onGameComplete?.(boardModel, status.player)
                     } else if (isDrawStatus(status)) {
                       setWinMessage("It's a draw!")
+                      onGameComplete?.(boardModel, 'draw')
                     }
                     setDialogClosing(true)
                     setTimeout(() => {

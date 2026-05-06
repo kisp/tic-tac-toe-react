@@ -4,6 +4,10 @@ import clsx from 'clsx'
 import {useState} from 'react'
 import Board from './components/Board.tsx'
 import {strategyMap, StrategyName} from './models/Strategies.ts'
+import {PastGame, createPastGame, resultLabel, strategyLabel} from './models/PastGame.ts'
+import {BoardModel} from './models/GameModel.ts'
+import {PastGameResult} from './models/PastGame.ts'
+import {useLocalStorage} from './hooks/useLocalStorage.ts'
 
 type ShowGameStatus = false | 0 | true
 
@@ -12,11 +16,15 @@ function WelcomePage({
   setShowGame,
   strategyName,
   setStrategyName,
+  pastGames,
+  onClearHistory,
 }: {
   showGame: ShowGameStatus
   setShowGame: (arg: ShowGameStatus) => void
   strategyName: StrategyName
   setStrategyName: (arg: StrategyName) => void
+  pastGames: PastGame[]
+  onClearHistory: () => void
 }) {
   return (
     <>
@@ -82,17 +90,36 @@ function WelcomePage({
       <h2 className="py-6 text-center text-xl font-semibold text-bark">
         Past Games
       </h2>
-      <div className="flex flex-wrap justify-around gap-6">
-        <div className="h-28 w-28 flex-col rounded-xl border-2 border-wood/30 bg-cream/50 p-2 shadow-md hover:border-wood/50">
-          <Board interactive={false} />
-        </div>
-        <div className="h-28 w-28 flex-col rounded-xl border-2 border-wood/30 bg-cream/50 p-2 shadow-md hover:border-wood/50">
-          <Board interactive={false} />
-        </div>
-        <div className="h-28 w-28 flex-col rounded-xl border-2 border-wood/30 bg-cream/50 p-2 shadow-md hover:border-wood/50">
-          <Board interactive={false} />
-        </div>
-      </div>
+      {pastGames.length === 0 ? (
+        <p className="text-center text-bark/60" data-testid="no-past-games">
+          No games played yet
+        </p>
+      ) : (
+        <>
+          <div className="flex flex-wrap justify-around gap-6" data-testid="past-games-list">
+            {pastGames.map(game => (
+              <div
+                key={game.id}
+                className="flex-col rounded-xl border-2 border-wood/30 bg-cream/50 p-2 shadow-md hover:border-wood/50"
+                data-testid="past-game-card"
+              >
+                <Board interactive={false} boardModel={game.boardModel} />
+                <div className="mt-1 text-center text-sm font-semibold text-bark">
+                  {resultLabel(game.result)}
+                </div>
+                <div className="text-center text-xs text-bark/60">
+                  {strategyLabel(game.strategy)}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 flex justify-center">
+            <Button onClick={onClearHistory} dataTestid="clear-history-button">
+              Clear History
+            </Button>
+          </div>
+        </>
+      )}
     </>
   )
 }
@@ -101,6 +128,16 @@ function App() {
   const [showGame, setShowGame] = useState<ShowGameStatus>(false)
   const [strategyName, setStrategyName] =
     useState<StrategyName>('deterministic')
+  const [pastGames, setPastGames] = useLocalStorage<PastGame[]>('pastGames', [])
+
+  const handleGameComplete = (boardModel: BoardModel, result: PastGameResult) => {
+    const game = createPastGame(boardModel, result, strategyName)
+    setPastGames(prev => [game, ...prev])
+  }
+
+  const handleClearHistory = () => {
+    setPastGames([])
+  }
 
   return (
     <div className="min-h-screen">
@@ -111,6 +148,8 @@ function App() {
             setShowGame={setShowGame}
             strategyName={strategyName}
             setStrategyName={setStrategyName}
+            pastGames={pastGames}
+            onClearHistory={handleClearHistory}
           />
         </div>
       )}
@@ -124,6 +163,7 @@ function App() {
           <Game
             strategy={strategyMap[strategyName]}
             onReturnToWelcome={() => setShowGame(false)}
+            onGameComplete={handleGameComplete}
           />
         )}
       </div>

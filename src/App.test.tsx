@@ -3,6 +3,10 @@ import userEvent from '@testing-library/user-event'
 import App from './App'
 
 describe('App', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
+
   it('shows a greeting', () => {
     render(<App />)
 
@@ -55,11 +59,18 @@ describe('App', () => {
     expect(heading).toBeInTheDocument()
   })
 
-  it('shows 3 past game boards', () => {
+  it('shows "No games played yet" when no games have been played', () => {
     render(<App />)
 
-    const boards = screen.getAllByTestId('board')
-    expect(boards).toHaveLength(3)
+    expect(screen.getByTestId('no-past-games')).toHaveTextContent(
+      'No games played yet',
+    )
+  })
+
+  it('does not show past game cards when no games have been played', () => {
+    render(<App />)
+
+    expect(screen.queryByTestId('past-games-list')).not.toBeInTheDocument()
   })
 
   it('shows strategy radio buttons with deterministic selected by default', () => {
@@ -92,5 +103,13 @@ describe('App', () => {
     await user.click(screen.getByTestId('strategy-deterministic'))
     expect(screen.getByTestId('strategy-deterministic')).toBeChecked()
     expect(screen.getByTestId('strategy-random')).not.toBeChecked()
+  })
+
+  it('does not show Clear History button when no games have been played', () => {
+    render(<App />)
+
+    expect(
+      screen.queryByTestId('clear-history-button'),
+    ).not.toBeInTheDocument()
   })
 })
