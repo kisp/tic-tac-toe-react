@@ -193,35 +193,35 @@ export function Game({
             <span data-testid="elapsed-time" className="font-mono tabular-nums">
               {formatElapsedSeconds(elapsedSeconds)}
             </span>
-            {isAIThinking && (
-              <span
-                data-testid="ai-thinking"
-                className="flex items-center"
-                aria-label="AI is thinking"
-              >
-                <SparklesIcon className="mr-1 h-4 w-4 animate-thinking-pulse text-honey" />
-                <span className="text-bark/80">Thinking</span>
-                <span
-                  className="inline-block animate-thinking-dot"
-                  style={{animationDelay: '0ms'}}
-                >
-                  .
-                </span>
-                <span
-                  className="inline-block animate-thinking-dot"
-                  style={{animationDelay: '200ms'}}
-                >
-                  .
-                </span>
-                <span
-                  className="inline-block animate-thinking-dot"
-                  style={{animationDelay: '400ms'}}
-                >
-                  .
-                </span>
-              </span>
-            )}
           </div>
+          {isAIThinking && (
+            <span
+              data-testid="ai-thinking"
+              className="flex items-center pb-2 text-sm"
+              aria-label="AI is thinking"
+            >
+              <SparklesIcon className="mr-1 h-4 w-4 animate-thinking-pulse text-honey" />
+              <span className="text-bark/80">Thinking</span>
+              <span
+                className="inline-block animate-thinking-dot"
+                style={{animationDelay: '0ms'}}
+              >
+                .
+              </span>
+              <span
+                className="inline-block animate-thinking-dot"
+                style={{animationDelay: '200ms'}}
+              >
+                .
+              </span>
+              <span
+                className="inline-block animate-thinking-dot"
+                style={{animationDelay: '400ms'}}
+              >
+                .
+              </span>
+            </span>
+          )}
           {onReturnToWelcome && (
             <div className="pb-2">
               <Button
