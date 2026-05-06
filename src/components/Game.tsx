@@ -291,7 +291,7 @@ export function Game({
                 </p>
                 <div className="flex gap-3">
                   <Button
-variant={isTurnStatus(status) ? 'secondary' : 'primary'}
+                    variant={isTurnStatus(status) ? 'secondary' : 'primary'}
                     className="flex-1"
                     onClick={() => {
                       setAbortDialogClosing(true)
