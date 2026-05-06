@@ -45,7 +45,7 @@ function Dialog({
       <div className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transform">
         <div
           className={clsx(
-            'min-w-[280px] overflow-hidden rounded-2xl border border-wood/30 bg-cream shadow-2xl',
+            'min-w-[280px] max-w-[360px] overflow-hidden rounded-2xl border border-wood/30 bg-cream shadow-2xl',
             closing
               ? 'animate-dialog-fade-out'
               : 'animate-dialog-scale-in',
