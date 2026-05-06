@@ -123,4 +123,90 @@ describe('App', () => {
 
     expect(screen.queryByTestId('clear-history-button')).not.toBeInTheDocument()
   })
+
+  describe('Clear History confirmation dialog', () => {
+    const pastGames = [
+      {
+        id: '1',
+        boardModel: ['X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'] as const,
+        result: 'X' as const,
+        strategy: 'deterministic' as const,
+        timestamp: Date.now(),
+      },
+    ]
+
+    it('shows Clear History button with secondary style when games exist', () => {
+      localStorage.setItem('pastGames', JSON.stringify(pastGames))
+      render(<App />)
+
+      const button = screen.getByTestId('clear-history-button')
+      expect(button).toBeInTheDocument()
+      expect(button).toHaveClass('border-flame')
+      expect(button).toHaveClass('text-flame')
+    })
+
+    it('shows confirmation dialog when Clear History is clicked', async () => {
+      localStorage.setItem('pastGames', JSON.stringify(pastGames))
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByTestId('clear-history-button'))
+
+      expect(
+        screen.getByTestId('clear-history-dialog-message'),
+      ).toHaveTextContent(
+        'Are you sure you want to clear all game history? This action cannot be undone.',
+      )
+      expect(screen.getByRole('button', {name: 'Cancel'})).toBeInTheDocument()
+      expect(screen.getByRole('button', {name: 'Clear'})).toBeInTheDocument()
+    })
+
+    it('clears history and closes dialog when Clear is clicked', async () => {
+      localStorage.setItem('pastGames', JSON.stringify(pastGames))
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByTestId('clear-history-button'))
+      await user.click(screen.getByRole('button', {name: 'Clear'}))
+
+      expect(screen.getByTestId('no-past-games')).toHaveTextContent(
+        'No games played yet',
+      )
+
+      await waitFor(() =>
+        expect(
+          screen.queryByTestId('clear-history-dialog-message'),
+        ).not.toBeInTheDocument(),
+      )
+      expect(
+        screen.queryByTestId('clear-history-button'),
+      ).not.toBeInTheDocument()
+    })
+
+    it('closes dialog without clearing history when Cancel is clicked', async () => {
+      localStorage.setItem('pastGames', JSON.stringify(pastGames))
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByTestId('clear-history-button'))
+      await user.click(screen.getByRole('button', {name: 'Cancel'}))
+
+      await waitFor(() =>
+        expect(
+          screen.queryByTestId('clear-history-dialog-message'),
+        ).not.toBeInTheDocument(),
+      )
+      expect(screen.getByTestId('past-games-list')).toBeInTheDocument()
+      expect(screen.getByTestId('clear-history-button')).toBeInTheDocument()
+    })
+
+    it('does not show confirmation dialog initially', () => {
+      localStorage.setItem('pastGames', JSON.stringify(pastGames))
+      render(<App />)
+
+      expect(
+        screen.queryByTestId('clear-history-dialog-message'),
+      ).not.toBeInTheDocument()
+    })
+  })
 })

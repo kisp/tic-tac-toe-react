@@ -196,6 +196,16 @@ describe('Past Games', () => {
 
     cy.get('[data-testid="clear-history-button"]').click()
 
+    // Confirmation dialog should appear
+    cy.get('[data-testid="clear-history-dialog-message"]')
+      .should('be.visible')
+      .and(
+        'have.text',
+        'Are you sure you want to clear all game history? This action cannot be undone.',
+      )
+
+    cy.get('[data-testid="clear-history-confirm-button"]').click()
+
     cy.get('[data-testid="no-past-games"]').should(
       'have.text',
       'No games played yet',
