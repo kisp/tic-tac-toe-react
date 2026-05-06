@@ -58,12 +58,8 @@ describe('ConfirmationDialog', () => {
     )
 
     expect(screen.getByText('🗑️')).toBeInTheDocument()
-    expect(
-      screen.getByRole('button', {name: 'Go Back'}),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('button', {name: 'Delete'}),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', {name: 'Go Back'})).toBeInTheDocument()
+    expect(screen.getByRole('button', {name: 'Delete'})).toBeInTheDocument()
   })
 
   it('renders with custom dataTestId', () => {
@@ -137,8 +133,9 @@ describe('ConfirmationDialog', () => {
       />,
     )
 
-    const accentBar = screen.getByText('Are you sure?').closest('div')
-      ?.previousElementSibling
+    const accentBar = screen
+      .getByText('Are you sure?')
+      .closest('div')?.previousElementSibling
     expect(accentBar).toHaveClass('bg-honey')
   })
 })

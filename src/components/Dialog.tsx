@@ -37,18 +37,14 @@ function Dialog({
       <div
         className={clsx(
           'fixed inset-0 z-50 bg-bark/60',
-          closing
-            ? 'animate-backdrop-fade-out'
-            : 'animate-backdrop-fade-in',
+          closing ? 'animate-backdrop-fade-out' : 'animate-backdrop-fade-in',
         )}
       ></div>
       <div className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transform">
         <div
           className={clsx(
             'min-w-[280px] max-w-[360px] overflow-hidden rounded-2xl border border-wood/30 bg-cream shadow-2xl',
-            closing
-              ? 'animate-dialog-fade-out'
-              : 'animate-dialog-scale-in',
+            closing ? 'animate-dialog-fade-out' : 'animate-dialog-scale-in',
           )}
         >
           <div className={clsx('h-2', accentClassName)} />

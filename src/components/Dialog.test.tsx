@@ -30,8 +30,9 @@ describe('Dialog', () => {
       </Dialog>,
     )
 
-    const accentBar = screen.getByText('Dialog content').closest('div')
-      ?.previousElementSibling
+    const accentBar = screen
+      .getByText('Dialog content')
+      .closest('div')?.previousElementSibling
     expect(accentBar).toHaveClass('bg-wood/40')
   })
 
@@ -42,8 +43,9 @@ describe('Dialog', () => {
       </Dialog>,
     )
 
-    const accentBar = screen.getByText('Dialog content').closest('div')
-      ?.previousElementSibling
+    const accentBar = screen
+      .getByText('Dialog content')
+      .closest('div')?.previousElementSibling
     expect(accentBar).toHaveClass('bg-honey')
   })
 
@@ -53,9 +55,7 @@ describe('Dialog', () => {
 
     render(
       <Dialog open={true} onClose={onClose}>
-        {closeDialog => (
-          <button onClick={closeDialog}>Close</button>
-        )}
+        {closeDialog => <button onClick={closeDialog}>Close</button>}
       </Dialog>,
     )
 
@@ -85,9 +85,7 @@ describe('Dialog', () => {
 
     render(
       <Dialog open={true} onClose={onClose}>
-        {closeDialog => (
-          <button onClick={closeDialog}>Close</button>
-        )}
+        {closeDialog => <button onClick={closeDialog}>Close</button>}
       </Dialog>,
     )
 

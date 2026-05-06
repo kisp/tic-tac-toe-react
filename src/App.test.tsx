@@ -178,7 +178,9 @@ describe('App', () => {
           screen.queryByTestId('clear-history-dialog-message'),
         ).not.toBeInTheDocument(),
       )
-      expect(screen.queryByTestId('clear-history-button')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('clear-history-button'),
+      ).not.toBeInTheDocument()
     })
 
     it('closes dialog without clearing history when Cancel is clicked', async () => {
