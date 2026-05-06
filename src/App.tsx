@@ -138,6 +138,7 @@ function WelcomePage({
                       ? getWinningFields(game.boardModel)
                       : null
                   }
+                  size="small"
                 />
                 <div className="mt-1 text-center text-sm font-semibold text-bark">
                   {resultLabel(game.result)}

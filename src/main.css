@@ -23,3 +23,7 @@
 .piece-shadow {
   text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
 }
+
+.piece-shadow-sm {
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+}

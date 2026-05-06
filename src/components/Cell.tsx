@@ -3,18 +3,19 @@ import {MouseEventHandler, useEffect, useState} from 'react'
 import {PieceOrEmpty} from '../models/GameModel.ts'
 
 function classes(
-  {noBorder = [], piece, interactive, highlighted}: CellProps,
+  {noBorder = [], piece, interactive, highlighted, size = 'normal'}: CellProps,
   isFlashing: boolean,
   cursorDelayed: boolean,
 ) {
   const isNonInteractive = interactive === false
+  const isSmall = size === 'small'
 
   return clsx(
     'flex items-center justify-center',
-    'text-5xl font-bold text-bark',
+    isSmall ? 'text-lg font-bold text-bark' : 'text-5xl font-bold text-bark',
     'border border-wood-dark',
     'select-none bg-cream/50',
-    'min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0',
+    isSmall ? '' : 'min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0',
     'focus-visible:outline-none focus-visible:ring focus-visible:ring-inset focus-visible:ring-flame/50',
     {
       'border-t-0': noBorder.includes('t'),
@@ -92,6 +93,7 @@ function useCursorDelay(piece?: PieceOrEmpty, interactive?: boolean): boolean {
 }
 
 export type BorderPosition = 't' | 'b' | 'l' | 'r'
+export type CellSize = 'normal' | 'small'
 
 type CellProps = {
   piece?: PieceOrEmpty
@@ -100,6 +102,7 @@ type CellProps = {
   interactive?: boolean
   highlighted?: boolean
   highlightDelay?: number
+  size?: CellSize
 }
 
 function Cell(props: CellProps) {
@@ -113,13 +116,16 @@ function Cell(props: CellProps) {
       ? {animationDelay: `${props.highlightDelay}ms`}
       : undefined
 
+  const shadowClass =
+    props.size === 'small' ? 'piece-shadow-sm' : 'piece-shadow'
+
   if (interactive) {
     return (
       <button
         onClick={!piece ? onClick : undefined}
         className={clsx(
           classes(props, isFlashing, cursorDelayed),
-          piece && 'piece-shadow',
+          piece && shadowClass,
         )}
         style={style}
         data-testid="cell"
@@ -133,7 +139,7 @@ function Cell(props: CellProps) {
       <div
         className={clsx(
           classes(props, isFlashing, cursorDelayed),
-          piece && 'piece-shadow',
+          piece && shadowClass,
         )}
         style={style}
         data-testid="cell"

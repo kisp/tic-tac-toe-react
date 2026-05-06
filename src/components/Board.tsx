@@ -1,4 +1,4 @@
-import Cell, {BorderPosition} from './Cell.tsx'
+import Cell, {BorderPosition, CellSize} from './Cell.tsx'
 import clsx from 'clsx'
 import {
   allFields,
@@ -29,6 +29,7 @@ type BoardProps = {
   onMove?: (field: Field) => void
   interactive?: boolean
   winningFields?: Field[] | null
+  size?: CellSize
 }
 
 export function Board({
@@ -37,6 +38,7 @@ export function Board({
   onMove = _field => null,
   interactive = true,
   winningFields,
+  size = 'normal',
 }: BoardProps) {
   const sortedWinningFields = winningFields
     ? [...winningFields].sort((a, b) => a - b)
@@ -57,6 +59,7 @@ export function Board({
         interactive={interactive}
         highlighted={isHighlighted}
         highlightDelay={highlightDelay}
+        size={size}
       />
     )
   }
