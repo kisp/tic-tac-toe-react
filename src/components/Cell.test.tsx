@@ -138,6 +138,43 @@ describe('Cell', () => {
 
       expect(handleClick).not.toHaveBeenCalled()
     })
+
+    it('does not show cursor-not-allowed on empty cell', () => {
+      render(<Cell interactive={false} />)
+      const cell = screen.getByTestId('cell')
+
+      expect(cell).not.toHaveClass('cursor-not-allowed')
+    })
+
+    it('does not show cursor-not-allowed on X piece', () => {
+      render(<Cell interactive={false} piece="X" />)
+      const cell = screen.getByTestId('cell')
+
+      expect(cell).not.toHaveClass('cursor-not-allowed')
+    })
+
+    it('does not show cursor-not-allowed on O piece', () => {
+      render(<Cell interactive={false} piece="O" />)
+      const cell = screen.getByTestId('cell')
+
+      expect(cell).not.toHaveClass('cursor-not-allowed')
+    })
+
+    it('has transition-colors for smooth hover transitions', () => {
+      render(<Cell interactive={false} piece="X" />)
+      const cell = screen.getByTestId('cell')
+
+      expect(cell).toHaveClass('transition-colors')
+    })
+
+    it('applies highlight styling without pop animation when highlighted', () => {
+      render(<Cell interactive={false} piece="X" highlighted />)
+      const cell = screen.getByTestId('cell')
+
+      expect(cell).toHaveClass('bg-flame')
+      expect(cell).toHaveClass('text-cream')
+      expect(cell).not.toHaveClass('animate-win-pop')
+    })
   })
 
   describe('cursor delay on X piece', () => {

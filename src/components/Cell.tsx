@@ -7,6 +7,8 @@ function classes(
   isFlashing: boolean,
   cursorDelayed: boolean,
 ) {
+  const isNonInteractive = interactive === false
+
   return clsx(
     'flex items-center justify-center',
     'text-5xl font-bold text-bark',
@@ -20,27 +22,35 @@ function classes(
       'border-b-0': noBorder.includes('b'),
       'border-l-0': noBorder.includes('l'),
     },
-    {'transition-colors duration-1000': piece === 'X' && !highlighted},
+    {'transition-colors duration-300': isNonInteractive},
+    {
+      'transition-colors duration-1000':
+        piece === 'X' && !highlighted && !isNonInteractive,
+    },
     {
       'bg-honey/30': isFlashing && piece === 'O' && !highlighted,
     },
     {
       'transition-colors duration-1000':
-        piece === 'O' && !isFlashing && !highlighted,
+        piece === 'O' && !isFlashing && !highlighted && !isNonInteractive,
     },
     {
       'cursor-pointer hover:bg-honey/30':
-        interactive !== false &&
+        !isNonInteractive &&
         (!piece || (piece === 'X' && (isFlashing || cursorDelayed))),
     },
     {
       'cursor-not-allowed':
-        (piece && (piece === 'O' || (!cursorDelayed && !isFlashing))) ||
-        (!piece && interactive === false),
+        !isNonInteractive &&
+        piece &&
+        (piece === 'O' || (!cursorDelayed && !isFlashing)),
     },
     {
       'animate-win-pop bg-flame text-cream transition-colors duration-500':
-        highlighted,
+        highlighted && !isNonInteractive,
+    },
+    {
+      'bg-flame text-cream': highlighted && isNonInteractive,
     },
   )
 }
