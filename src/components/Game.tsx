@@ -158,7 +158,11 @@ export function Game({
           {onReturnToWelcome && (
             <div className="pb-2">
               <Button
-                variant="secondary"
+                variant={
+                  isTurnStatus(status) || showGameEndDialog
+                    ? 'secondary'
+                    : 'primary'
+                }
                 onClick={
                   isTurnStatus(status)
                     ? () => setShowAbortDialog(true)
