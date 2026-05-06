@@ -28,6 +28,8 @@ jobs:
           cache: npm
       - name: Install Dependencies
         run: npm ci
+      - name: Audit dependencies for critical vulnerabilities
+        run: npm audit --audit-level=critical
       - name: Unit Tests
         run: npm run test:ci
       - name: E2E Tests
