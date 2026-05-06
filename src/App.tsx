@@ -154,6 +154,7 @@ function WelcomePage({
         message="Are you sure you want to clear all game history? This action cannot be undone."
         confirmLabel="Clear"
         dataTestId="clear-history-dialog-message"
+        confirmButtonTestId="clear-history-confirm-button"
       />
     </>
   )

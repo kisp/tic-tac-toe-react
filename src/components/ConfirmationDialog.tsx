@@ -11,6 +11,7 @@ interface ConfirmationDialogProps {
   cancelLabel?: string
   accentClassName?: string
   dataTestId?: string
+  confirmButtonTestId?: string
 }
 
 function ConfirmationDialog({
@@ -23,6 +24,7 @@ function ConfirmationDialog({
   cancelLabel = 'Cancel',
   accentClassName,
   dataTestId,
+  confirmButtonTestId,
 }: ConfirmationDialogProps) {
   return (
     <Dialog open={open} onClose={onClose} accentClassName={accentClassName}>
@@ -48,6 +50,7 @@ function ConfirmationDialog({
             <Button
               size="large"
               className="flex-1"
+              dataTestid={confirmButtonTestId}
               onClick={() => {
                 onConfirm()
                 closeDialog()

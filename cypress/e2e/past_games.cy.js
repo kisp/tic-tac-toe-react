@@ -204,7 +204,7 @@ it('can clear history with the Clear History button', () => {
           'Are you sure you want to clear all game history? This action cannot be undone.',
         )
 
-      cy.contains('button', 'Clear').click()
+      cy.get('[data-testid="clear-history-confirm-button"]').click()
 
       cy.get('[data-testid="no-past-games"]').should(
         'have.text',
