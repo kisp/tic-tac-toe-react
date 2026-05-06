@@ -1,5 +1,6 @@
 import Board from './Board.tsx'
 import clsx from 'clsx'
+import {StarIcon, HandThumbUpIcon} from '@heroicons/react/24/solid'
 import {useEffect, useMemo, useState} from 'react'
 import {
   BoardModel,
@@ -201,9 +202,13 @@ export function Game({
       >
         {closeDialog => (
           <>
-            <div className="mb-3 text-5xl" aria-hidden="true">
-              {isWinStatus(status) && '🏆'}
-              {isDrawStatus(status) && '🤝'}
+            <div className="mb-3" aria-hidden="true">
+              {isWinStatus(status) && (
+                <StarIcon className="mx-auto h-16 w-16 text-honey" />
+              )}
+              {isDrawStatus(status) && (
+                <HandThumbUpIcon className="mx-auto h-16 w-16 text-wood/60" />
+              )}
             </div>
             <p
               className="mb-6 text-xl font-bold text-bark"

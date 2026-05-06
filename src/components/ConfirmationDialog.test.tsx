@@ -1,6 +1,7 @@
 import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import ConfirmationDialog from './ConfirmationDialog'
+import {TrashIcon} from '@heroicons/react/24/solid'
 
 describe('ConfirmationDialog', () => {
   it('does not render when open is false', () => {
@@ -30,7 +31,7 @@ describe('ConfirmationDialog', () => {
   })
 
   it('renders with default icon, labels, and dataTestId', () => {
-    render(
+    const {container} = render(
       <ConfirmationDialog
         open={true}
         onClose={() => {}}
@@ -39,13 +40,13 @@ describe('ConfirmationDialog', () => {
       />,
     )
 
-    expect(screen.getByText('⚠️')).toBeInTheDocument()
+    expect(container.querySelector('svg')).toBeInTheDocument()
     expect(screen.getByRole('button', {name: 'Cancel'})).toBeInTheDocument()
     expect(screen.getByRole('button', {name: 'Confirm'})).toBeInTheDocument()
   })
 
   it('renders custom labels and icon', () => {
-    render(
+    const {container} = render(
       <ConfirmationDialog
         open={true}
         onClose={() => {}}
@@ -53,11 +54,11 @@ describe('ConfirmationDialog', () => {
         message="Delete everything?"
         confirmLabel="Delete"
         cancelLabel="Go Back"
-        icon="🗑️"
+        icon={<TrashIcon className="h-16 w-16 text-honey" />}
       />,
     )
 
-    expect(screen.getByText('🗑️')).toBeInTheDocument()
+    expect(container.querySelector('svg')).toBeInTheDocument()
     expect(screen.getByRole('button', {name: 'Go Back'})).toBeInTheDocument()
     expect(screen.getByRole('button', {name: 'Delete'})).toBeInTheDocument()
   })
