@@ -61,7 +61,8 @@ describe('Button', () => {
     render(<Button>Click me</Button>)
 
     const button = screen.getByRole('button')
-    expect(button).toHaveClass('bg-flame')
+    expect(button).toHaveClass('bg-flame/90')
+    expect(button).toHaveClass('border-flame/30')
     expect(button).toHaveClass('text-white')
   })
 
