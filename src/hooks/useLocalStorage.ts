@@ -22,8 +22,7 @@ export function useLocalStorage<T>(
 
   const setStoredValue: React.Dispatch<React.SetStateAction<T>> = action => {
     setValue(prev => {
-      const nextValue =
-        action instanceof Function ? action(prev) : action
+      const nextValue = action instanceof Function ? action(prev) : action
       try {
         localStorage.setItem(key, JSON.stringify(nextValue))
       } catch {

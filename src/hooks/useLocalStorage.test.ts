@@ -8,13 +8,17 @@ describe('useLocalStorage', () => {
   })
 
   it('returns the default value when localStorage is empty', () => {
-    const {result} = renderHook(() => useLocalStorage('testKey', 'defaultValue'))
+    const {result} = renderHook(() =>
+      useLocalStorage('testKey', 'defaultValue'),
+    )
     expect(result.current[0]).toEqual('defaultValue')
   })
 
   it('returns the stored value when localStorage has data', () => {
     localStorage.setItem('testKey', JSON.stringify('storedValue'))
-    const {result} = renderHook(() => useLocalStorage('testKey', 'defaultValue'))
+    const {result} = renderHook(() =>
+      useLocalStorage('testKey', 'defaultValue'),
+    )
     expect(result.current[0]).toEqual('storedValue')
   })
 
@@ -26,7 +30,10 @@ describe('useLocalStorage', () => {
     })
 
     expect(result.current[0]).toEqual(['item1', 'item2'])
-    expect(JSON.parse(localStorage.getItem('testKey')!)).toEqual(['item1', 'item2'])
+    expect(JSON.parse(localStorage.getItem('testKey')!)).toEqual([
+      'item1',
+      'item2',
+    ])
   })
 
   it('supports functional updates', () => {
@@ -41,12 +48,17 @@ describe('useLocalStorage', () => {
     })
 
     expect(result.current[0]).toEqual(['item1', 'item2'])
-    expect(JSON.parse(localStorage.getItem('testKey')!)).toEqual(['item1', 'item2'])
+    expect(JSON.parse(localStorage.getItem('testKey')!)).toEqual([
+      'item1',
+      'item2',
+    ])
   })
 
   it('handles invalid JSON in localStorage gracefully', () => {
     localStorage.setItem('testKey', 'not-json')
-    const {result} = renderHook(() => useLocalStorage('testKey', 'defaultValue'))
+    const {result} = renderHook(() =>
+      useLocalStorage('testKey', 'defaultValue'),
+    )
     expect(result.current[0]).toEqual('defaultValue')
   })
 

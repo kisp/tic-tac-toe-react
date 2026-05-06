@@ -108,8 +108,6 @@ describe('App', () => {
   it('does not show Clear History button when no games have been played', () => {
     render(<App />)
 
-    expect(
-      screen.queryByTestId('clear-history-button'),
-    ).not.toBeInTheDocument()
+    expect(screen.queryByTestId('clear-history-button')).not.toBeInTheDocument()
   })
 })

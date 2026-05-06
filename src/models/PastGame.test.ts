@@ -5,7 +5,13 @@ import {describe} from 'vitest'
 describe('PastGame', () => {
   describe('createPastGame', () => {
     it('creates a past game with an X win result', () => {
-      const boardModel = placeMoves([0, 'X'], [4, 'O'], [1, 'X'], [6, 'O'], [2, 'X'])
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [4, 'O'],
+        [1, 'X'],
+        [6, 'O'],
+        [2, 'X'],
+      )
       const game = createPastGame(boardModel, 'X', 'deterministic')
 
       expect(game.result).toEqual('X')
@@ -16,7 +22,14 @@ describe('PastGame', () => {
     })
 
     it('creates a past game with an O win result', () => {
-      const boardModel = placeMoves([6, 'X'], [0, 'O'], [7, 'X'], [1, 'O'], [4, 'X'], [2, 'O'])
+      const boardModel = placeMoves(
+        [6, 'X'],
+        [0, 'O'],
+        [7, 'X'],
+        [1, 'O'],
+        [4, 'X'],
+        [2, 'O'],
+      )
       const game = createPastGame(boardModel, 'O', 'minimax')
 
       expect(game.result).toEqual('O')
@@ -42,7 +55,13 @@ describe('PastGame', () => {
     })
 
     it('generates unique ids', () => {
-      const boardModel = placeMoves([0, 'X'], [4, 'O'], [1, 'X'], [6, 'O'], [2, 'X'])
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [4, 'O'],
+        [1, 'X'],
+        [6, 'O'],
+        [2, 'X'],
+      )
       const game1 = createPastGame(boardModel, 'X', 'deterministic')
       const game2 = createPastGame(boardModel, 'X', 'deterministic')
 

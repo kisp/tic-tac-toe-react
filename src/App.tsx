@@ -4,7 +4,12 @@ import clsx from 'clsx'
 import {useState} from 'react'
 import Board from './components/Board.tsx'
 import {strategyMap, StrategyName} from './models/Strategies.ts'
-import {PastGame, createPastGame, resultLabel, strategyLabel} from './models/PastGame.ts'
+import {
+  PastGame,
+  createPastGame,
+  resultLabel,
+  strategyLabel,
+} from './models/PastGame.ts'
 import {BoardModel} from './models/GameModel.ts'
 import {PastGameResult} from './models/PastGame.ts'
 import {useLocalStorage} from './hooks/useLocalStorage.ts'
@@ -96,7 +101,10 @@ function WelcomePage({
         </p>
       ) : (
         <>
-          <div className="flex flex-wrap justify-around gap-6" data-testid="past-games-list">
+          <div
+            className="flex flex-wrap justify-around gap-6"
+            data-testid="past-games-list"
+          >
             {pastGames.map(game => (
               <div
                 key={game.id}
@@ -130,7 +138,10 @@ function App() {
     useState<StrategyName>('deterministic')
   const [pastGames, setPastGames] = useLocalStorage<PastGame[]>('pastGames', [])
 
-  const handleGameComplete = (boardModel: BoardModel, result: PastGameResult) => {
+  const handleGameComplete = (
+    boardModel: BoardModel,
+    result: PastGameResult,
+  ) => {
     const game = createPastGame(boardModel, result, strategyName)
     setPastGames(prev => [game, ...prev])
   }
