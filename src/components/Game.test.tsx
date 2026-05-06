@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import Game from './Game'
 import {Strategy} from '../models/Strategies.ts'
 import {placeMoves} from '../models/GameModel.ts'
+import {PastGameResult} from '../models/PastGame.ts'
 
 describe('Game', () => {
   it('renders the board', () => {
@@ -430,6 +431,128 @@ describe('Game', () => {
       cells.forEach(cell => {
         expect(cell).not.toHaveClass('bg-flame')
       })
+    })
+  })
+
+  describe('onGameComplete callback', () => {
+    it('calls onGameComplete with board and result when X wins and Close is clicked', async () => {
+      const user = userEvent.setup()
+      const onGameComplete = vi.fn()
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [4, 'O'],
+        [1, 'X'],
+        [6, 'O'],
+        [2, 'X'],
+      )
+
+      render(
+        <Game initialBoardModel={boardModel} onGameComplete={onGameComplete} />,
+      )
+
+      await waitFor(
+        () =>
+          expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+        {timeout: 3000},
+      )
+
+      await user.click(screen.getByRole('button', {name: 'Close'}))
+
+      expect(onGameComplete).toHaveBeenCalledOnce()
+      expect(onGameComplete).toHaveBeenCalledWith(boardModel, 'X')
+    })
+
+    it('calls onGameComplete with draw result when game is a draw and Close is clicked', async () => {
+      const user = userEvent.setup()
+      const onGameComplete = vi.fn()
+      const boardModel = placeMoves(
+        [4, 'X'],
+        [0, 'O'],
+        [6, 'X'],
+        [2, 'O'],
+        [1, 'X'],
+        [7, 'O'],
+        [8, 'X'],
+        [3, 'O'],
+      )
+      const strategy: Strategy = vi.fn().mockName('strategy')
+
+      render(
+        <Game
+          initialBoardModel={boardModel}
+          strategy={strategy}
+          onGameComplete={onGameComplete}
+        />,
+      )
+
+      await user.click(screen.getAllByTestId('cell')[5])
+
+      await waitFor(
+        () =>
+          expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+        {timeout: 3000},
+      )
+
+      await user.click(screen.getByRole('button', {name: 'Close'}))
+
+      expect(onGameComplete).toHaveBeenCalledOnce()
+      const [calledBoardModel, calledResult] = onGameComplete.mock.calls[0] as [
+        typeof boardModel,
+        PastGameResult,
+      ]
+      expect(calledResult).toEqual('draw')
+      expect(calledBoardModel[5]).toEqual('X')
+    })
+
+    it('calls onGameComplete with O result when O wins', async () => {
+      const user = userEvent.setup()
+      const onGameComplete = vi.fn()
+      const boardModel = placeMoves(
+        [6, 'X'],
+        [0, 'O'],
+        [7, 'X'],
+        [1, 'O'],
+        [4, 'X'],
+        [2, 'O'],
+      )
+
+      render(
+        <Game initialBoardModel={boardModel} onGameComplete={onGameComplete} />,
+      )
+
+      await waitFor(
+        () =>
+          expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+        {timeout: 3000},
+      )
+
+      await user.click(screen.getByRole('button', {name: 'Close'}))
+
+      expect(onGameComplete).toHaveBeenCalledOnce()
+      expect(onGameComplete).toHaveBeenCalledWith(boardModel, 'O')
+    })
+
+    it('does not call onGameComplete before Close is clicked', async () => {
+      const onGameComplete = vi.fn()
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [4, 'O'],
+        [1, 'X'],
+        [6, 'O'],
+        [2, 'X'],
+      )
+
+      render(
+        <Game initialBoardModel={boardModel} onGameComplete={onGameComplete} />,
+      )
+
+      await waitFor(
+        () =>
+          expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+        {timeout: 3000},
+      )
+
+      expect(onGameComplete).not.toHaveBeenCalled()
     })
   })
 })
