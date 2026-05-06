@@ -11,7 +11,7 @@ function classes(
 
   return clsx(
     'flex items-center justify-center',
-    'text-5xl font-bold text-bark',
+    'piece-text font-bold text-bark',
     'border border-wood-dark',
     'select-none bg-cream/50',
     'min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0',
