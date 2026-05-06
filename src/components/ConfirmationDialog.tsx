@@ -1,12 +1,14 @@
 import Dialog from './Dialog.tsx'
 import Button from './Button.tsx'
+import {ExclamationTriangleIcon} from '@heroicons/react/24/solid'
+import type {ReactNode} from 'react'
 
 interface ConfirmationDialogProps {
   open: boolean
   onClose: () => void
   onConfirm: () => void
   message: string
-  icon?: string
+  icon?: ReactNode
   confirmLabel?: string
   cancelLabel?: string
   accentClassName?: string
@@ -19,7 +21,7 @@ function ConfirmationDialog({
   onClose,
   onConfirm,
   message,
-  icon = '⚠️',
+  icon = <ExclamationTriangleIcon className="mx-auto h-16 w-16 text-wood/60" />,
   confirmLabel = 'Confirm',
   cancelLabel = 'Cancel',
   accentClassName,
@@ -30,7 +32,7 @@ function ConfirmationDialog({
     <Dialog open={open} onClose={onClose} accentClassName={accentClassName}>
       {closeDialog => (
         <>
-          <div className="mb-3 text-5xl" aria-hidden="true">
+          <div className="mb-3" aria-hidden="true">
             {icon}
           </div>
           <p
