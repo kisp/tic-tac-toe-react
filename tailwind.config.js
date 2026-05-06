@@ -51,6 +51,10 @@ export default {
           '0%, 100%': {opacity: '0.3'},
           '50%': {opacity: '1'},
         },
+        'thinking-pulse': {
+          '0%, 100%': {transform: 'scale(1)', opacity: '0.7'},
+          '50%': {transform: 'scale(1.2)', opacity: '1'},
+        },
       },
       animation: {
         'win-pop': 'win-pop 0.6s ease-out',
@@ -60,6 +64,7 @@ export default {
         'backdrop-fade-in': 'backdrop-fade-in 500ms ease-in-out forwards',
         'backdrop-fade-out': 'backdrop-fade-out 500ms ease-in-out forwards',
         'thinking-dot': 'thinking-dot 1.2s ease-in-out infinite',
+        'thinking-pulse': 'thinking-pulse 1.5s ease-in-out infinite',
       },
     },
   },

@@ -1,6 +1,10 @@
 import Board from './Board.tsx'
 import clsx from 'clsx'
-import {StarIcon, HandThumbUpIcon} from '@heroicons/react/24/solid'
+import {
+  StarIcon,
+  HandThumbUpIcon,
+  SparklesIcon,
+} from '@heroicons/react/24/solid'
 import {useEffect, useMemo, useState} from 'react'
 import {
   BoardModel,
@@ -195,7 +199,8 @@ export function Game({
                 className="flex items-center"
                 aria-label="AI is thinking"
               >
-                <span className="mr-0.5 text-bark/80">Thinking</span>
+                <SparklesIcon className="mr-1 h-4 w-4 animate-thinking-pulse text-honey" />
+                <span className="text-bark/80">Thinking</span>
                 <span
                   className="inline-block animate-thinking-dot"
                   style={{animationDelay: '0ms'}}
