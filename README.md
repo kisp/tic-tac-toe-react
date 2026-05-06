@@ -36,6 +36,23 @@ Every completed game is saved to your browser's local storage and displayed on t
 | Linting                  | ESLint 8 + TypeScript plugin |
 | Formatting               | Prettier 3 + Tailwind plugin |
 
+## Development Setup
+
+After cloning the repository and installing dependencies, initialize Husky hooks:
+
+```bash
+npm install
+npx husky install
+```
+
+**What this does:**
+
+- Automatically formats staged files with Prettier before each commit
+- Prevents commits if formatting fails
+- Works seamlessly for both human developers and AI agents
+
+No additional action needed—formatting is handled automatically!
+
 ## Getting Started
 
 ```bash
