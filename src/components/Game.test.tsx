@@ -730,13 +730,16 @@ describe('Game', () => {
   })
 
   describe('AI thinking indicator', () => {
-    it('does not show when AI is not thinking', () => {
+    it('is hidden when AI is not thinking', () => {
       render(<Game />)
 
-      expect(screen.queryByTestId('ai-thinking')).not.toBeInTheDocument()
+      expect(screen.getByTestId('ai-thinking')).toHaveAttribute(
+        'aria-hidden',
+        'true',
+      )
     })
 
-    it('shows when AI is thinking after player makes a move', async () => {
+    it('is visible when AI is thinking after player makes a move', async () => {
       const user = userEvent.setup()
       const strategy: Strategy = vi.fn().mockReturnValue(8).mockName('strategy')
 
@@ -745,17 +748,23 @@ describe('Game', () => {
       const cells = screen.getAllByTestId('cell')
       await user.click(cells[0])
 
-      expect(screen.getByTestId('ai-thinking')).toBeInTheDocument()
+      expect(screen.getByTestId('ai-thinking')).toHaveAttribute(
+        'aria-hidden',
+        'false',
+      )
 
       await waitFor(
         () => {
-          expect(screen.queryByTestId('ai-thinking')).not.toBeInTheDocument()
+          expect(screen.getByTestId('ai-thinking')).toHaveAttribute(
+            'aria-hidden',
+            'true',
+          )
         },
         {timeout: 3000},
       )
     })
 
-    it('does not show when game ends on player move', async () => {
+    it('is hidden when game ends on player move', async () => {
       const user = userEvent.setup()
       const boardModel = placeMoves([0, 'X'], [4, 'O'], [1, 'X'], [6, 'O'])
       const strategy: Strategy = vi.fn().mockName('strategy')
@@ -764,7 +773,10 @@ describe('Game', () => {
 
       await user.click(screen.getAllByTestId('cell')[2])
 
-      expect(screen.queryByTestId('ai-thinking')).not.toBeInTheDocument()
+      expect(screen.getByTestId('ai-thinking')).toHaveAttribute(
+        'aria-hidden',
+        'true',
+      )
     })
   })
 

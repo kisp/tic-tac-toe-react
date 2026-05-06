@@ -1,6 +1,10 @@
 import Board from './Board.tsx'
 import clsx from 'clsx'
-import {StarIcon, HandThumbUpIcon} from '@heroicons/react/24/solid'
+import {
+  StarIcon,
+  HandThumbUpIcon,
+  SparklesIcon,
+} from '@heroicons/react/24/solid'
 import {useEffect, useMemo, useState} from 'react'
 import {
   BoardModel,
@@ -179,7 +183,7 @@ export function Game({
           <h1 className="py-4 text-center text-2xl font-bold text-bark sm:py-6 sm:text-3xl">
             {winMessage ?? 'Have fun with this game!'}
           </h1>
-          <div className="flex items-center gap-4 pb-2 text-sm text-bark/60">
+          <div className="flex items-center gap-4 text-sm text-bark/60">
             {strategyName && (
               <span data-testid="strategy-display">
                 Playing against: {strategyLabel(strategyName)}
@@ -189,34 +193,36 @@ export function Game({
             <span data-testid="elapsed-time" className="font-mono tabular-nums">
               {formatElapsedSeconds(elapsedSeconds)}
             </span>
-            {isAIThinking && (
-              <span
-                data-testid="ai-thinking"
-                className="flex items-center"
-                aria-label="AI is thinking"
-              >
-                <span className="mr-0.5 text-bark/80">Thinking</span>
-                <span
-                  className="inline-block animate-thinking-dot"
-                  style={{animationDelay: '0ms'}}
-                >
-                  .
-                </span>
-                <span
-                  className="inline-block animate-thinking-dot"
-                  style={{animationDelay: '200ms'}}
-                >
-                  .
-                </span>
-                <span
-                  className="inline-block animate-thinking-dot"
-                  style={{animationDelay: '400ms'}}
-                >
-                  .
-                </span>
-              </span>
-            )}
           </div>
+          <span
+            data-testid="ai-thinking"
+            className={clsx('flex items-center pb-2 text-sm', {
+              invisible: !isAIThinking,
+            })}
+            aria-hidden={!isAIThinking}
+            aria-label="AI is thinking"
+          >
+            <SparklesIcon className="mr-1 h-4 w-4 animate-thinking-pulse text-honey" />
+            <span className="text-bark/80">Thinking</span>
+            <span
+              className="inline-block animate-thinking-dot"
+              style={{animationDelay: '0ms'}}
+            >
+              .
+            </span>
+            <span
+              className="inline-block animate-thinking-dot"
+              style={{animationDelay: '200ms'}}
+            >
+              .
+            </span>
+            <span
+              className="inline-block animate-thinking-dot"
+              style={{animationDelay: '400ms'}}
+            >
+              .
+            </span>
+          </span>
           {onReturnToWelcome && (
             <div className="pb-2">
               <Button
