@@ -18,6 +18,8 @@ import {
   isWinStatus,
 } from '../models/GameStatus.ts'
 import Button from './Button.tsx'
+import ConfirmationDialog from './ConfirmationDialog.tsx'
+import Dialog from './Dialog.tsx'
 
 function useCypress(
   boardModel: PieceOrEmpty[],
@@ -61,13 +63,11 @@ export function Game({
 }: GameProps) {
   const [boardModel, setBoardModel] = useState<BoardModel>(initialBoardModel)
   const [showGameEndDialog, setShowGameEndDialog] = useState(false)
-  const [dialogClosing, setDialogClosing] = useState(false)
   const [winMessage, setWinMessage] = useState<string | null>(null)
   const [isAIThinking, setIsAIThinking] = useState(false)
   const [showNotAllowedCursor, setShowNotAllowedCursor] = useState(false)
   const [lastMoveField, setLastMoveField] = useState<Field | null>(null)
   const [showAbortDialog, setShowAbortDialog] = useState(false)
-  const [abortDialogClosing, setAbortDialogClosing] = useState(false)
 
   useCypress(boardModel, setBoardModel)
 
@@ -194,132 +194,54 @@ export function Game({
         </div>
       </div>
 
-      {showGameEndDialog && (
-        <>
-          <div
-            className={clsx(
-              'fixed inset-0 z-50 bg-bark/60',
-              dialogClosing
-                ? 'animate-backdrop-fade-out'
-                : 'animate-backdrop-fade-in',
-            )}
-          ></div>
-          <div className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transform">
-            <div
-              className={clsx(
-                'min-w-[280px] overflow-hidden rounded-2xl border border-wood/30 bg-cream shadow-2xl',
-                dialogClosing
-                  ? 'animate-dialog-fade-out'
-                  : 'animate-dialog-scale-in',
-              )}
-            >
-              <div
-                className={clsx('h-2', {
-                  'bg-honey': isWinStatus(status),
-                  'bg-wood/40': isDrawStatus(status),
-                })}
-              />
-              <div className="px-8 pb-8 pt-6 text-center">
-                <div className="mb-3 text-5xl" aria-hidden="true">
-                  {isWinStatus(status) && '🏆'}
-                  {isDrawStatus(status) && '🤝'}
-                </div>
-                <p
-                  className="mb-6 text-xl font-bold text-bark"
-                  data-testid="game-ends-message"
-                >
-                  {isWinStatus(status) && (
-                    <span>The winner is {status.player}!</span>
-                  )}
-                  {isDrawStatus(status) && <span>It&apos;s a draw!</span>}
-                </p>
-                <Button
-                  size="large"
-                  className="w-full"
-                  onClick={() => {
-                    if (isWinStatus(status)) {
-                      setWinMessage(`The winner is ${status.player}!`)
-                      onGameComplete?.(boardModel, status.player)
-                    } else if (isDrawStatus(status)) {
-                      setWinMessage("It's a draw!")
-                      onGameComplete?.(boardModel, 'draw')
-                    }
-                    setDialogClosing(true)
-                    setTimeout(() => {
-                      setShowGameEndDialog(false)
-                      setDialogClosing(false)
-                    }, 500)
-                  }}
-                >
-                  Close
-                </Button>
-              </div>
+      <Dialog
+        open={showGameEndDialog}
+        onClose={() => setShowGameEndDialog(false)}
+        accentClassName={isWinStatus(status) ? 'bg-honey' : 'bg-wood/40'}
+      >
+        {closeDialog => (
+          <>
+            <div className="mb-3 text-5xl" aria-hidden="true">
+              {isWinStatus(status) && '🏆'}
+              {isDrawStatus(status) && '🤝'}
             </div>
-          </div>
-        </>
-      )}
+            <p
+              className="mb-6 text-xl font-bold text-bark"
+              data-testid="game-ends-message"
+            >
+              {isWinStatus(status) && (
+                <span>The winner is {status.player}!</span>
+              )}
+              {isDrawStatus(status) && <span>It&apos;s a draw!</span>}
+            </p>
+            <Button
+              size="large"
+              className="w-full"
+              onClick={() => {
+                if (isWinStatus(status)) {
+                  setWinMessage(`The winner is ${status.player}!`)
+                  onGameComplete?.(boardModel, status.player)
+                } else if (isDrawStatus(status)) {
+                  setWinMessage("It's a draw!")
+                  onGameComplete?.(boardModel, 'draw')
+                }
+                closeDialog()
+              }}
+            >
+              Close
+            </Button>
+          </>
+        )}
+      </Dialog>
 
-      {showAbortDialog && (
-        <>
-          <div
-            className={clsx(
-              'fixed inset-0 z-50 bg-bark/60',
-              abortDialogClosing
-                ? 'animate-backdrop-fade-out'
-                : 'animate-backdrop-fade-in',
-            )}
-          ></div>
-          <div className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transform">
-            <div
-              className={clsx(
-                'min-w-[280px] overflow-hidden rounded-2xl border border-wood/30 bg-cream shadow-2xl',
-                abortDialogClosing
-                  ? 'animate-dialog-fade-out'
-                  : 'animate-dialog-scale-in',
-              )}
-            >
-              <div className="h-2 bg-wood/40" />
-              <div className="px-8 pb-8 pt-6 text-center">
-                <div className="mb-3 text-5xl" aria-hidden="true">
-                  ⚠️
-                </div>
-                <p
-                  className="mb-6 text-xl font-bold text-bark"
-                  data-testid="abort-dialog-message"
-                >
-                  Are you sure you want to quit the game?
-                </p>
-                <div className="flex gap-3">
-                  <Button
-                    variant={isTurnStatus(status) ? 'secondary' : 'primary'}
-                    className="flex-1"
-                    onClick={() => {
-                      setAbortDialogClosing(true)
-                      setTimeout(() => {
-                        setShowAbortDialog(false)
-                        setAbortDialogClosing(false)
-                      }, 500)
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    size="large"
-                    className="flex-1"
-                    onClick={() => {
-                      setShowAbortDialog(false)
-                      setAbortDialogClosing(false)
-                      onReturnToWelcome?.()
-                    }}
-                  >
-                    Quit Game
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+      <ConfirmationDialog
+        open={showAbortDialog}
+        onClose={() => setShowAbortDialog(false)}
+        onConfirm={() => onReturnToWelcome?.()}
+        message="Are you sure you want to quit the game?"
+        confirmLabel="Quit Game"
+        dataTestId="abort-dialog-message"
+      />
     </>
   )
 }

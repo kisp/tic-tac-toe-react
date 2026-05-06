@@ -1,4 +1,5 @@
 import Button from './components/Button.tsx'
+import ConfirmationDialog from './components/ConfirmationDialog.tsx'
 import Game from './components/Game.tsx'
 import clsx from 'clsx'
 import {useState} from 'react'
@@ -31,6 +32,8 @@ function WelcomePage({
   pastGames: PastGame[]
   onClearHistory: () => void
 }) {
+  const [showClearHistoryDialog, setShowClearHistoryDialog] = useState(false)
+
   return (
     <>
       <h1 className="py-6 text-center text-3xl font-bold text-bark">
@@ -134,12 +137,24 @@ function WelcomePage({
             ))}
           </div>
           <div className="mt-4 flex justify-center">
-            <Button onClick={onClearHistory} dataTestid="clear-history-button">
+            <Button
+              variant="secondary"
+              onClick={() => setShowClearHistoryDialog(true)}
+              dataTestid="clear-history-button"
+            >
               Clear History
             </Button>
           </div>
         </>
       )}
+      <ConfirmationDialog
+        open={showClearHistoryDialog}
+        onClose={() => setShowClearHistoryDialog(false)}
+        onConfirm={onClearHistory}
+        message="Are you sure you want to clear all game history? This action cannot be undone."
+        confirmLabel="Clear"
+        dataTestId="clear-history-dialog-message"
+      />
     </>
   )
 }

@@ -166,42 +166,52 @@ describe('Past Games', () => {
     cy.get('[data-testid="past-game-card"]').contains('Minimax')
   })
 
-  it('can clear history with the Clear History button', () => {
-    // Play a game first
-    cy.get('[data-testid="start-new-game-button"]').click()
-    cy.get('[data-testid="game"]').should('exist')
+it('can clear history with the Clear History button', () => {
+      // Play a game first
+      cy.get('[data-testid="start-new-game-button"]').click()
+      cy.get('[data-testid="game"]').should('exist')
 
-    cy.window().invoke('setBoardModel', [
-      'X',
-      'X',
-      null,
-      null,
-      'O',
-      null,
-      'O',
-      null,
-      null,
-    ])
-    cy.get('[data-testid="cell"]').eq(2).click().should('have.text', 'X')
+      cy.window().invoke('setBoardModel', [
+        'X',
+        'X',
+        null,
+        null,
+        'O',
+        null,
+        'O',
+        null,
+        null,
+      ])
+      cy.get('[data-testid="cell"]').eq(2).click().should('have.text', 'X')
 
-    cy.get('[data-testid="game-ends-message"]')
-      .should('be.visible')
-      .and('have.text', 'The winner is X!')
+      cy.get('[data-testid="game-ends-message"]')
+        .should('be.visible')
+        .and('have.text', 'The winner is X!')
 
-    cy.contains('button', 'Close').click()
-    cy.contains('button', 'Return to Welcome Page').click()
+      cy.contains('button', 'Close').click()
+      cy.contains('button', 'Return to Welcome Page').click()
 
-    cy.get('[data-testid="past-games-list"]').should('exist')
-    cy.get('[data-testid="clear-history-button"]').should('exist')
+      cy.get('[data-testid="past-games-list"]').should('exist')
+      cy.get('[data-testid="clear-history-button"]').should('exist')
 
-    cy.get('[data-testid="clear-history-button"]').click()
+      cy.get('[data-testid="clear-history-button"]').click()
 
-    cy.get('[data-testid="no-past-games"]').should(
-      'have.text',
-      'No games played yet',
-    )
-    cy.get('[data-testid="past-games-list"]').should('not.exist')
-  })
+      // Confirmation dialog should appear
+      cy.get('[data-testid="clear-history-dialog-message"]')
+        .should('be.visible')
+        .and(
+          'have.text',
+          'Are you sure you want to clear all game history? This action cannot be undone.',
+        )
+
+      cy.contains('button', 'Clear').click()
+
+      cy.get('[data-testid="no-past-games"]').should(
+        'have.text',
+        'No games played yet',
+      )
+      cy.get('[data-testid="past-games-list"]').should('not.exist')
+    })
 
   it('persists past games across page reloads', () => {
     cy.get('[data-testid="start-new-game-button"]').click()
