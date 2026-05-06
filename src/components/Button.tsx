@@ -13,12 +13,14 @@ const classes = (size: ButtonSize, variant: ButtonVariant = 'primary') => {
       return clsx(
         'border-2 border-flame bg-cream font-semibold text-flame',
         'hover:bg-flame/10',
+        'transition-all duration-200',
         focusStyles,
       )
     }
     return clsx(
-      'bg-flame font-semibold text-white',
-      'hover:bg-flame-dark',
+      'border border-flame/30 bg-flame/90 font-semibold text-white',
+      'hover:border-flame/50 hover:bg-flame',
+      'transition-all duration-200',
       focusStyles,
     )
   }
