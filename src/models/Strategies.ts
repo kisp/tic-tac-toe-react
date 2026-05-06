@@ -3,13 +3,14 @@ import {
   BoardModel,
   Field,
   isEmptyField,
+  Piece,
   placeMove,
 } from './GameModel.ts'
 import {gameStatus} from './GameStatus.ts'
 
 export type Strategy = (boardModel: BoardModel) => Field
 
-export type StrategyName = 'deterministic' | 'random' | 'minimax'
+export type StrategyName = 'deterministic' | 'random' | 'mostlyRandom' | 'minimax'
 
 function minimaxScore(boardModel: BoardModel, isMaximizing: boolean): number {
   const status = gameStatus(boardModel)
@@ -84,8 +85,47 @@ export const randomStrategy: Strategy = boardModel => {
   return emptyFields[randomIndex]
 }
 
+function findWinningMoves(boardModel: BoardModel, player: Piece): Field[] {
+  const emptyFields = allFields.filter(isEmptyField(boardModel))
+  return emptyFields.filter(field => {
+    const newBoard = placeMove(boardModel, [field, player])
+    const status = gameStatus(newBoard)
+    return status.type === 'Won' && status.player === player
+  })
+}
+
+export const mostlyRandomStrategy: Strategy = boardModel => {
+  const emptyFields = allFields.filter(isEmptyField(boardModel))
+  if (emptyFields.length === 0) {
+    throw new Error('No empty field found in the board model')
+  }
+
+  const aiWinningMoves = findWinningMoves(boardModel, 'O')
+  const blockMoves = findWinningMoves(boardModel, 'X')
+
+  if (aiWinningMoves.length > 0 && blockMoves.length > 0) {
+    if (Math.random() < 0.5) {
+      return aiWinningMoves[Math.floor(Math.random() * aiWinningMoves.length)]
+    } else {
+      return blockMoves[Math.floor(Math.random() * blockMoves.length)]
+    }
+  }
+
+  if (aiWinningMoves.length > 0) {
+    return aiWinningMoves[Math.floor(Math.random() * aiWinningMoves.length)]
+  }
+
+  if (blockMoves.length > 0) {
+    return blockMoves[Math.floor(Math.random() * blockMoves.length)]
+  }
+
+  const randomIndex = Math.floor(Math.random() * emptyFields.length)
+  return emptyFields[randomIndex]
+}
+
 export const strategyMap: Record<StrategyName, Strategy> = {
   deterministic: deterministicStrategy,
   random: randomStrategy,
+  mostlyRandom: mostlyRandomStrategy,
   minimax: minimaxStrategy,
 }

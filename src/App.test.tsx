@@ -78,9 +78,11 @@ describe('App', () => {
 
     const deterministicRadio = screen.getByTestId('strategy-deterministic')
     const randomRadio = screen.getByTestId('strategy-random')
+    const mostlyRandomRadio = screen.getByTestId('strategy-mostly-random')
 
     expect(deterministicRadio).toBeChecked()
     expect(randomRadio).not.toBeChecked()
+    expect(mostlyRandomRadio).not.toBeChecked()
   })
 
   it('allows switching to random strategy', async () => {
@@ -90,6 +92,16 @@ describe('App', () => {
     await user.click(screen.getByTestId('strategy-random'))
 
     expect(screen.getByTestId('strategy-random')).toBeChecked()
+    expect(screen.getByTestId('strategy-deterministic')).not.toBeChecked()
+  })
+
+  it('allows switching to mostly random strategy', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByTestId('strategy-mostly-random'))
+
+    expect(screen.getByTestId('strategy-mostly-random')).toBeChecked()
     expect(screen.getByTestId('strategy-deterministic')).not.toBeChecked()
   })
 
@@ -103,6 +115,7 @@ describe('App', () => {
     await user.click(screen.getByTestId('strategy-deterministic'))
     expect(screen.getByTestId('strategy-deterministic')).toBeChecked()
     expect(screen.getByTestId('strategy-random')).not.toBeChecked()
+    expect(screen.getByTestId('strategy-mostly-random')).not.toBeChecked()
   })
 
   it('does not show Clear History button when no games have been played', () => {

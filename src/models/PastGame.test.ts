@@ -95,5 +95,9 @@ describe('PastGame', () => {
     it('capitalizes minimax', () => {
       expect(strategyLabel('minimax')).toEqual('Minimax')
     })
+
+    it('labels mostlyRandom as Mostly random', () => {
+      expect(strategyLabel('mostlyRandom')).toEqual('Mostly random')
+    })
   })
 })

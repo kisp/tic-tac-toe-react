@@ -31,5 +31,11 @@ export function resultLabel(result: PastGameResult): string {
 }
 
 export function strategyLabel(strategy: StrategyName): string {
-  return strategy.charAt(0).toUpperCase() + strategy.slice(1)
+  const labels: Record<StrategyName, string> = {
+    deterministic: 'Deterministic',
+    random: 'Random',
+    mostlyRandom: 'Mostly random',
+    minimax: 'Minimax',
+  }
+  return labels[strategy]
 }

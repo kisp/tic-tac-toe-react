@@ -66,6 +66,18 @@ function WelcomePage({
           <input
             type="radio"
             name="strategy"
+            value="mostlyRandom"
+            checked={strategyName === 'mostlyRandom'}
+            onChange={() => setStrategyName('mostlyRandom')}
+            data-testid="strategy-mostly-random"
+            className="accent-flame"
+          />
+          <span className="text-bark">Mostly random</span>
+        </label>
+        <label className="flex items-center gap-2">
+          <input
+            type="radio"
+            name="strategy"
             value="minimax"
             checked={strategyName === 'minimax'}
             onChange={() => setStrategyName('minimax')}
