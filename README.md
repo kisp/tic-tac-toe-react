@@ -1,6 +1,6 @@
 # tic-tac-toe-react
 
-Classic game, modern twist — a Tic Tac Toe game built with React and TypeScript.
+Classic game, modern twist - a Tic Tac Toe game built with React and TypeScript.
 
 You play as **X**, and the AI plays as **O**.
 
@@ -14,7 +14,7 @@ Choose from three AI strategies before starting a game:
 | ----------------- | ----------------------------------------------------------------------------------------------------------- |
 | **Deterministic** | Always picks the first available cell (top-left to bottom-right). Easy to beat once you notice the pattern. |
 | **Random**        | Picks a random empty cell each turn. Unpredictable but not strategic.                                       |
-| **Minimax**       | Uses the minimax algorithm to play optimally. This AI never loses — the best you can achieve is a draw!     |
+| **Minimax**       | Uses the minimax algorithm to play optimally. This AI never loses - the best you can achieve is a draw!     |
 
 ### Past Games Collection
 
