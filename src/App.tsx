@@ -119,7 +119,7 @@ function WelcomePage({
       ) : (
         <>
           <div
-            className="flex flex-wrap justify-around gap-6"
+            className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4"
             data-testid="past-games-list"
           >
             {pastGames.map(game => (
