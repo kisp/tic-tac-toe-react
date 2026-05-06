@@ -595,9 +595,7 @@ describe('Game', () => {
       expect(screen.getByTestId('abort-dialog-message')).toHaveTextContent(
         'Are you sure you want to quit the game?',
       )
-      expect(
-        screen.getByRole('button', {name: 'Cancel'}),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', {name: 'Cancel'})).toBeInTheDocument()
       expect(
         screen.getByRole('button', {name: 'Quit Game'}),
       ).toBeInTheDocument()
@@ -625,7 +623,9 @@ describe('Game', () => {
       await user.click(screen.getByRole('button', {name: 'Cancel'}))
 
       await waitFor(() =>
-        expect(screen.queryByTestId('abort-dialog-message')).not.toBeInTheDocument(),
+        expect(
+          screen.queryByTestId('abort-dialog-message'),
+        ).not.toBeInTheDocument(),
       )
 
       expect(onReturnToWelcome).not.toHaveBeenCalled()

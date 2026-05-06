@@ -164,9 +164,7 @@ export function Game({
                     : onReturnToWelcome
                 }
               >
-                {isTurnStatus(status)
-                  ? 'Abort Game'
-                  : 'Return to Welcome Page'}
+                {isTurnStatus(status) ? 'Abort Game' : 'Return to Welcome Page'}
               </Button>
             </div>
           )}
