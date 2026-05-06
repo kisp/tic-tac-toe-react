@@ -150,7 +150,7 @@ describe('Game', () => {
         )
       })
 
-      it('calls onReturnToWelcome when the Return to Welcome Page button is clicked', async () => {
+      it('calls onReturnToWelcome when the Return to Welcome Page button is clicked after game ends', async () => {
         const user = userEvent.setup()
         const onReturnToWelcome = vi.fn()
         const boardModel = placeMoves(
@@ -168,20 +168,24 @@ describe('Game', () => {
           />,
         )
 
+        // Game is already won, so button shows "Return to Welcome Page"
+        expect(
+          screen.getByRole('button', {name: 'Return to Welcome Page'}),
+        ).toBeInTheDocument()
+
         await waitFor(
           () =>
             expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
           {timeout: 3000},
         )
 
-        // Button is not yet visible while the dialog is open
+        // After game ends, button still says "Return to Welcome Page"
         expect(
-          screen.queryByRole('button', {name: 'Return to Welcome Page'}),
-        ).not.toBeInTheDocument()
+          screen.getByRole('button', {name: 'Return to Welcome Page'}),
+        ).toBeInTheDocument()
 
         await user.click(screen.getByRole('button', {name: 'Close'}))
 
-        // Button appears below the game after closing the dialog
         await user.click(
           screen.getByRole('button', {name: 'Return to Welcome Page'}),
         )
@@ -189,7 +193,7 @@ describe('Game', () => {
         expect(onReturnToWelcome).toHaveBeenCalledOnce()
       })
 
-      it('does not show a Return to Welcome Page button when onReturnToWelcome is not provided', async () => {
+      it('does not show navigation buttons when onReturnToWelcome is not provided', async () => {
         const user = userEvent.setup()
         const boardModel = placeMoves(
           [0, 'X'],
@@ -200,6 +204,10 @@ describe('Game', () => {
         )
 
         render(<Game initialBoardModel={boardModel} />)
+
+        expect(
+          screen.queryByRole('button', {name: 'Abort Game'}),
+        ).not.toBeInTheDocument()
 
         await waitFor(
           () =>
@@ -553,6 +561,111 @@ describe('Game', () => {
       )
 
       expect(onGameComplete).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('navigation button', () => {
+    it('shows Abort Game button during gameplay when onReturnToWelcome is provided', () => {
+      const onReturnToWelcome = vi.fn()
+      render(<Game onReturnToWelcome={onReturnToWelcome} />)
+
+      expect(
+        screen.getByRole('button', {name: 'Abort Game'}),
+      ).toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', {name: 'Return to Welcome Page'}),
+      ).not.toBeInTheDocument()
+    })
+
+    it('does not show Abort Game button when onReturnToWelcome is not provided', () => {
+      render(<Game />)
+
+      expect(
+        screen.queryByRole('button', {name: 'Abort Game'}),
+      ).not.toBeInTheDocument()
+    })
+
+    it('shows confirmation dialog when Abort Game is clicked', async () => {
+      const user = userEvent.setup()
+      const onReturnToWelcome = vi.fn()
+      render(<Game onReturnToWelcome={onReturnToWelcome} />)
+
+      await user.click(screen.getByRole('button', {name: 'Abort Game'}))
+
+      expect(screen.getByTestId('abort-dialog-message')).toHaveTextContent(
+        'Are you sure you want to quit the game?',
+      )
+      expect(screen.getByRole('button', {name: 'Cancel'})).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', {name: 'Quit Game'}),
+      ).toBeInTheDocument()
+    })
+
+    it('calls onReturnToWelcome when Quit Game is clicked in abort dialog', async () => {
+      const user = userEvent.setup()
+      const onReturnToWelcome = vi.fn()
+      render(<Game onReturnToWelcome={onReturnToWelcome} />)
+
+      await user.click(screen.getByRole('button', {name: 'Abort Game'}))
+      await user.click(screen.getByRole('button', {name: 'Quit Game'}))
+
+      expect(onReturnToWelcome).toHaveBeenCalledOnce()
+    })
+
+    it('closes abort dialog when Cancel is clicked and returns to game', async () => {
+      const user = userEvent.setup()
+      const onReturnToWelcome = vi.fn()
+      render(<Game onReturnToWelcome={onReturnToWelcome} />)
+
+      await user.click(screen.getByRole('button', {name: 'Abort Game'}))
+      expect(screen.getByTestId('abort-dialog-message')).toBeInTheDocument()
+
+      await user.click(screen.getByRole('button', {name: 'Cancel'}))
+
+      await waitFor(() =>
+        expect(
+          screen.queryByTestId('abort-dialog-message'),
+        ).not.toBeInTheDocument(),
+      )
+
+      expect(onReturnToWelcome).not.toHaveBeenCalled()
+      // Game is still visible
+      expect(screen.getByTestId('board')).toBeInTheDocument()
+    })
+
+    it('changes button from Abort Game to Return to Welcome Page when game ends', async () => {
+      const onReturnToWelcome = vi.fn()
+      const boardModel = placeMoves(
+        [0, 'X'],
+        [4, 'O'],
+        [1, 'X'],
+        [6, 'O'],
+        [2, 'X'],
+      )
+
+      render(
+        <Game
+          initialBoardModel={boardModel}
+          onReturnToWelcome={onReturnToWelcome}
+        />,
+      )
+
+      // Game is already won, so button says "Return to Welcome Page"
+      expect(
+        screen.getByRole('button', {name: 'Return to Welcome Page'}),
+      ).toBeInTheDocument()
+
+      // Wait for the game end dialog
+      await waitFor(
+        () =>
+          expect(screen.getByTestId('game-ends-message')).toBeInTheDocument(),
+        {timeout: 3000},
+      )
+
+      // After game ends, button still says "Return to Welcome Page"
+      expect(
+        screen.getByRole('button', {name: 'Return to Welcome Page'}),
+      ).toBeInTheDocument()
     })
   })
 })

@@ -56,4 +56,21 @@ describe('Button', () => {
     expect(button).toHaveClass('py-4')
     expect(button).toHaveClass('shadow-xl')
   })
+
+  it('applies primary variant styles by default', () => {
+    render(<Button>Click me</Button>)
+
+    const button = screen.getByRole('button')
+    expect(button).toHaveClass('bg-flame')
+    expect(button).toHaveClass('text-white')
+  })
+
+  it('applies secondary variant styles when variant is secondary', () => {
+    render(<Button variant="secondary">Cancel</Button>)
+
+    const button = screen.getByRole('button')
+    expect(button).toHaveClass('border-flame')
+    expect(button).toHaveClass('bg-cream')
+    expect(button).toHaveClass('text-flame')
+  })
 })
