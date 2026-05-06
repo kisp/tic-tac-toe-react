@@ -28,7 +28,8 @@ function classes(
         piece === 'X' && !highlighted && !isNonInteractive,
     },
     {
-      'bg-honey/30': isFlashing && piece === 'O' && !highlighted,
+      'bg-honey/30':
+        isFlashing && piece === 'O' && !highlighted && !isNonInteractive,
     },
     {
       'transition-colors duration-1000':
@@ -55,10 +56,11 @@ function classes(
   )
 }
 
-function useFlashing(piece?: PieceOrEmpty): boolean {
+function useFlashing(piece?: PieceOrEmpty, interactive?: boolean): boolean {
   const [stopFlashing, setStopFlashing] = useState(false)
 
   useEffect(() => {
+    if (!interactive) return
     if (piece) {
       const timer = setTimeout(() => {
         setStopFlashing(true)
@@ -68,24 +70,25 @@ function useFlashing(piece?: PieceOrEmpty): boolean {
         clearTimeout(timer)
       }
     }
-  }, [piece])
+  }, [piece, interactive])
 
-  return !!piece && !stopFlashing
+  return interactive ? !!piece && !stopFlashing : false
 }
 
-function useCursorDelay(piece?: PieceOrEmpty): boolean {
+function useCursorDelay(piece?: PieceOrEmpty, interactive?: boolean): boolean {
   const [cursorDelayed, setCursorDelayed] = useState(false)
 
   useEffect(() => {
+    if (!interactive) return
     if (piece === 'X') {
       setCursorDelayed(true)
       const timer = setTimeout(() => setCursorDelayed(false), 1000)
       return () => clearTimeout(timer)
     }
     setCursorDelayed(false)
-  }, [piece])
+  }, [piece, interactive])
 
-  return cursorDelayed
+  return interactive ? cursorDelayed : false
 }
 
 export type BorderPosition = 't' | 'b' | 'l' | 'r'
@@ -102,8 +105,8 @@ type CellProps = {
 function Cell(props: CellProps) {
   const {piece, onClick, interactive = true} = props
 
-  const isFlashing = useFlashing(piece)
-  const cursorDelayed = useCursorDelay(piece)
+  const isFlashing = useFlashing(piece, interactive)
+  const cursorDelayed = useCursorDelay(piece, interactive)
 
   const style =
     props.highlighted && props.highlightDelay !== undefined

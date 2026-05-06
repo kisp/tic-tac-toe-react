@@ -175,6 +175,38 @@ describe('Cell', () => {
       expect(cell).toHaveClass('text-cream')
       expect(cell).not.toHaveClass('animate-win-pop')
     })
+
+    it('does not show move highlight flash on O piece immediately after mount', () => {
+      vi.useFakeTimers()
+      render(<Cell interactive={false} piece="O" />)
+      const cell = screen.getByTestId('cell')
+
+      expect(cell).not.toHaveClass('bg-honey/30')
+
+      vi.useRealTimers()
+    })
+
+    it('does not show move highlight flash on O piece after piece update', () => {
+      vi.useFakeTimers()
+      const {rerender} = render(<Cell interactive={false} />)
+      rerender(<Cell interactive={false} piece="O" />)
+      const cell = screen.getByTestId('cell')
+
+      expect(cell).not.toHaveClass('bg-honey/30')
+
+      vi.useRealTimers()
+    })
+
+    it('does not show cursor-pointer on X piece', () => {
+      vi.useFakeTimers()
+      render(<Cell interactive={false} piece="X" />)
+      const cell = screen.getByTestId('cell')
+
+      expect(cell).not.toHaveClass('cursor-pointer')
+      expect(cell).not.toHaveClass('hover:bg-honey/30')
+
+      vi.useRealTimers()
+    })
   })
 
   describe('cursor delay on X piece', () => {
