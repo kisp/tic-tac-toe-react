@@ -85,7 +85,8 @@ export function Game({
   const [showNotAllowedCursor, setShowNotAllowedCursor] = useState(false)
   const [lastMoveField, setLastMoveField] = useState<Field | null>(null)
   const [showAbortDialog, setShowAbortDialog] = useState(false)
-  const [elapsedSeconds, setElapsedSeconds] = useState(0)
+  const [gameStartTime] = useState(() => Date.now())
+  const [displayedSeconds, setDisplayedSeconds] = useState(0)
 
   useCypress(boardModel, setBoardModel)
 
@@ -103,14 +104,15 @@ export function Game({
   const status = useMemo(() => gameStatus(boardModel), [boardModel])
 
   useEffect(() => {
-    if (!isTurnStatus(status)) return
-
-    const timer = setInterval(() => {
-      setElapsedSeconds(prev => prev + 1)
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [status])
+    if (isTurnStatus(status)) {
+      const interval = setInterval(() => {
+        setDisplayedSeconds(Math.floor((Date.now() - gameStartTime) / 1000))
+      }, 100)
+      return () => clearInterval(interval)
+    } else {
+      setDisplayedSeconds(Math.floor((Date.now() - gameStartTime) / 1000))
+    }
+  }, [status, gameStartTime])
 
   const handleMove = () => {
     let handleMoveCalled = false
@@ -191,7 +193,7 @@ export function Game({
             )}
             {strategyName && <span aria-hidden="true">·</span>}
             <span data-testid="elapsed-time" className="font-mono tabular-nums">
-              {formatElapsedSeconds(elapsedSeconds)}
+              {formatElapsedSeconds(displayedSeconds)}
             </span>
           </div>
           <span
