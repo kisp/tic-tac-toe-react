@@ -2,7 +2,7 @@
 
 Classic game, modern twist — a Tic Tac Toe game built with React and TypeScript.
 
-You play as **X**, and the AI plays as **O** with a 1-second move delay for a smoother experience.
+You play as **X**, and the AI plays as **O**.
 
 ## Features
 
