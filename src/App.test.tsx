@@ -85,7 +85,15 @@ describe('App', () => {
     expect(randomRadio).not.toBeChecked()
   })
 
-  it('allows switching to random strategy', async () => {
+  it('shows a select menu for mobile strategy selection', () => {
+    render(<App />)
+
+    const select = screen.getByTestId('strategy-select')
+    expect(select).toBeInTheDocument()
+    expect(select).toHaveValue('mostlyRandom')
+  })
+
+  it('allows switching to random strategy via radio', async () => {
     const user = userEvent.setup()
     render(<App />)
 
@@ -96,7 +104,7 @@ describe('App', () => {
     expect(screen.getByTestId('strategy-mostly-random')).not.toBeChecked()
   })
 
-  it('allows switching to deterministic strategy', async () => {
+  it('allows switching to deterministic strategy via radio', async () => {
     const user = userEvent.setup()
     render(<App />)
 
@@ -106,7 +114,7 @@ describe('App', () => {
     expect(screen.getByTestId('strategy-mostly-random')).not.toBeChecked()
   })
 
-  it('allows switching back to mostly random strategy', async () => {
+  it('allows switching back to mostly random strategy via radio', async () => {
     const user = userEvent.setup()
     render(<App />)
 
@@ -117,6 +125,16 @@ describe('App', () => {
     expect(screen.getByTestId('strategy-mostly-random')).toBeChecked()
     expect(screen.getByTestId('strategy-random')).not.toBeChecked()
     expect(screen.getByTestId('strategy-deterministic')).not.toBeChecked()
+  })
+
+  it('allows switching strategy via select menu', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.selectOptions(screen.getByTestId('strategy-select'), 'random')
+
+    expect(screen.getByTestId('strategy-select')).toHaveValue('random')
+    expect(screen.getByTestId('strategy-random')).toBeChecked()
   })
 
   it('does not show Clear History button when no games have been played', () => {

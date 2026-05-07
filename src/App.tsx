@@ -60,54 +60,67 @@ function WelcomePage({
       </h1>
       <div className="my-4 flex items-center justify-center gap-6">
         <span className="text-lg text-bark">AI Strategy:</span>
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name="strategy"
-            value="deterministic"
-            checked={strategyName === 'deterministic'}
-            onChange={() => setStrategyName('deterministic')}
-            data-testid="strategy-deterministic"
-            className="accent-flame"
-          />
-          <span className="text-bark">Deterministic</span>
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name="strategy"
-            value="random"
-            checked={strategyName === 'random'}
-            onChange={() => setStrategyName('random')}
-            data-testid="strategy-random"
-            className="accent-flame"
-          />
-          <span className="text-bark">Random</span>
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name="strategy"
-            value="mostlyRandom"
-            checked={strategyName === 'mostlyRandom'}
-            onChange={() => setStrategyName('mostlyRandom')}
-            data-testid="strategy-mostly-random"
-            className="accent-flame"
-          />
-          <span className="text-bark">Mostly random</span>
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name="strategy"
-            value="minimax"
-            checked={strategyName === 'minimax'}
-            onChange={() => setStrategyName('minimax')}
-            data-testid="strategy-minimax"
-            className="accent-flame"
-          />
-          <span className="text-bark">Minimax</span>
-        </label>
+        <div className="hidden gap-4 sm:flex">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="strategy"
+              value="deterministic"
+              checked={strategyName === 'deterministic'}
+              onChange={() => setStrategyName('deterministic')}
+              data-testid="strategy-deterministic"
+              className="accent-flame"
+            />
+            <span className="text-bark">Deterministic</span>
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="strategy"
+              value="random"
+              checked={strategyName === 'random'}
+              onChange={() => setStrategyName('random')}
+              data-testid="strategy-random"
+              className="accent-flame"
+            />
+            <span className="text-bark">Random</span>
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="strategy"
+              value="mostlyRandom"
+              checked={strategyName === 'mostlyRandom'}
+              onChange={() => setStrategyName('mostlyRandom')}
+              data-testid="strategy-mostly-random"
+              className="accent-flame"
+            />
+            <span className="text-bark">Mostly random</span>
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="strategy"
+              value="minimax"
+              checked={strategyName === 'minimax'}
+              onChange={() => setStrategyName('minimax')}
+              data-testid="strategy-minimax"
+              className="accent-flame"
+            />
+            <span className="text-bark">Minimax</span>
+          </label>
+        </div>
+        <select
+          value={strategyName}
+          onChange={e => setStrategyName(e.target.value as StrategyName)}
+          data-testid="strategy-select"
+          className="rounded-md border-2 border-wood/30 bg-cream px-3 py-1.5 text-bark sm:hidden"
+        >
+          <option value="deterministic">Deterministic</option>
+          <option value="random">Random</option>
+          <option value="mostlyRandom">Mostly random</option>
+          <option value="minimax">Minimax</option>
+        </select>
       </div>
       <div
         className={clsx('my-3 flex justify-center', {
